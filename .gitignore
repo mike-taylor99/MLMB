@@ -1,5 +1,6 @@
 # Project specific
 assets/data/seasons/
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
