@@ -8,7 +8,7 @@ Babel @ file:///C:/ci_311/babel_1676427169844/work
 beautifulsoup4 @ file:///C:/b/abs_0agyz1wsr4/croot/beautifulsoup4-split_1681493048687/work
 bleach @ file:///opt/conda/conda-bld/bleach_1641577558959/work
 Brotli @ file:///C:/ci_311/brotli-split_1676435766766/work
-certifi @ file:///C:/b/abs_91u83siphd/croot/certifi_1700501720658/work/certifi
+certifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1700303426725/work/certifi
 cffi @ file:///C:/b/abs_924gv1kxzj/croot/cffi_1700254355075/work
 charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
 colorama @ file:///C:/ci_311/colorama_1676422310965/work
