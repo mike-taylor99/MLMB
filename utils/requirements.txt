@@ -94,6 +94,7 @@ stack-data @ file:///opt/conda/conda-bld/stack_data_1646927590127/work
 terminado @ file:///C:/ci_311/terminado_1678228513830/work
 tinycss2 @ file:///C:/ci_311/tinycss2_1676425376744/work
 tornado @ file:///C:/b/abs_0cbrstidzg/croot/tornado_1696937003724/work
+tqdm==4.66.1
 traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1704212992681/work
 typing_extensions @ file:///C:/b/abs_72cdotwc_6/croot/typing_extensions_1705599364138/work
 tzdata==2023.4
