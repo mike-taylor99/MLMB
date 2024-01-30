@@ -20,6 +20,7 @@ defusedxml @ file:///tmp/build/80754af9/defusedxml_1615228127516/work
 exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1704921103267/work
 executing @ file:///opt/conda/conda-bld/executing_1646925071911/work
 fastjsonschema @ file:///C:/ci_311/python-fastjsonschema_1679500568724/work
+html5lib==1.1
 idna @ file:///C:/ci_311/idna_1676424932545/work
 importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1703269254275/work
 ipykernel @ file:///C:/b/abs_07rkft_vaz/croot/ipykernel_1691121700587/work
