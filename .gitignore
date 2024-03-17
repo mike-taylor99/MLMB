@@ -1,2 +1,3 @@
 data/seasons/
 *.ipynb_checkpoints/
+.vscode
