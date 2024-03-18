@@ -1,0 +1,30 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  /* min-width: 320px; */
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  /* max-width: 1280px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* padding-left: calc(100vw - 100%); */
+}
+
+.content {
+  /* flex: 1 0 auto; */
+  display: flex;
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.footer {
+  flex-shrink: 0;
+}
