@@ -4,7 +4,11 @@ import { MatchupInput, MatchupOutput } from "./types";
 // Define a service using a base URL and expected endpoints
 export const mlmbApi = createApi({
   reducerPath: "mlmb",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://mlmb-api.azurewebsites.net/" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://mlmb-api.azurewebsites.net/",
+    credentials: "same-origin",
+    mode: "cors",
+  }),
   endpoints: (builder) => ({
     getTop25: builder.query<{ [name: string]: number }, void>({
       query: () => `top25`,
