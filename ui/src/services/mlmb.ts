@@ -5,7 +5,7 @@ import { MatchupInput, MatchupOutput } from "./types";
 export const mlmbApi = createApi({
   reducerPath: "mlmb",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://mlmb-api.azurewebsites.net/",
+    baseUrl: "https://mlmb-api.azurewebsites.net/",
     credentials: "same-origin",
     mode: "cors",
   }),
