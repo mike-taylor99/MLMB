@@ -3,18 +3,25 @@ import { PredictionForm } from "./PredictionForm";
 import { IMatchupFormInput } from "../common/models";
 import { EMPTY_FORM_MATCHUP } from "../common/constants";
 import { teams } from "../assets/teams";
-import { IResultCard, ResultCard } from "./ResultCard";
+import { ResultCard } from "./ResultCard";
 import { useState } from "react";
 import { Stack } from "@fluentui/react";
+import { usePredictMutation } from "../services/mlmb";
+import { MatchupOutput } from "../services/types";
 
 export const Prediction: React.FC = () => {
-  const [results, setResults] = useState<IResultCard[] | undefined>(undefined);
+  const [results, setResults] = useState<MatchupOutput[] | undefined>(
+    undefined
+  );
+  const [predict] = usePredictMutation();
+  // const [predict, { isLoading, isError }] = usePredictMutation();
 
   const formikConfig: FormikConfig<IMatchupFormInput[]> = {
     initialValues: [EMPTY_FORM_MATCHUP],
     initialTouched: [],
-    onSubmit: (values) => {
-      setResults(values);
+    onSubmit: async (values) => {
+      const apiResults = await predict(values);
+      setResults((apiResults as any)?.data || undefined);
     },
     validate: (values) => {
       const errors = values.map((matchup) => {

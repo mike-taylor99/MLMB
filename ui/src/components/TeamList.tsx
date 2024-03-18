@@ -71,7 +71,7 @@ export const TeamList: React.FC<ITeamListProps> = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "start",
-          height: `${height - 88}px`,
+          height: `${height - 88 - 20}px`,
         },
       },
     },
@@ -175,7 +175,7 @@ export const TeamList: React.FC<ITeamListProps> = () => {
   };
 
   return (
-    <Stack horizontalAlign="center">
+    <Stack horizontalAlign="center" styles={{ root: { padding: "0px 20px" } }}>
       <Stack horizontalAlign="start" styles={{ root: { maxWidth: 835 } }}>
         <CommandBar
           items={[

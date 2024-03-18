@@ -8,6 +8,10 @@ import {
   DetailsList,
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
+import { useGetTop25Query } from "../services/mlmb";
+import { teams } from "../assets/teams";
+import { ITeam } from "../common/models";
+import no_logo from "../assets/no-logo.svg";
 
 const gridStyles: Partial<IDetailsListStyles> = {
   root: {
@@ -58,68 +62,16 @@ const focusZoneProps = {
 } as React.HTMLAttributes<HTMLElement>;
 
 export const Top25: React.FC = () => {
-  const items = [
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-    {
-      key: "1",
-      name: "Connecticut",
-      logo: "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/uconn.svg",
-    },
-  ];
+  const { data, error, isLoading } = useGetTop25Query();
+  const filteredTeams = teams.filter((team) =>
+    Object.keys(data || {}).includes(team["SR key"])
+  );
+  const items = filteredTeams
+    .map((team) => ({
+      ...team,
+      score: data?.[team["SR key"]],
+    }))
+    .sort((a, b) => (b?.score || 0) - (a?.score || 0));
 
   const columns: IColumn[] = useConst(() => {
     return [
@@ -141,12 +93,23 @@ export const Top25: React.FC = () => {
               verticalAlign="center"
               horizontalAlign="center"
               style={{
-                backgroundColor: "#0C2340",
+                backgroundColor:
+                  ((item as ITeam)["background-color"] as string) ?? undefined,
                 width: (currentWidth ?? 0) + 20,
                 height: 42,
               }}
             >
-              <img style={{ height: 30 }} src={item.logo} />
+              <img
+                style={{ height: 30 }}
+                src={
+                  !!(item as ITeam)["NCAA key"] &&
+                  !!(item as ITeam)["background-color"]
+                    ? `https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/${
+                        (item as ITeam)["NCAA key"]
+                      }.svg`
+                    : no_logo
+                }
+              />
             </Stack>
           );
         },
@@ -154,15 +117,15 @@ export const Top25: React.FC = () => {
       {
         key: "column1",
         name: "Name",
-        fieldName: "name",
+        fieldName: "NCAA School",
         minWidth: 40,
         maxWidth: 200,
         isResizable: false,
       },
       {
-        key: "rank",
-        name: "Rank",
-        fieldName: "key",
+        key: "score",
+        name: "Score",
+        fieldName: "score",
         minWidth: 40,
         maxWidth: 40,
         isResizable: false,
@@ -172,7 +135,7 @@ export const Top25: React.FC = () => {
 
   return (
     <div>
-      {false ? (
+      {isLoading || error ? (
         <ShimmeredDetailsList
           enableShimmer
           items={[]}

@@ -1,19 +1,19 @@
 import { Stack, StackItem, Text, getTheme } from "@fluentui/react";
 import { teams } from "../assets/teams";
 import no_logo from "../assets/no-logo.svg";
+import { MatchupOutput } from "../services/types";
 
-export interface IResultCard {
-  model: string;
-  isNeutral: boolean;
-  team1: string;
-  team2: string;
-}
+export interface IResultCard extends MatchupOutput {}
 
 export const ResultCard: React.FC<IResultCard> = ({
   model,
   isNeutral,
   team1,
   team2,
+  team1LastPlayed,
+  team2LastPlayed,
+  predict,
+  predictProba,
 }) => {
   const theme = getTheme();
 
@@ -97,7 +97,12 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="large">
             {team1Metadata?.["NCAA Name"] ?? team1Metadata?.School}
           </Text>
-          <Text variant="medium">{`(80%)${isNeutral ? "" : " Away"}`}</Text>
+          <Text variant="medium">{`(${(predictProba[0] * 100).toFixed(2)}%)${
+            isNeutral ? "" : " Away"
+          }`}</Text>
+          <Text variant="xSmall">
+            {new Date(team1LastPlayed).toLocaleDateString()}
+          </Text>
         </Stack>
         <Stack
           grow
@@ -109,7 +114,7 @@ export const ResultCard: React.FC<IResultCard> = ({
             variant="xxLargePlus"
             styles={{ root: { letterSpacing: "10px" } }}
           >
-            W - L
+            {`${predict[0] == 1 ? "L" : "W"} - ${predict[0] == 1 ? "W" : "L"}`}
           </Text>
         </Stack>
         <Stack
@@ -120,7 +125,12 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="large">
             {team2Metadata?.["NCAA Name"] ?? team2Metadata?.School}
           </Text>
-          <Text variant="medium">{`${isNeutral ? "" : "Home "}(20%)`}</Text>
+          <Text variant="medium">{`${isNeutral ? "" : "Home "}(${(
+            predictProba[1] * 100
+          ).toFixed(2)}%)`}</Text>
+          <Text variant="xSmall">
+            {new Date(team2LastPlayed).toLocaleDateString()}
+          </Text>
         </Stack>
       </Stack>
     </Stack>

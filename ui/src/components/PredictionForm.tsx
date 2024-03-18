@@ -12,6 +12,7 @@ import {
   IComboBoxOption,
   Selection,
   CheckboxVisibility,
+  Spinner,
 } from "@fluentui/react";
 import { useConst, useForceUpdate } from "@fluentui/react-hooks";
 import { teams } from "../assets/teams";
@@ -60,7 +61,8 @@ const isSearchTextIncluded = (team: ITeam, searchText: string) => {
 export const PredictionForm: React.FC = () => {
   const theme = getTheme();
   const { height } = useWindowDimensions();
-  const { errors, values, setValues } = useFormikContext<IMatchupFormInput[]>();
+  const { errors, values, isSubmitting, setValues } =
+    useFormikContext<IMatchupFormInput[]>();
 
   const forceUpdate = useForceUpdate();
   const _selection = useConst(
@@ -84,7 +86,7 @@ export const PredictionForm: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "start",
-          height: `${height - 88}px`,
+          height: `${height - 88 - 20}px`,
         },
       },
     },
@@ -103,7 +105,7 @@ export const PredictionForm: React.FC = () => {
       {
         key: "model",
         name: "Model",
-        minWidth: 150,
+        minWidth: 300,
         isResizable: false,
       },
       {
@@ -231,7 +233,80 @@ export const PredictionForm: React.FC = () => {
       return (
         <Dropdown
           fieldName={`[${index}].${column?.key}`}
-          options={[{ key: "placeholder", text: "Placeholder" }]}
+          options={[
+            {
+              key: "3span_gradient_boosting",
+              text: "Gradient Boosting (3 game lookback)",
+            },
+            {
+              key: "3span_knn_model",
+              text: "K Nearest Neighbors (3 game lookback)",
+            },
+            {
+              key: "3span_logistic_regression_model",
+              text: "Logistic Regression (3 game lookback)",
+            },
+            {
+              key: "3span_multilayer_perceptron",
+              text: "Multilayer Perceptron (3 game lookback)",
+            },
+            {
+              key: "3span_random_forest",
+              text: "Random Forest (3 game lookback)",
+            },
+            {
+              key: "3span_support_vector_machine_model",
+              text: "Support Vector Machine (3 game lookback)",
+            },
+            {
+              key: "5span_gradient_boosting",
+              text: "Gradient Boosting (5 game lookback)",
+            },
+            {
+              key: "5span_knn_model",
+              text: "K Nearest Neighbors (5 game lookback)",
+            },
+            {
+              key: "5span_logistic_regression_model",
+              text: "Logistic Regression (5 game lookback)",
+            },
+            {
+              key: "5span_multilayer_perceptron",
+              text: "Multilayer Perceptron (5 game lookback)",
+            },
+            {
+              key: "5span_random_forest",
+              text: "Random Forest (5 game lookback)",
+            },
+            {
+              key: "5span_support_vector_machine_model",
+              text: "Support Vector Machine (5 game lookback)",
+            },
+            {
+              key: "7span_gradient_boosting",
+              text: "Gradient Boosting (7 game lookback)",
+            },
+            {
+              key: "7span_knn_model",
+              text: "K Nearest Neighbors (7 game lookback)",
+            },
+            {
+              key: "7span_logistic_regression_model",
+              text: "Logistic Regression (7 game lookback)",
+            },
+            {
+              key: "7span_multilayer_perceptron",
+              text: "Multilayer Perceptron (7 game lookback)",
+            },
+            {
+              key: "7span_random_forest",
+              text: "Random Forest (7 game lookback)",
+            },
+            {
+              key: "7span_support_vector_machine_model",
+              text: "Support Vector Machine (7 game lookback)",
+            },
+          ]}
         />
       );
     if (column?.key === "isNeutral")
@@ -264,7 +339,7 @@ export const PredictionForm: React.FC = () => {
   const _onAddMatchup = () => setValues([...values, EMPTY_FORM_MATCHUP]);
 
   return (
-    <Stack horizontalAlign="center">
+    <Stack horizontalAlign="center" styles={{ root: { padding: "0px 20px" } }}>
       <Stack>
         <CommandBar
           items={[
@@ -272,6 +347,7 @@ export const PredictionForm: React.FC = () => {
               key: "new",
               text: "New matchup",
               iconProps: { iconName: "Add" },
+              disabled: values?.length > 64,
               onClick: _onAddMatchup as any,
             },
             {
@@ -302,7 +378,8 @@ export const PredictionForm: React.FC = () => {
               text: "Submit",
               type: "submit",
               iconProps: { iconName: "Send" },
-              disabled: (errors?.length ?? 0) > 0,
+              onRenderIcon: isSubmitting ? () => <Spinner /> : undefined,
+              disabled: (errors?.length ?? 0) > 0 || isSubmitting,
               buttonStyles: {
                 root: {
                   backgroundColor: theme.semanticColors.primaryButtonBackground,

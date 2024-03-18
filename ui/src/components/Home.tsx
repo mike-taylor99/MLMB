@@ -13,9 +13,13 @@ import { Top25 } from "./Top25";
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Stack horizontalAlign="center" tokens={{ childrenGap: 10 }}>
+    <Stack
+      horizontalAlign="center"
+      tokens={{ childrenGap: 10 }}
+      styles={{ root: { padding: "0px 20px", minWidth: 500 } }}
+    >
       <Text>
-        <h1 style={{ marginBlockEnd: 0 }}>Get started with MLMB</h1>
+        <h1>Get started with MLMB</h1>
       </Text>
       <Text
         styles={{
@@ -39,7 +43,7 @@ export const Home: React.FC = () => {
         styles={{ root: { paddingTop: 50 } }}
       >
         <Stack
-          styles={{ root: { maxWidth: 400 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
@@ -62,7 +66,7 @@ export const Home: React.FC = () => {
           </Stack>
         </Stack>
         <Stack
-          styles={{ root: { maxWidth: 400 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
@@ -82,7 +86,7 @@ export const Home: React.FC = () => {
           </Text>
         </Stack>
         <Stack
-          styles={{ root: { maxWidth: 400 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
@@ -111,7 +115,7 @@ export const Home: React.FC = () => {
                 defaultSelectedKey={"men"}
                 options={[
                   { key: "men", text: "Men's top 25" },
-                  { key: "women", text: "Women's top 25" },
+                  { key: "women", text: "Women's top 25", disabled: true },
                 ]}
               />
             </StackItem>
