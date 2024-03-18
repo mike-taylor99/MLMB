@@ -1,3 +1,5 @@
 data/seasons/
 *.ipynb_checkpoints/
-.vscode
+.vscode/
+data/
+*my_data.json
