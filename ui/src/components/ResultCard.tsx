@@ -100,9 +100,7 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="medium">{`(${(predictProba[0] * 100).toFixed(2)}%)${
             isNeutral ? "" : " Away"
           }`}</Text>
-          <Text variant="xSmall">
-            {new Date(team1LastPlayed).toLocaleDateString()}
-          </Text>
+          <Text variant="xSmall">{team1LastPlayed}</Text>
         </Stack>
         <Stack
           grow
@@ -128,9 +126,7 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="medium">{`${isNeutral ? "" : "Home "}(${(
             predictProba[1] * 100
           ).toFixed(2)}%)`}</Text>
-          <Text variant="xSmall">
-            {new Date(team2LastPlayed).toLocaleDateString()}
-          </Text>
+          <Text variant="xSmall">{team2LastPlayed}</Text>
         </Stack>
       </Stack>
     </Stack>
