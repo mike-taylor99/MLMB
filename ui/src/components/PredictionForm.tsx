@@ -161,7 +161,7 @@ export const PredictionForm: React.FC = () => {
       },
       {
         key: "team1",
-        name: "Team 1",
+        name: "Team 1 (Away)",
         minWidth: 300,
         isResizable: false,
       },
@@ -212,7 +212,7 @@ export const PredictionForm: React.FC = () => {
       },
       {
         key: "team2",
-        name: "Team 2",
+        name: "Team 2 (Home)",
         minWidth: 300,
         isResizable: false,
       },
