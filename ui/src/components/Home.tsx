@@ -43,7 +43,7 @@ export const Home: React.FC = () => {
         styles={{ root: { paddingTop: 50 } }}
       >
         <Stack
-          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 400 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
@@ -66,7 +66,7 @@ export const Home: React.FC = () => {
           </Stack>
         </Stack>
         <Stack
-          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 400 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
@@ -86,7 +86,7 @@ export const Home: React.FC = () => {
           </Text>
         </Stack>
         <Stack
-          styles={{ root: { maxWidth: 400, minWidth: 0 } }}
+          styles={{ root: { maxWidth: 400, minWidth: 400 } }}
           tokens={{ childrenGap: 10 }}
         >
           <div style={{ height: 400, margin: "auto" }}>
