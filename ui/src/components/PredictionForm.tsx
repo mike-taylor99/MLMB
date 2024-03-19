@@ -13,6 +13,7 @@ import {
   Selection,
   CheckboxVisibility,
   Spinner,
+  DropdownMenuItemType,
 } from "@fluentui/react";
 import { useConst, useForceUpdate } from "@fluentui/react-hooks";
 import { teams } from "../assets/teams";
@@ -235,6 +236,28 @@ export const PredictionForm: React.FC = () => {
           fieldName={`[${index}].${column?.key}`}
           options={[
             {
+              key: "Header1",
+              text: "Recommended",
+              itemType: DropdownMenuItemType.Header,
+            },
+            {
+              key: "3span_ensemble",
+              text: "Ensemble (3 game lookback)",
+            },
+            {
+              key: "5span_ensemble",
+              text: "Ensemble (5 game lookback)",
+            },
+            {
+              key: "7span_ensemble",
+              text: "Ensemble (7 game lookback)",
+            },
+            {
+              key: "Header2",
+              text: "3 game lookback",
+              itemType: DropdownMenuItemType.Header,
+            },
+            {
               key: "3span_gradient_boosting",
               text: "Gradient Boosting (3 game lookback)",
             },
@@ -259,6 +282,11 @@ export const PredictionForm: React.FC = () => {
               text: "Support Vector Machine (3 game lookback)",
             },
             {
+              key: "Header3",
+              text: "5 game lookback",
+              itemType: DropdownMenuItemType.Header,
+            },
+            {
               key: "5span_gradient_boosting",
               text: "Gradient Boosting (5 game lookback)",
             },
@@ -281,6 +309,11 @@ export const PredictionForm: React.FC = () => {
             {
               key: "5span_support_vector_machine_model",
               text: "Support Vector Machine (5 game lookback)",
+            },
+            {
+              key: "Header4",
+              text: "7 game lookback",
+              itemType: DropdownMenuItemType.Header,
             },
             {
               key: "7span_gradient_boosting",
