@@ -24,16 +24,15 @@ def run(raw_data):
         
     def ensemble(input, models, span):
         counter = 0
-        predict, predict_proba = 0, [0, 0]
+        predict_proba = [0, 0]
         for key in models:
             if f'{span}span_' in key:
                 model = models[key]
-                predict += model.predict(input)[0]
                 proba = model.predict_proba(input)
                 predict_proba[0], predict_proba[1] = predict_proba[0] + proba[0][0], predict_proba[1] + proba[0][1]
                 counter += 1
         return {
-            'predict': [int(predict / counter)], 
+            'predict': [round(predict_proba[1] / counter)], 
             'predict_proba': [predict_proba[0] / counter, predict_proba[1] / counter]
         }
 

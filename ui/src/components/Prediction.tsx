@@ -5,7 +5,7 @@ import { EMPTY_FORM_MATCHUP } from "../common/constants";
 import { teams } from "../assets/teams";
 import { ResultCard } from "./ResultCard";
 import { useState } from "react";
-import { Stack } from "@fluentui/react";
+import { DefaultButton, Stack, StackItem } from "@fluentui/react";
 import { usePredictMutation } from "../services/mlmb";
 import { MatchupOutput } from "../services/types";
 
@@ -58,6 +58,14 @@ export const Prediction: React.FC = () => {
             tokens={{ childrenGap: 20 }}
             styles={{ root: { padding: 20 } }}
           >
+            <Stack
+              styles={{ root: { width: 650 } }}
+              onClick={() => setResults(undefined)}
+            >
+              <StackItem grow align="start">
+                <DefaultButton text="Back" />
+              </StackItem>
+            </Stack>
             {results!.map((result, index) => (
               <ResultCard key={index} {...result} />
             ))}
