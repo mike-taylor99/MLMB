@@ -9,7 +9,7 @@ import {
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
 import { useGetTop25Query } from "../services/mlmb";
-import { teams } from "../assets/teams";
+import { teams } from "../assets/mens_teams";
 import { ITeam } from "../common/models";
 import no_logo from "../assets/no-logo.svg";
 

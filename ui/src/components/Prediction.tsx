@@ -2,7 +2,8 @@ import { Form, Formik, FormikConfig, FormikErrors } from "formik";
 import { PredictionForm } from "./PredictionForm";
 import { IMatchupFormInput } from "../common/models";
 import { EMPTY_FORM_MATCHUP } from "../common/constants";
-import { teams } from "../assets/teams";
+import { teams as mensTeams } from "../assets/mens_teams";
+import { teams as womensTeams } from "../assets/womens_teams";
 import { ResultCard } from "./ResultCard";
 import { useState } from "react";
 import { DefaultButton, Stack, StackItem } from "@fluentui/react";
@@ -13,11 +14,13 @@ export const Prediction: React.FC = () => {
   const [results, setResults] = useState<MatchupOutput[] | undefined>(
     undefined
   );
+  const [isWomens, setIsWomens] = useState(false);
   const [predict] = usePredictMutation();
   // const [predict, { isLoading, isError }] = usePredictMutation();
 
   const formikConfig: FormikConfig<IMatchupFormInput[]> = {
-    initialValues: [EMPTY_FORM_MATCHUP],
+    enableReinitialize: true,
+    initialValues: [{ ...EMPTY_FORM_MATCHUP, isWomens }],
     initialTouched: [],
     onSubmit: async (values) => {
       const apiResults = await predict(values);
@@ -26,6 +29,7 @@ export const Prediction: React.FC = () => {
     validate: (values) => {
       const errors = values.map((matchup) => {
         let matchupErrors: FormikErrors<IMatchupFormInput> = {};
+        const teams = matchup.isWomens ? womensTeams : mensTeams;
 
         const team1 = teams.find((team) => team["SR key"] === matchup.team1);
         const team2 = teams.find((team) => team["SR key"] === matchup.team2);
@@ -51,19 +55,19 @@ export const Prediction: React.FC = () => {
     <Formik<IMatchupFormInput[]> {...formikConfig}>
       <Form>
         {!!!results ? (
-          <PredictionForm />
+          <PredictionForm isWomens={isWomens} setIsWomens={setIsWomens} />
         ) : (
           <Stack
             horizontalAlign="center"
             tokens={{ childrenGap: 20 }}
             styles={{ root: { padding: 20 } }}
           >
-            <Stack
-              styles={{ root: { width: 650 } }}
-              onClick={() => setResults(undefined)}
-            >
+            <Stack styles={{ root: { width: 650 } }}>
               <StackItem grow align="start">
-                <DefaultButton text="Back" />
+                <DefaultButton
+                  text="Back"
+                  onClick={() => setResults(undefined)}
+                />
               </StackItem>
             </Stack>
             {results!.map((result, index) => (

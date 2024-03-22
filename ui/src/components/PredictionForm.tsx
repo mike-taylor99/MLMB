@@ -16,7 +16,8 @@ import {
   DropdownMenuItemType,
 } from "@fluentui/react";
 import { useConst, useForceUpdate } from "@fluentui/react-hooks";
-import { teams } from "../assets/teams";
+import { teams as mensTeams } from "../assets/mens_teams";
+import { teams as womensTeams } from "../assets/womens_teams";
 import { IMatchupFormInput, ITeam } from "../common/models";
 import { useWindowDimensions } from "../common/hooks";
 import no_logo from "../assets/no-logo.svg";
@@ -59,7 +60,15 @@ const isSearchTextIncluded = (team: ITeam, searchText: string) => {
   return false;
 };
 
-export const PredictionForm: React.FC = () => {
+export interface IPredictionForm {
+  isWomens: boolean;
+  setIsWomens: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const PredictionForm: React.FC<IPredictionForm> = ({
+  isWomens,
+  setIsWomens,
+}) => {
   const theme = getTheme();
   const { height } = useWindowDimensions();
   const { errors, values, isSubmitting, setValues } =
@@ -72,6 +81,8 @@ export const PredictionForm: React.FC = () => {
       onSelectionChanged: forceUpdate,
     })
   );
+
+  const teams = isWomens ? womensTeams : mensTeams;
 
   const comboBoxOptions: IComboBoxOption[] = teams.map((team) => ({
     ...team,
@@ -369,7 +380,8 @@ export const PredictionForm: React.FC = () => {
     return value;
   };
 
-  const _onAddMatchup = () => setValues([...values, EMPTY_FORM_MATCHUP]);
+  const _onAddMatchup = () =>
+    setValues([...values, { ...EMPTY_FORM_MATCHUP, isWomens }]);
 
   return (
     <Stack horizontalAlign="center" styles={{ root: { padding: "0px 20px" } }}>
@@ -400,8 +412,23 @@ export const PredictionForm: React.FC = () => {
                 }
 
                 setValues(
-                  newValues.length > 0 ? newValues : [EMPTY_FORM_MATCHUP]
+                  newValues.length > 0
+                    ? newValues
+                    : [{ ...EMPTY_FORM_MATCHUP, isWomens }]
                 );
+              },
+            },
+            {
+              key: "type",
+              text: isWomens ? "Mode: Women" : "Mode: Men",
+              subMenuProps: {
+                items: [
+                  {
+                    key: "option1",
+                    text: isWomens ? "Men" : "Women",
+                    onClick: () => setIsWomens(!isWomens),
+                  },
+                ],
               },
             },
           ]}

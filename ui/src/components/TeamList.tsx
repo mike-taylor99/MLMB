@@ -13,7 +13,8 @@ import {
   getTheme,
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
-import { teams } from "../assets/teams";
+import { teams as mensTeams } from "../assets/mens_teams";
+import { teams as womensTeams } from "../assets/womens_teams";
 import { ITeam } from "../common/models";
 import { useWindowDimensions } from "../common/hooks";
 import { useState } from "react";
@@ -58,7 +59,10 @@ export const TeamList: React.FC<ITeamListProps> = () => {
   const theme = getTheme();
   const { height } = useWindowDimensions();
   const [searchInput, setSearchInput] = useState("");
+  const [isWomens, setIsWomens] = useState(false);
 
+  const teams = isWomens ? womensTeams : mensTeams;
+  console.log("here", teams.length);
   const items: ITeam[] = teams
     .map((team) => ({ ...team, key: team["SR key"] }))
     .filter((team) => !searchInput || isSearchTextIncluded(team, searchInput));
@@ -197,13 +201,15 @@ export const TeamList: React.FC<ITeamListProps> = () => {
               onRender: () => (
                 <Stack verticalAlign="center">
                   <Dropdown
-                    defaultSelectedKey="all"
+                    selectedKey={isWomens ? "women" : "men"}
                     options={[
-                      { key: "all", text: "All" },
-                      { key: "men", text: "Men", disabled: true },
-                      { key: "women", text: "Women", disabled: true },
+                      { key: "men", text: "Men" },
+                      { key: "women", text: "Women" },
                     ]}
                     styles={{ root: { minWidth: 100 } }}
+                    onChange={(_ev, option) =>
+                      setIsWomens(option?.key === "women")
+                    }
                   />
                 </Stack>
               ),
@@ -212,7 +218,7 @@ export const TeamList: React.FC<ITeamListProps> = () => {
           styles={{ root: { padding: 0 } }}
         />
         <DetailsList
-          setKey="items"
+          setKey={`${isWomens}`}
           items={items || []}
           columns={columns}
           selectionMode={SelectionMode.none}
