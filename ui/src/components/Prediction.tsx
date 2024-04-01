@@ -2,8 +2,7 @@ import { Form, Formik, FormikConfig, FormikErrors } from "formik";
 import { PredictionForm } from "./PredictionForm";
 import { IMatchupFormInput } from "../common/models";
 import { EMPTY_FORM_MATCHUP } from "../common/constants";
-import { teams as mensTeams } from "../assets/mens_teams";
-import { teams as womensTeams } from "../assets/womens_teams";
+import { teams as TEAMS } from "../assets/teams";
 import { ResultCard } from "./ResultCard";
 import { useState } from "react";
 import { DefaultButton, Stack, StackItem } from "@fluentui/react";
@@ -29,7 +28,9 @@ export const Prediction: React.FC = () => {
     validate: (values) => {
       const errors = values.map((matchup) => {
         let matchupErrors: FormikErrors<IMatchupFormInput> = {};
-        const teams = matchup.isWomens ? womensTeams : mensTeams;
+        const teams = TEAMS.filter((team) =>
+          matchup.isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+        );
 
         const team1 = teams.find((team) => team["SR key"] === matchup.team1);
         const team2 = teams.find((team) => team["SR key"] === matchup.team2);

@@ -16,8 +16,7 @@ import {
   DropdownMenuItemType,
 } from "@fluentui/react";
 import { useConst, useForceUpdate } from "@fluentui/react-hooks";
-import { teams as mensTeams } from "../assets/mens_teams";
-import { teams as womensTeams } from "../assets/womens_teams";
+import { teams as TEAMS } from "../assets/teams";
 import { IMatchupFormInput, ITeam } from "../common/models";
 import { useWindowDimensions } from "../common/hooks";
 import no_logo from "../assets/no-logo.svg";
@@ -82,7 +81,9 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
     })
   );
 
-  const teams = isWomens ? womensTeams : mensTeams;
+  const teams = TEAMS.filter((team) =>
+    isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+  );
 
   const comboBoxOptions: IComboBoxOption[] = teams.map((team) => ({
     ...team,

@@ -13,8 +13,7 @@ import {
   getTheme,
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
-import { teams as mensTeams } from "../assets/mens_teams";
-import { teams as womensTeams } from "../assets/womens_teams";
+import { teams as TEAMS } from "../assets/teams";
 import { ITeam } from "../common/models";
 import { useWindowDimensions } from "../common/hooks";
 import { useState } from "react";
@@ -61,8 +60,9 @@ export const TeamList: React.FC<ITeamListProps> = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isWomens, setIsWomens] = useState(false);
 
-  const teams = isWomens ? womensTeams : mensTeams;
-  console.log("here", teams.length);
+  const teams = TEAMS.filter((team) =>
+    isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+  );
   const items: ITeam[] = teams
     .map((team) => ({ ...team, key: team["SR key"] }))
     .filter((team) => !searchInput || isSearchTextIncluded(team, searchInput));

@@ -9,6 +9,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Abilene Christian",
     "NCAA Name": "Abilene Christian University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Air Force",
@@ -18,6 +20,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Air Force",
     "NCAA Name": "Air Force Academy",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Akron",
@@ -27,6 +31,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Akron",
     "NCAA Name": "University of Akron",
     "background-color": "#0F192B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Alabama",
@@ -36,6 +42,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Alabama",
     "NCAA Name": "University of Alabama",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Alabama A&M",
@@ -45,6 +53,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Alabama A&M",
     "NCAA Name": "Alabama A&M University",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Alabama State",
@@ -54,6 +64,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Alabama St.",
     "NCAA Name": "Alabama State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Albany (NY)",
@@ -63,6 +75,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Albany (NY)",
     "NCAA Name": "University at Albany",
     "background-color": "#46166B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Alcorn State",
@@ -72,6 +86,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Alcorn St.",
     "NCAA Name": "Alcorn State University",
     "background-color": "#512D6D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "American",
@@ -81,6 +97,8 @@ export const teams: ITeam[] = [
     "NCAA School": "American",
     "NCAA Name": "American University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Appalachian State",
@@ -90,6 +108,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Appalachian St.",
     "NCAA Name": "Appalachian State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Arizona",
@@ -99,6 +119,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Arizona",
     "NCAA Name": "University of Arizona",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Arizona State",
@@ -108,6 +130,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Arizona St.",
     "NCAA Name": "Arizona State University",
     "background-color": "#8A0C3C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Arkansas",
@@ -117,6 +141,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Arkansas",
     "NCAA Name": "University of Arkansas",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Arkansas State",
@@ -126,6 +152,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Arkansas St.",
     "NCAA Name": "Arkansas State University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Arkansas-Pine Bluff",
@@ -135,6 +163,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Ark.-Pine Bluff",
     "NCAA Name": "University of Arkansas-Pine Bluff",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Army",
@@ -144,6 +174,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Army",
     "NCAA Name": "Army West Point",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Auburn",
@@ -153,6 +185,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Auburn",
     "NCAA Name": "Auburn University",
     "background-color": "#FA4616",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Austin Peay",
@@ -162,6 +196,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Austin Peay",
     "NCAA Name": "Austin Peay State University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Ball State",
@@ -171,6 +207,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Ball St.",
     "NCAA Name": "Ball State University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Baylor",
@@ -180,6 +218,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Baylor",
     "NCAA Name": "Baylor University",
     "background-color": "#1B3E30",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bellarmine",
@@ -189,6 +229,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bellarmine",
     "NCAA Name": "Bellarmine University",
     "background-color": "#772f40",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Belmont",
@@ -198,6 +240,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Belmont",
     "NCAA Name": "Belmont University",
     "background-color": "#0D2C6B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bethune-Cookman",
@@ -207,6 +251,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bethune-Cookman",
     "NCAA Name": "Bethune-Cookman University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Binghamton",
@@ -216,6 +262,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Binghamton",
     "NCAA Name": "Binghamton University",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Boise State",
@@ -225,6 +273,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Boise St.",
     "NCAA Name": "Boise State University",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Boston College",
@@ -234,6 +284,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Boston College",
     "NCAA Name": "Boston College",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Boston University",
@@ -243,6 +295,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Boston U.",
     "NCAA Name": "Boston University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bowling Green State",
@@ -252,6 +306,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bowling Green",
     "NCAA Name": "Bowling Green State University",
     "background-color": "#FE5000",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bradley",
@@ -261,6 +317,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bradley",
     "NCAA Name": "Bradley University",
     "background-color": "#A21B21",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Brigham Young",
@@ -270,6 +328,8 @@ export const teams: ITeam[] = [
     "NCAA School": "BYU",
     "NCAA Name": "Brigham Young University",
     "background-color": "#213C84",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Brown",
@@ -279,6 +339,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Brown",
     "NCAA Name": "Brown University",
     "background-color": "#4E3629",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bryant",
@@ -288,6 +350,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bryant",
     "NCAA Name": "Bryant University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Bucknell",
@@ -297,6 +361,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Bucknell",
     "NCAA Name": "Bucknell University",
     "background-color": "#071D49",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Buffalo",
@@ -306,6 +372,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Buffalo",
     "NCAA Name": "University at Buffalo",
     "background-color": "#0057B8",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Butler",
@@ -315,6 +383,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Butler",
     "NCAA Name": "Butler University",
     "background-color": "#13294B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cal Poly",
@@ -324,6 +394,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cal Poly",
     "NCAA Name": "Cal Poly",
     "background-color": "#193E30",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cal State Bakersfield",
@@ -333,6 +405,8 @@ export const teams: ITeam[] = [
     "NCAA School": "CSU Bakersfield",
     "NCAA Name": "CSU Bakersfield",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cal State Fullerton",
@@ -342,6 +416,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cal St. Fullerton",
     "NCAA Name": "Cal State-Fullerton",
     "background-color": "#F47216",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cal State Northridge",
@@ -351,6 +427,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cal St. Northridge",
     "NCAA Name": "Cal State-Northridge",
     "background-color": "#BB2531",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "California",
@@ -360,6 +438,8 @@ export const teams: ITeam[] = [
     "NCAA School": "California",
     "NCAA Name": "University of California",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "California Baptist",
@@ -369,6 +449,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cal Baptist",
     "NCAA Name": "California Baptist University",
     "background-color": "#171F3B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Campbell",
@@ -378,6 +460,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Campbell",
     "NCAA Name": "Campbell University",
     "background-color": "#FF4713",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Canisius",
@@ -387,6 +471,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Canisius",
     "NCAA Name": "Canisius College",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Central Arkansas",
@@ -396,6 +482,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Central Ark.",
     "NCAA Name": "University of Central Arkansas",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Central Connecticut State",
@@ -405,6 +493,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Central Conn. St.",
     "NCAA Name": "Central Connecticut State University",
     "background-color": "#003087",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Central Florida",
@@ -414,6 +504,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UCF",
     "NCAA Name": "University of Central Florida",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Central Michigan",
@@ -423,6 +515,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Central Mich.",
     "NCAA Name": "Central Michigan University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Charleston Southern",
@@ -432,6 +526,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Charleston So.",
     "NCAA Name": "Charleston Southern University",
     "background-color": "#15233C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Charlotte",
@@ -441,6 +537,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Charlotte",
     "NCAA Name": "UNC Charlotte",
     "background-color": "#124D39",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Chattanooga",
@@ -450,6 +548,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tenn-Chattanooga",
     "NCAA Name": "University of Tennessee at Chattanooga",
     "background-color": "#00416D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Chicago State",
@@ -459,6 +559,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Chicago St.",
     "NCAA Name": "Chicago State University",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cincinnati",
@@ -468,6 +570,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cincinnati",
     "NCAA Name": "University of Cincinnati",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Clemson",
@@ -477,6 +581,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Clemson",
     "NCAA Name": "Clemson University",
     "background-color": "#FF6720",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cleveland State",
@@ -486,6 +592,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cleveland St.",
     "NCAA Name": "Cleveland State University",
     "background-color": "#115740",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Coastal Carolina",
@@ -495,6 +603,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Coastal Caro.",
     "NCAA Name": "Coastal Carolina University",
     "background-color": "#007377",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Colgate",
@@ -504,6 +614,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Colgate",
     "NCAA Name": "Colgate University",
     "background-color": "#772430",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "College of Charleston",
@@ -513,6 +625,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Col. of Charleston",
     "NCAA Name": "College of Charleston",
     "background-color": "#76232F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Colorado",
@@ -522,6 +636,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Colorado",
     "NCAA Name": "University of Colorado",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Colorado State",
@@ -531,6 +647,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Colorado St.",
     "NCAA Name": "Colorado State University",
     "background-color": "#2C5234",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Columbia",
@@ -540,6 +658,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Columbia",
     "NCAA Name": "Columbia University-Barnard College",
     "background-color": "#97CAEB",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Connecticut",
@@ -549,6 +669,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Connecticut",
     "NCAA Name": "University of Connecticut",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Coppin State",
@@ -558,6 +680,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Coppin St.",
     "NCAA Name": "Coppin State University",
     "background-color": "#0c3354",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Cornell",
@@ -567,6 +691,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Cornell",
     "NCAA Name": "Cornell University",
     "background-color": "#B32025",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Creighton",
@@ -576,6 +702,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Creighton",
     "NCAA Name": "Creighton University",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Dartmouth",
@@ -585,6 +713,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Dartmouth",
     "NCAA Name": "Dartmouth College",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Davidson",
@@ -594,6 +724,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Davidson",
     "NCAA Name": "Davidson College",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Dayton",
@@ -603,6 +735,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Dayton",
     "NCAA Name": "University of Dayton",
     "background-color": "#D50032",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Delaware",
@@ -612,6 +746,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Delaware",
     "NCAA Name": "University of Delaware",
     "background-color": "#006095",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Delaware State",
@@ -621,6 +757,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Delaware St.",
     "NCAA Name": "Delaware State University",
     "background-color": "#DA291C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Denver",
@@ -630,6 +768,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Denver",
     "NCAA Name": "University of Denver",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "DePaul",
@@ -639,6 +779,8 @@ export const teams: ITeam[] = [
     "NCAA School": "DePaul",
     "NCAA Name": "DePaul University",
     "background-color": "#003DA5",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Detroit Mercy",
@@ -648,6 +790,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Detroit",
     "NCAA Name": "University of Detroit Mercy",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Drake",
@@ -657,6 +801,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Drake",
     "NCAA Name": "Drake University",
     "background-color": "#002F6C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Drexel",
@@ -666,6 +812,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Drexel",
     "NCAA Name": "Drexel University",
     "background-color": "#1D2D4F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Duke",
@@ -675,6 +823,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Duke",
     "NCAA Name": "Duke University",
     "background-color": "#002D72",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Duquesne",
@@ -684,6 +834,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Duquesne",
     "NCAA Name": "Duquesne University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "East Carolina",
@@ -693,6 +845,8 @@ export const teams: ITeam[] = [
     "NCAA School": "East Carolina",
     "NCAA Name": "East Carolina University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "East Tennessee State",
@@ -702,6 +856,8 @@ export const teams: ITeam[] = [
     "NCAA School": "East Tenn. St.",
     "NCAA Name": "East Tennessee State University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Eastern Illinois",
@@ -711,6 +867,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Eastern Ill.",
     "NCAA Name": "Eastern Illinois University",
     "background-color": "#003594",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Eastern Kentucky",
@@ -720,6 +878,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Eastern Ky.",
     "NCAA Name": "Eastern Kentucky University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Eastern Michigan",
@@ -729,6 +889,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Eastern Mich.",
     "NCAA Name": "Eastern Michigan University",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Eastern Washington",
@@ -738,6 +900,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Eastern Wash.",
     "NCAA Name": "Eastern Washington University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Elon",
@@ -747,6 +911,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Elon",
     "NCAA Name": "Elon University",
     "background-color": "#76232F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Evansville",
@@ -756,6 +922,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Evansville",
     "NCAA Name": "University of Evansville",
     "background-color": "#470A68",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Fairfield",
@@ -765,6 +933,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Fairfield",
     "NCAA Name": "Fairfield University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Fairleigh Dickinson",
@@ -774,6 +944,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Fairleigh Dickinson",
     "NCAA Name": "Fairleigh Dickinson University",
     "background-color": "#72293c",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida",
@@ -783,6 +955,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Florida",
     "NCAA Name": "University of Florida",
     "background-color": "#003087",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida A&M",
@@ -792,6 +966,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Florida A&M",
     "NCAA Name": "Florida A&M University",
     "background-color": "#FF8200",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida Atlantic",
@@ -801,6 +977,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Florida Atlantic",
     "NCAA Name": "Florida Atlantic University",
     "background-color": "#002855",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida Gulf Coast",
@@ -810,6 +988,8 @@ export const teams: ITeam[] = [
     "NCAA School": "FGCU",
     "NCAA Name": "Florida Gulf Coast University",
     "background-color": "#002D72",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida International",
@@ -819,6 +999,8 @@ export const teams: ITeam[] = [
     "NCAA School": "FIU",
     "NCAA Name": "Florida International University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Florida State",
@@ -828,6 +1010,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Florida St.",
     "NCAA Name": "Florida State University",
     "background-color": "#76253A",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Fordham",
@@ -837,6 +1021,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Fordham",
     "NCAA Name": "Fordham University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Fresno State",
@@ -846,6 +1032,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Fresno St.",
     "NCAA Name": "Fresno State",
     "background-color": "#D50032",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Furman",
@@ -855,6 +1043,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Furman",
     "NCAA Name": "Furman University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Gardner-Webb",
@@ -864,6 +1054,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Gardner-Webb",
     "NCAA Name": "Gardner-Webb University",
     "background-color": "#A82931",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "George Mason",
@@ -873,6 +1065,8 @@ export const teams: ITeam[] = [
     "NCAA School": "George Mason",
     "NCAA Name": "George Mason University",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "George Washington",
@@ -882,6 +1076,8 @@ export const teams: ITeam[] = [
     "NCAA School": "George Washington",
     "NCAA Name": "George Washington University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Georgetown",
@@ -891,6 +1087,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Georgetown",
     "NCAA Name": "Georgetown University",
     "background-color": "#141F35",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Georgia",
@@ -900,6 +1098,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Georgia",
     "NCAA Name": "University of Georgia",
     "background-color": "#DA291C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Georgia Southern",
@@ -909,6 +1109,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Georgia Southern",
     "NCAA Name": "Georgia Southern University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Georgia State",
@@ -918,6 +1120,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Georgia St.",
     "NCAA Name": "Georgia State University",
     "background-color": "#264391",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Georgia Tech",
@@ -927,6 +1131,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Georgia Tech",
     "NCAA Name": "Georgia Tech",
     "background-color": "#B3A369",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Gonzaga",
@@ -936,6 +1142,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Gonzaga",
     "NCAA Name": "Gonzaga University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Grambling",
@@ -945,6 +1153,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Grambling",
     "NCAA Name": "Grambling State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Grand Canyon",
@@ -954,6 +1164,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Grand Canyon",
     "NCAA Name": "Grand Canyon University",
     "background-color": "#5F259F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Green Bay",
@@ -963,6 +1175,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Green Bay",
     "NCAA Name": "University of Wisconsin, Green Bay",
     "background-color": "#0F5640",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Hampton",
@@ -972,6 +1186,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Hampton",
     "NCAA Name": "Hampton University",
     "background-color": "#0033A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Harvard",
@@ -981,6 +1197,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Harvard",
     "NCAA Name": "Harvard University",
     "background-color": "#912235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Hawaii",
@@ -990,6 +1208,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Hawaii",
     "NCAA Name": "University of Hawaii, Manoa",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "High Point",
@@ -999,6 +1219,8 @@ export const teams: ITeam[] = [
     "NCAA School": "High Point",
     "NCAA Name": "High Point University",
     "background-color": "#330072",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Hofstra",
@@ -1008,6 +1230,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Hofstra",
     "NCAA Name": "Hofstra University",
     "background-color": "#003594",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Holy Cross",
@@ -1017,6 +1241,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Holy Cross",
     "NCAA Name": "College of the Holy Cross",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Houston",
@@ -1026,6 +1252,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Houston",
     "NCAA Name": "University of Houston",
     "background-color": "#E51636",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Houston Christian",
@@ -1035,6 +1263,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Houston Christian",
     "NCAA Name": "Houston Christian University",
     "background-color": "#002F87",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Howard",
@@ -1044,6 +1274,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Howard",
     "NCAA Name": "Howard University",
     "background-color": "#00263E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Idaho",
@@ -1053,6 +1285,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Idaho",
     "NCAA Name": "University of Idaho",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Idaho State",
@@ -1062,6 +1296,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Idaho St.",
     "NCAA Name": "Idaho State University",
     "background-color": "#F47920",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Illinois",
@@ -1071,6 +1307,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Illinois",
     "NCAA Name": "University of Illinois",
     "background-color": "#F15A22",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Illinois State",
@@ -1080,6 +1318,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Illinois St.",
     "NCAA Name": "Illinois State University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Illinois-Chicago",
@@ -1089,6 +1329,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Ill.-Chicago",
     "NCAA Name": "University of Illinois-Chicago",
     "background-color": "#DB0032",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Incarnate Word",
@@ -1097,7 +1339,8 @@ export const teams: ITeam[] = [
     "NCAA key": "incarnate-word",
     "NCAA School": "UIW",
     "NCAA Name": "University of the Incarnate Word",
-    "background-color": undefined,
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Indiana",
@@ -1107,6 +1350,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Indiana",
     "NCAA Name": "Indiana University, Bloomington",
     "background-color": "#970310",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Indiana State",
@@ -1116,6 +1361,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Indiana St.",
     "NCAA Name": "Indiana State University",
     "background-color": "#1E437B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Iona",
@@ -1125,6 +1372,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Iona",
     "NCAA Name": "Iona College",
     "background-color": "#6F2C3F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Iowa",
@@ -1134,6 +1383,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Iowa",
     "NCAA Name": "University of Iowa",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Iowa State",
@@ -1143,6 +1394,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Iowa St.",
     "NCAA Name": "Iowa State University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "IUPUI",
@@ -1152,6 +1405,8 @@ export const teams: ITeam[] = [
     "NCAA School": "IUPUI",
     "NCAA Name": "IUPUI",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Jackson State",
@@ -1161,6 +1416,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Jackson St.",
     "NCAA Name": "Jackson State University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Jacksonville",
@@ -1170,6 +1427,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Jacksonville",
     "NCAA Name": "Jacksonville University",
     "background-color": "#004E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Jacksonville State",
@@ -1179,6 +1438,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Jacksonville St.",
     "NCAA Name": "Jacksonville State University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "James Madison",
@@ -1188,6 +1449,8 @@ export const teams: ITeam[] = [
     "NCAA School": "James Madison",
     "NCAA Name": "James Madison University",
     "background-color": "#330072",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kansas",
@@ -1197,6 +1460,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kansas",
     "NCAA Name": "University of Kansas",
     "background-color": "#1967B8",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kansas City",
@@ -1206,6 +1471,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kansas City",
     "NCAA Name": "University of Missouri-Kansas City",
     "background-color": "#004B87",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kansas State",
@@ -1215,6 +1482,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kansas St.",
     "NCAA Name": "Kansas State University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kennesaw State",
@@ -1224,6 +1493,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kennesaw St.",
     "NCAA Name": "Kennesaw State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kent State",
@@ -1233,6 +1504,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kent St.",
     "NCAA Name": "Kent State University",
     "background-color": "#003976",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Kentucky",
@@ -1242,6 +1515,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Kentucky",
     "NCAA Name": "University of Kentucky",
     "background-color": "#3258AF",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "La Salle",
@@ -1251,6 +1526,8 @@ export const teams: ITeam[] = [
     "NCAA School": "La Salle",
     "NCAA Name": "La Salle University",
     "background-color": "#003057",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Lafayette",
@@ -1260,6 +1537,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Lafayette",
     "NCAA Name": "Lafayette College",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Lamar",
@@ -1269,6 +1548,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Lamar",
     "NCAA Name": "Lamar University",
     "background-color": "#D50032",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Le Moyne",
@@ -1278,6 +1559,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Le Moyne",
     "NCAA Name": "Le Moyne College",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Lehigh",
@@ -1287,6 +1570,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Lehigh",
     "NCAA Name": "Lehigh University",
     "background-color": "#653819",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Liberty",
@@ -1296,6 +1581,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Liberty",
     "NCAA Name": "Liberty University",
     "background-color": "#971A1F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Lindenwood",
@@ -1305,6 +1592,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Lindenwood",
     "NCAA Name": "Lindenwood University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Lipscomb",
@@ -1314,6 +1603,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Lipscomb",
     "NCAA Name": "Lipscomb University",
     "background-color": "#2E1A47",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Little Rock",
@@ -1323,6 +1614,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Little-Rock",
     "NCAA Name": "Little Rock",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Long Beach State",
@@ -1332,6 +1625,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Long Beach St.",
     "NCAA Name": "Long Beach State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Long Island University",
@@ -1341,6 +1636,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Long Island",
     "NCAA Name": "Long Island University",
     "background-color": "#68A8D0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Longwood",
@@ -1350,6 +1647,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Longwood",
     "NCAA Name": "Longwood University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Louisiana",
@@ -1359,6 +1658,8 @@ export const teams: ITeam[] = [
     "NCAA School": "La.-Lafayette",
     "NCAA Name": "University of Louisiana at Lafayette",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Louisiana State",
@@ -1368,6 +1669,8 @@ export const teams: ITeam[] = [
     "NCAA School": "LSU",
     "NCAA Name": "Louisiana State University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Louisiana Tech",
@@ -1377,6 +1680,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Louisiana Tech",
     "NCAA Name": "Louisiana Tech University",
     "background-color": "#003087",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Louisiana-Monroe",
@@ -1386,6 +1691,8 @@ export const teams: ITeam[] = [
     "NCAA School": "La.-Monroe",
     "NCAA Name": "University of Louisiana at Monroe",
     "background-color": "#8A2432",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Louisville",
@@ -1395,6 +1702,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Louisville",
     "NCAA Name": "University of Louisville",
     "background-color": "#EE2722",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Loyola (IL)",
@@ -1404,6 +1713,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Loyola (IL)",
     "NCAA Name": "Loyola University Chicago",
     "background-color": "#861F41",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Loyola (MD)",
@@ -1413,6 +1724,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Loyola Maryland",
     "NCAA Name": "Loyola University Maryland",
     "background-color": "#115740",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Loyola Marymount",
@@ -1422,6 +1735,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Loyola Marymount",
     "NCAA Name": "Loyola Marymount University",
     "background-color": "#AB0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Maine",
@@ -1431,6 +1746,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Maine",
     "NCAA Name": "University of Maine",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Manhattan",
@@ -1440,6 +1757,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Manhattan",
     "NCAA Name": "Manhattan College",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Marist",
@@ -1449,6 +1768,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Marist",
     "NCAA Name": "Marist College",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Marquette",
@@ -1458,6 +1779,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Marquette",
     "NCAA Name": "Marquette University",
     "background-color": "#1D2953",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Marshall",
@@ -1467,6 +1790,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Marshall",
     "NCAA Name": "Marshall University",
     "background-color": "#00B140",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Maryland",
@@ -1476,6 +1801,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Maryland",
     "NCAA Name": "University of Maryland-College Park",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Maryland-Baltimore County",
@@ -1485,15 +1812,16 @@ export const teams: ITeam[] = [
     "NCAA School": "Maryland-Baltimore-County",
     "NCAA Name": "UMBC",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Maryland-Eastern Shore",
     "City, State": "Princess Anne, Maryland",
     "SR key": "maryland-eastern-shore",
     "NCAA key": "umes",
-    "NCAA School": undefined,
-    "NCAA Name": undefined,
-    "background-color": undefined,
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Massachusetts",
@@ -1503,6 +1831,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mass-Amherst",
     "NCAA Name": "University of Massachusetts",
     "background-color": "#732122",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Massachusetts-Lowell",
@@ -1512,6 +1842,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mass.-Lowell",
     "NCAA Name": "UMass Lowell",
     "background-color": "#003DA5",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "McNeese State",
@@ -1521,6 +1853,8 @@ export const teams: ITeam[] = [
     "NCAA School": "McNeese St.",
     "NCAA Name": "McNeese State University",
     "background-color": "#003087",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Memphis",
@@ -1530,6 +1864,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Memphis",
     "NCAA Name": "University of Memphis",
     "background-color": "#173B70",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Mercer",
@@ -1539,6 +1875,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mercer",
     "NCAA Name": "Mercer University",
     "background-color": "#E87722",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Merrimack",
@@ -1548,6 +1886,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Merrimack",
     "NCAA Name": "Merrimack College",
     "background-color": "#003057",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Miami (FL)",
@@ -1557,6 +1897,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Miami (Fla.)",
     "NCAA Name": "University of Miami",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Miami (OH)",
@@ -1566,6 +1908,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Miami (OH)",
     "NCAA Name": "Miami University (Ohio)",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Michigan",
@@ -1575,6 +1919,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Michigan",
     "NCAA Name": "University of Michigan",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Michigan State",
@@ -1584,6 +1930,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Michigan St.",
     "NCAA Name": "Michigan State University",
     "background-color": "#173F35",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Middle Tennessee",
@@ -1593,6 +1941,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Middle Tenn.",
     "NCAA Name": "Middle Tennessee State University",
     "background-color": "#006FAB",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Milwaukee",
@@ -1602,6 +1952,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Milwaukee",
     "NCAA Name": "University of Wisconsin, Milwaukee",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Minnesota",
@@ -1611,6 +1963,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Minnesota",
     "NCAA Name": "University of Minnesota",
     "background-color": "#861F41",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Mississippi",
@@ -1620,6 +1974,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mississippi",
     "NCAA Name": "University of Mississippi",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Mississippi State",
@@ -1629,6 +1985,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mississippi St.",
     "NCAA Name": "Mississippi State University",
     "background-color": "#5D1725",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Mississippi Valley State",
@@ -1638,6 +1996,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mississippi Val.",
     "NCAA Name": "Mississippi Valley State University",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Missouri",
@@ -1647,6 +2007,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Missouri",
     "NCAA Name": "University of Missouri",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Missouri State",
@@ -1656,6 +2018,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Missouri St.",
     "NCAA Name": "Missouri State University",
     "background-color": "#6F2C3F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Monmouth",
@@ -1665,6 +2029,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Monmouth",
     "NCAA Name": "Monmouth University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Montana",
@@ -1674,6 +2040,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Montana",
     "NCAA Name": "University of Montana",
     "background-color": "#6F2C3F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Montana State",
@@ -1683,6 +2051,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Montana St.",
     "NCAA Name": "Montana State University-Bozeman",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Morehead State",
@@ -1692,6 +2062,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Morehead St.",
     "NCAA Name": "Morehead State University",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Morgan State",
@@ -1701,6 +2073,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Morgan St.",
     "NCAA Name": "Morgan State University",
     "background-color": "#FC4C02",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Mount St. Mary's",
@@ -1710,6 +2084,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Mt. St. Mary's",
     "NCAA Name": "Mount St. Mary's University",
     "background-color": "#002F6C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Murray State",
@@ -1719,6 +2095,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Murray St.",
     "NCAA Name": "Murray State University",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Navy",
@@ -1728,6 +2106,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Navy",
     "NCAA Name": "U.S. Naval Academy",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "NC State",
@@ -1737,6 +2117,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Carolina St.",
     "NCAA Name": "North Carolina State University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Nebraska",
@@ -1746,6 +2128,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Nebraska",
     "NCAA Name": "University of Nebraska-Lincoln",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Nevada",
@@ -1755,6 +2139,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Nevada",
     "NCAA Name": "University of Nevada",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Nevada-Las Vegas",
@@ -1764,6 +2150,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UNLV",
     "NCAA Name": "UNLV",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "New Hampshire",
@@ -1773,6 +2161,8 @@ export const teams: ITeam[] = [
     "NCAA School": "New Hampshire",
     "NCAA Name": "University of New Hampshire",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: false,
   },
   {
     School: "New Mexico",
@@ -1782,6 +2172,8 @@ export const teams: ITeam[] = [
     "NCAA School": "New Mexico",
     "NCAA Name": "University of New Mexico",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "New Mexico State",
@@ -1791,6 +2183,8 @@ export const teams: ITeam[] = [
     "NCAA School": "New Mexico St.",
     "NCAA Name": "New Mexico State University",
     "background-color": "#891619",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "New Orleans",
@@ -1800,6 +2194,8 @@ export const teams: ITeam[] = [
     "NCAA School": "New Orleans",
     "NCAA Name": "University of New Orleans",
     "background-color": "#0057B8",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Niagara",
@@ -1809,6 +2205,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Niagara",
     "NCAA Name": "Niagara University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Nicholls State",
@@ -1818,6 +2216,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Nicholls St.",
     "NCAA Name": "Nicholls State University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "NJIT",
@@ -1827,6 +2227,8 @@ export const teams: ITeam[] = [
     "NCAA School": "New-Jersey-Tech",
     "NCAA Name": "New Jersey Institute of Technology",
     "background-color": "#D22630",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Norfolk State",
@@ -1836,6 +2238,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Norfolk St.",
     "NCAA Name": "Norfolk State University",
     "background-color": "#007A53",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Alabama",
@@ -1845,6 +2249,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Ala.",
     "NCAA Name": "University of North Alabama",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Carolina",
@@ -1854,6 +2260,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Carolina",
     "NCAA Name": "University of North Carolina",
     "background-color": "#7BAFD4",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Carolina A&T",
@@ -1863,6 +2271,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Carolina A&T",
     "NCAA Name": "North Carolina A&T State University",
     "background-color": "#002D72",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Carolina Central",
@@ -1872,6 +2282,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Carolina Central",
     "NCAA Name": "North Carolina Central University",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Dakota",
@@ -1881,6 +2293,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Dakota",
     "NCAA Name": "University of North Dakota",
     "background-color": "#009A44",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Dakota State",
@@ -1890,6 +2304,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Dakota St.",
     "NCAA Name": "North Dakota State University",
     "background-color": "#115740",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Florida",
@@ -1899,6 +2315,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Florida",
     "NCAA Name": "University of North Florida",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "North Texas",
@@ -1908,6 +2326,8 @@ export const teams: ITeam[] = [
     "NCAA School": "North Texas",
     "NCAA Name": "University of North Texas",
     "background-color": "#007A33",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northeastern",
@@ -1917,6 +2337,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northeastern",
     "NCAA Name": "Northeastern University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northern Arizona",
@@ -1926,6 +2348,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northern Ariz.",
     "NCAA Name": "Northern Arizona University",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northern Colorado",
@@ -1935,6 +2359,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northern Colo.",
     "NCAA Name": "University of Northern Colorado",
     "background-color": "#002855",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northern Illinois",
@@ -1944,6 +2370,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northern Ill.",
     "NCAA Name": "Northern Illinois University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northern Iowa",
@@ -1953,6 +2381,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northern Iowa",
     "NCAA Name": "University of Northern Iowa",
     "background-color": "#470A68",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northern Kentucky",
@@ -1962,6 +2392,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northern Ky.",
     "NCAA Name": "Northern Kentucky University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northwestern",
@@ -1971,6 +2403,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northwestern",
     "NCAA Name": "Northwestern University",
     "background-color": "#4E2A84",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Northwestern State",
@@ -1980,6 +2414,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Northwestern St.",
     "NCAA Name": "Northwestern State University",
     "background-color": "#54209e",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Notre Dame",
@@ -1989,6 +2425,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Notre Dame",
     "NCAA Name": "University of Notre Dame",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oakland",
@@ -1998,6 +2436,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oakland",
     "NCAA Name": "Oakland University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Ohio",
@@ -2007,6 +2447,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Ohio",
     "NCAA Name": "Ohio University",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Ohio State",
@@ -2016,6 +2458,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Ohio St.",
     "NCAA Name": "The Ohio State University",
     "background-color": "#CE0F3E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oklahoma",
@@ -2025,6 +2469,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oklahoma",
     "NCAA Name": "University of Oklahoma",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oklahoma State",
@@ -2034,6 +2480,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oklahoma St.",
     "NCAA Name": "Oklahoma State University",
     "background-color": "#DF4F2A",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Old Dominion",
@@ -2043,6 +2491,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Old Dominion",
     "NCAA Name": "Old Dominion University",
     "background-color": "#0B4071",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Omaha",
@@ -2052,6 +2502,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Omaha",
     "NCAA Name": "University of Nebraska-Omaha",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oral Roberts",
@@ -2061,6 +2513,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oral Roberts",
     "NCAA Name": "Oral Roberts University",
     "background-color": "#011E41",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oregon",
@@ -2070,6 +2524,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oregon",
     "NCAA Name": "University of Oregon",
     "background-color": "#173F35",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Oregon State",
@@ -2079,6 +2535,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Oregon State",
     "NCAA Name": "Oregon State University",
     "background-color": "#DC4405",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Pacific",
@@ -2088,6 +2546,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Pacific (OR)",
     "NCAA Name": "Pacific University",
     "background-color": "#b4183a",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Penn State",
@@ -2097,6 +2557,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Penn State",
     "NCAA Name": "Penn State University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Pennsylvania",
@@ -2106,6 +2568,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Penn",
     "NCAA Name": "University of Pennsylvania",
     "background-color": "#002D72",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Pepperdine",
@@ -2115,6 +2579,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Pepperdine",
     "NCAA Name": "Pepperdine University",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Pittsburgh",
@@ -2124,6 +2590,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Pittsburgh",
     "NCAA Name": "University of Pittsburgh",
     "background-color": "#003594",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Portland",
@@ -2133,6 +2601,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Portland",
     "NCAA Name": "University of Portland",
     "background-color": "#31006F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Portland State",
@@ -2142,6 +2612,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Portland St.",
     "NCAA Name": "Portland State University",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Prairie View",
@@ -2151,6 +2623,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Prairie View",
     "NCAA Name": "Prairie View A&M University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Presbyterian",
@@ -2160,6 +2634,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Presbyterian",
     "NCAA Name": "Presbyterian College",
     "background-color": "#005394",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Princeton",
@@ -2169,6 +2645,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Princeton",
     "NCAA Name": "Princeton University",
     "background-color": "#E87722",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Providence",
@@ -2178,6 +2656,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Providence",
     "NCAA Name": "Providence College",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Purdue",
@@ -2187,6 +2667,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Purdue",
     "NCAA Name": "Purdue University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Purdue Fort Wayne",
@@ -2196,6 +2678,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Purdue University Fort Wayne",
     "NCAA Name": "Purdue University Fort Wayne",
     "background-color": "#1f3d7c",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Queens (NC)",
@@ -2205,6 +2689,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Queens (NC)",
     "NCAA Name": "Queens University of Charlotte",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Quinnipiac",
@@ -2214,6 +2700,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Quinnipiac",
     "NCAA Name": "Quinnipiac University",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Radford",
@@ -2223,6 +2711,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Radford",
     "NCAA Name": "Radford University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Rhode Island",
@@ -2232,6 +2722,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Rhode Island",
     "NCAA Name": "University of Rhode Island",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Rice",
@@ -2241,6 +2733,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Rice",
     "NCAA Name": "Rice University",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Richmond",
@@ -2250,6 +2744,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Richmond",
     "NCAA Name": "University of Richmond",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Rider",
@@ -2259,6 +2755,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Rider",
     "NCAA Name": "Rider University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Robert Morris",
@@ -2268,6 +2766,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Robert Morris",
     "NCAA Name": "Robert Morris University",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Rutgers",
@@ -2277,6 +2777,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Rutgers",
     "NCAA Name": "Rutgers University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Sacramento State",
@@ -2286,6 +2788,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Sacramento St.",
     "NCAA Name": "Sacramento State University",
     "background-color": "#115740",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Sacred Heart",
@@ -2295,15 +2799,16 @@ export const teams: ITeam[] = [
     "NCAA School": "Sacred Heart",
     "NCAA Name": "Sacred Heart University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Saint Francis (PA)",
     "City, State": "Loretto, Pennsylvania",
     "SR key": "saint-francis-pa",
     "NCAA key": "saint-francis-pa",
-    "NCAA School": undefined,
-    "NCAA Name": undefined,
-    "background-color": undefined,
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Saint Joseph's",
@@ -2313,6 +2818,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Saint Joseph's",
     "NCAA Name": "Saint Joseph's University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Saint Louis",
@@ -2322,6 +2829,8 @@ export const teams: ITeam[] = [
     "NCAA School": "St. Louis",
     "NCAA Name": "Saint Louis University",
     "background-color": "#003DA5",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Saint Mary's (CA)",
@@ -2331,6 +2840,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Saint-Mary's (CA)",
     "NCAA Name": "St. Mary's College (CA)",
     "background-color": "#E51B24",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Saint Peter's",
@@ -2339,7 +2850,8 @@ export const teams: ITeam[] = [
     "NCAA key": "saint-peters",
     "NCAA School": "Saint Peter's",
     "NCAA Name": "Saint Peter's University",
-    "background-color": undefined,
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Sam Houston",
@@ -2349,6 +2861,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Sam Houston St.",
     "NCAA Name": "Sam Houston State University",
     "background-color": "#DF502A",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Samford",
@@ -2358,6 +2872,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Samford",
     "NCAA Name": "Samford University",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "San Diego",
@@ -2367,6 +2883,8 @@ export const teams: ITeam[] = [
     "NCAA School": "San Diego",
     "NCAA Name": "University of San Diego",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "San Diego State",
@@ -2376,6 +2894,8 @@ export const teams: ITeam[] = [
     "NCAA School": "San Diego St.",
     "NCAA Name": "San Diego State University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "San Francisco",
@@ -2385,6 +2905,8 @@ export const teams: ITeam[] = [
     "NCAA School": "San Francisco",
     "NCAA Name": "University of San Francisco",
     "background-color": "#205C40",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "San Jose State",
@@ -2394,6 +2916,8 @@ export const teams: ITeam[] = [
     "NCAA School": "San Jose St.",
     "NCAA Name": "San Jose State University",
     "background-color": "#233A82",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Santa Clara",
@@ -2403,6 +2927,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Santa Clara",
     "NCAA Name": "Santa Clara University",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Seattle",
@@ -2412,6 +2938,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Seattle",
     "NCAA Name": "Seattle University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Seton Hall",
@@ -2421,6 +2949,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Seton Hall",
     "NCAA Name": "Seton Hall University",
     "background-color": "#1A5DAD",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Siena",
@@ -2430,6 +2960,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Siena",
     "NCAA Name": "Siena College",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Alabama",
@@ -2439,6 +2971,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Ala.",
     "NCAA Name": "University of South Alabama",
     "background-color": "#BF0D3E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Carolina",
@@ -2448,6 +2982,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Carolina",
     "NCAA Name": "University of South Carolina",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Carolina State",
@@ -2457,6 +2993,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Carolina St.",
     "NCAA Name": "South Carolina State University",
     "background-color": "#862633",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Carolina Upstate",
@@ -2466,6 +3004,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South-Carolina-Upstate",
     "NCAA Name": "University of South Carolina Upstate",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Dakota",
@@ -2475,6 +3015,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Dakota",
     "NCAA Name": "University of South Dakota",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Dakota State",
@@ -2484,6 +3026,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Dakota St.",
     "NCAA Name": "South Dakota State University",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "South Florida",
@@ -2493,6 +3037,8 @@ export const teams: ITeam[] = [
     "NCAA School": "South Fla.",
     "NCAA Name": "University of South Florida",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southeast Missouri State",
@@ -2502,6 +3048,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southeast Mo. St.",
     "NCAA Name": "Southeast Missouri State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southeastern Louisiana",
@@ -2511,6 +3059,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southeastern La.",
     "NCAA Name": "Southeastern Louisiana University",
     "background-color": "#1D4C30",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern",
@@ -2520,6 +3070,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern U.",
     "NCAA Name": "Southern University",
     "background-color": "#69B3E7",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern California",
@@ -2529,6 +3081,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern California",
     "NCAA Name": "University of Southern California",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Illinois",
@@ -2538,6 +3092,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern Ill.",
     "NCAA Name": "Southern Illinois University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Illinois-Edwardsville",
@@ -2547,6 +3103,8 @@ export const teams: ITeam[] = [
     "NCAA School": "SIUE",
     "NCAA Name": "Southern Illinois Univ.-Edwardsville",
     "background-color": "#DB372F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Indiana",
@@ -2556,6 +3114,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern Ind.",
     "NCAA Name": "University of Southern Indiana",
     "background-color": "#002855",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Methodist",
@@ -2565,6 +3125,8 @@ export const teams: ITeam[] = [
     "NCAA School": "SMU",
     "NCAA Name": "Southern Methodist University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Mississippi",
@@ -2574,6 +3136,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern Miss.",
     "NCAA Name": "The University of Southern Mississippi",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Southern Utah",
@@ -2583,6 +3147,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Southern Utah",
     "NCAA Name": "Southern Utah University",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "St. Bonaventure",
@@ -2592,6 +3158,8 @@ export const teams: ITeam[] = [
     "NCAA School": "St. Bonaventure",
     "NCAA Name": "St. Bonaventure University",
     "background-color": "#412E26",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "St. John's (NY)",
@@ -2601,6 +3169,8 @@ export const teams: ITeam[] = [
     "NCAA School": "St. John's (NY)",
     "NCAA Name": "St. John's University (N.Y.)",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "St. Thomas",
@@ -2610,6 +3180,8 @@ export const teams: ITeam[] = [
     "NCAA School": "St. Thomas (MN)",
     "NCAA Name": "University of St. Thomas (Minn.)",
     "background-color": "#412784",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Stanford",
@@ -2619,6 +3191,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Stanford",
     "NCAA Name": "Stanford University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Stephen F. Austin",
@@ -2628,6 +3202,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Stephen F. Austin",
     "NCAA Name": "Stephen F. Austin State University",
     "background-color": "#532F7C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Stetson",
@@ -2637,6 +3213,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Stetson",
     "NCAA Name": "Stetson University",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Stonehill",
@@ -2646,6 +3224,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Stonehill",
     "NCAA Name": "Stonehill College",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Stony Brook",
@@ -2655,6 +3235,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Stony Brook",
     "NCAA Name": "Stony Brook University",
     "background-color": "#A6192E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Syracuse",
@@ -2664,6 +3246,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Syracuse",
     "NCAA Name": "Syracuse University",
     "background-color": "#DC4405",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tarleton State",
@@ -2673,6 +3257,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tarleton St.",
     "NCAA Name": "Tarleton State University",
     "background-color": "#582C83",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "TCU",
@@ -2682,6 +3268,8 @@ export const teams: ITeam[] = [
     "NCAA School": "TCU",
     "NCAA Name": "Texas Christian University",
     "background-color": "#592D82",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Temple",
@@ -2691,6 +3279,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Temple",
     "NCAA Name": "Temple University",
     "background-color": "#b30838",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tennessee",
@@ -2700,6 +3290,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tennessee",
     "NCAA Name": "University of Tennessee",
     "background-color": "#FF8200",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tennessee State",
@@ -2709,6 +3301,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tennessee St.",
     "NCAA Name": "Tennessee State University",
     "background-color": "#272E63",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tennessee Tech",
@@ -2718,6 +3312,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tennessee Tech",
     "NCAA Name": "Tennessee Technological University",
     "background-color": "#753BBD",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tennessee-Martin",
@@ -2727,6 +3323,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tenn-Martin",
     "NCAA Name": "University of Tennessee at Martin",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas",
@@ -2736,6 +3334,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas",
     "NCAA Name": "University of Texas",
     "background-color": "#CB6015",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas A&M",
@@ -2745,6 +3345,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas A&M",
     "NCAA Name": "Texas A&M University",
     "background-color": "#5D0025",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas A&M-Commerce",
@@ -2754,6 +3356,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tex. A&M-Commerce",
     "NCAA Name": "Texas A&M-Commerce",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas A&M-Corpus Christi",
@@ -2763,6 +3367,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas-Am-Corpus",
     "NCAA Name": "Texas A&M-Corpus Christi",
     "background-color": "#007AC1",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas Southern",
@@ -2772,6 +3378,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas Southern",
     "NCAA Name": "Texas Southern University",
     "background-color": "#6F263D",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas State",
@@ -2781,6 +3389,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas St.",
     "NCAA Name": "Texas State University",
     "background-color": "#572932",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas Tech",
@@ -2790,6 +3400,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas Tech",
     "NCAA Name": "Texas Tech University",
     "background-color": "#ED1F2A",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Texas-Rio Grande Valley",
@@ -2799,6 +3411,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas Rio Grande Valley",
     "NCAA Name": "University of Texas Rio Grande Valley",
     "background-color": "#FF4D00",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "The Citadel",
@@ -2808,6 +3422,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Citadel",
     "NCAA Name": "The Citadel",
     "background-color": "#77A5C3",
+    isMenTeam: true,
+    isWomenTeam: false,
   },
   {
     School: "Toledo",
@@ -2817,6 +3433,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Toledo",
     "NCAA Name": "University of Toledo",
     "background-color": "#00205B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Towson",
@@ -2826,6 +3444,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Towson",
     "NCAA Name": "Towson University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Troy",
@@ -2835,6 +3455,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Troy",
     "NCAA Name": "Troy University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tulane",
@@ -2844,6 +3466,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tulane",
     "NCAA Name": "Tulane University",
     "background-color": "#006747",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Tulsa",
@@ -2853,6 +3477,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Tulsa",
     "NCAA Name": "The University of Tulsa",
     "background-color": "#002D72",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UAB",
@@ -2862,6 +3488,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UAB",
     "NCAA Name": "UAB",
     "background-color": "#006341",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UC Davis",
@@ -2871,6 +3499,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UC Davis",
     "NCAA Name": "UC Davis",
     "background-color": "#002855",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UC Irvine",
@@ -2880,6 +3510,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UC Irvine",
     "NCAA Name": "UC Irvine",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UC Riverside",
@@ -2889,6 +3521,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UC Riverside",
     "NCAA Name": "UC Riverside",
     "background-color": "#1E437B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UC San Diego",
@@ -2898,6 +3532,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UC San Diego",
     "NCAA Name": "UC San Diego",
     "background-color": "#192847",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UC Santa Barbara",
@@ -2907,6 +3543,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UC Santa Barbara",
     "NCAA Name": "UC Santa Barbara",
     "background-color": "#0032A0",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UCLA",
@@ -2916,6 +3554,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UCLA",
     "NCAA Name": "UCLA",
     "background-color": "#0072CE",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UNC Asheville",
@@ -2925,6 +3565,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UNC Asheville",
     "NCAA Name": "UNC Asheville",
     "background-color": "#002F6C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UNC Greensboro",
@@ -2934,6 +3576,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UNC Greensboro",
     "NCAA Name": "UNC Greensboro",
     "background-color": "#13294B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UNC Wilmington",
@@ -2943,6 +3587,8 @@ export const teams: ITeam[] = [
     "NCAA School": "UNCW",
     "NCAA Name": "UNC Wilmington",
     "background-color": "#00685E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UT Arlington",
@@ -2952,6 +3598,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas at Arlington",
     "NCAA Name": "University of Texas at Arlington",
     "background-color": "#003DA5",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Utah",
@@ -2961,6 +3609,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Utah",
     "NCAA Name": "University of Utah",
     "background-color": "#D42331",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Utah State",
@@ -2970,6 +3620,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Utah St.",
     "NCAA Name": "Utah State University",
     "background-color": "#00263A",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Utah Tech",
@@ -2979,6 +3631,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Utah Tech",
     "NCAA Name": "Utah Tech University",
     "background-color": "#BA1C21",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Utah Valley",
@@ -2988,6 +3642,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Utah Valley",
     "NCAA Name": "Utah Valley University",
     "background-color": "#275D38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UTEP",
@@ -2997,6 +3653,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas at El Paso",
     "NCAA Name": "University of Texas at El Paso",
     "background-color": "#041E42",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "UTSA",
@@ -3006,6 +3664,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Texas at San Antonio",
     "NCAA Name": "University of Texas at San Antonio",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Valparaiso",
@@ -3015,6 +3675,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Valparaiso",
     "NCAA Name": "Valparaiso University",
     "background-color": "#693F23",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Vanderbilt",
@@ -3024,6 +3686,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Vanderbilt",
     "NCAA Name": "Vanderbilt University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Vermont",
@@ -3033,6 +3697,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Vermont",
     "NCAA Name": "University of Vermont",
     "background-color": "#154734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Villanova",
@@ -3042,6 +3708,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Villanova",
     "NCAA Name": "Villanova University",
     "background-color": "#173A79",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Virginia",
@@ -3051,6 +3719,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Virginia",
     "NCAA Name": "University of Virginia",
     "background-color": "#232D4B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Virginia Commonwealth",
@@ -3060,6 +3730,8 @@ export const teams: ITeam[] = [
     "NCAA School": "VCU",
     "NCAA Name": "Virginia Commonwealth University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Virginia Military Institute",
@@ -3069,6 +3741,8 @@ export const teams: ITeam[] = [
     "NCAA School": "VMI",
     "NCAA Name": "Virginia Military Institute",
     "background-color": "#E4002B",
+    isMenTeam: true,
+    isWomenTeam: false,
   },
   {
     School: "Virginia Tech",
@@ -3078,6 +3752,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Virginia Tech",
     "NCAA Name": "Virginia Tech",
     "background-color": "#861F41",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wagner",
@@ -3087,6 +3763,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wagner",
     "NCAA Name": "Wagner College",
     "background-color": "#034638",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wake Forest",
@@ -3096,6 +3774,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wake Forest",
     "NCAA Name": "Wake Forest University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Washington",
@@ -3105,6 +3785,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Washington",
     "NCAA Name": "University of Washington",
     "background-color": "#33006f",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Washington State",
@@ -3114,6 +3796,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Washington St.",
     "NCAA Name": "Washington State University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Weber State",
@@ -3123,6 +3807,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Weber St.",
     "NCAA Name": "Weber State University",
     "background-color": "#470A68",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "West Virginia",
@@ -3132,6 +3818,8 @@ export const teams: ITeam[] = [
     "NCAA School": "West Virginia",
     "NCAA Name": "West Virginia University",
     "background-color": "#0F2D52",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Western Carolina",
@@ -3141,6 +3829,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Western Caro.",
     "NCAA Name": "Western Carolina University",
     "background-color": "#5F259F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Western Illinois",
@@ -3150,6 +3840,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Western Ill.",
     "NCAA Name": "Western Illinois University",
     "background-color": "#59327E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Western Kentucky",
@@ -3159,6 +3851,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Western Ky.",
     "NCAA Name": "Western Kentucky University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Western Michigan",
@@ -3168,6 +3862,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Western Mich.",
     "NCAA Name": "Western Michigan University",
     "background-color": "#511B00",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wichita State",
@@ -3177,6 +3873,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wichita St.",
     "NCAA Name": "Wichita State University",
     "background-color": "#010101",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "William & Mary",
@@ -3186,6 +3884,8 @@ export const teams: ITeam[] = [
     "NCAA School": "William & Mary",
     "NCAA Name": "College of William and Mary",
     "background-color": "#284734",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Winthrop",
@@ -3195,6 +3895,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Winthrop",
     "NCAA Name": "Winthrop University",
     "background-color": "#9D2235",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wisconsin",
@@ -3204,6 +3906,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wisconsin",
     "NCAA Name": "University of Wisconsin, Madison",
     "background-color": "#BA0C2F",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wofford",
@@ -3213,6 +3917,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wofford",
     "NCAA Name": "Wofford College",
     "background-color": "#8A6E4B",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wright State",
@@ -3222,6 +3928,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wright St.",
     "NCAA Name": "Wright State University",
     "background-color": "#046A38",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Wyoming",
@@ -3231,6 +3939,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Wyoming",
     "NCAA Name": "University of Wyoming",
     "background-color": "#4E3629",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Xavier",
@@ -3240,6 +3950,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Xavier",
     "NCAA Name": "Xavier University",
     "background-color": "#0C2340",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Yale",
@@ -3249,6 +3961,8 @@ export const teams: ITeam[] = [
     "NCAA School": "Yale",
     "NCAA Name": "Yale University",
     "background-color": "#111C2C",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
   {
     School: "Youngstown State",
@@ -3258,5 +3972,7 @@ export const teams: ITeam[] = [
     "NCAA School": "Youngstown St.",
     "NCAA Name": "Youngstown State University",
     "background-color": "#C8102E",
+    isMenTeam: true,
+    isWomenTeam: true,
   },
 ];
