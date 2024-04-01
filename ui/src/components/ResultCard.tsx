@@ -1,6 +1,5 @@
 import { Stack, StackItem, Text, getTheme } from "@fluentui/react";
-import { teams as mensTeams } from "../assets/mens_teams";
-import { teams as womensTeams } from "../assets/womens_teams";
+import { teams as TEAMS } from "../assets/teams";
 import no_logo from "../assets/no-logo.svg";
 import { MatchupOutput } from "../services/types";
 
@@ -19,7 +18,9 @@ export const ResultCard: React.FC<IResultCard> = ({
 }) => {
   const theme = getTheme();
 
-  const teams = isWomens ? womensTeams : mensTeams;
+  const teams = TEAMS.filter((team) =>
+    isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+  );
   const team1Metadata = teams.find((team) => team["SR key"] === team1);
   const team2Metadata = teams.find((team) => team["SR key"] === team2);
 

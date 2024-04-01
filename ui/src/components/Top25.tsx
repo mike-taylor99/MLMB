@@ -9,7 +9,7 @@ import {
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
 import { useGetTop25Query } from "../services/mlmb";
-import { teams } from "../assets/mens_teams";
+import { teams as TEAMS } from "../assets/teams";
 import { ITeam } from "../common/models";
 import no_logo from "../assets/no-logo.svg";
 
@@ -63,8 +63,8 @@ const focusZoneProps = {
 
 export const Top25: React.FC = () => {
   const { data, error, isLoading } = useGetTop25Query();
-  const filteredTeams = teams.filter((team) =>
-    Object.keys(data || {}).includes(team["SR key"])
+  const filteredTeams = TEAMS.filter((team) => !!team.isMenTeam).filter(
+    (team) => Object.keys(data || {}).includes(team["SR key"])
   );
   const items = filteredTeams
     .map((team) => ({

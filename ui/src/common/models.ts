@@ -6,6 +6,8 @@ export interface ITeam {
   ["NCAA School"]?: string;
   ["NCAA Name"]?: string;
   ["background-color"]?: string;
+  isMenTeam?: boolean;
+  isWomenTeam?: boolean;
 }
 
 export interface IMatchupFormInput {
@@ -13,4 +15,5 @@ export interface IMatchupFormInput {
   isNeutral: boolean;
   team1: string;
   team2: string;
+  isWomens?: boolean;
 }
