@@ -61,8 +61,14 @@ const focusZoneProps = {
   "data-is-scrollable": "true",
 } as React.HTMLAttributes<HTMLElement>;
 
-export const Top25: React.FC = () => {
-  const { data, error, isLoading } = useGetTop25Query();
+export interface ITop25Props {
+  isWomens?: boolean;
+}
+
+export const Top25: React.FC<ITop25Props> = ({ isWomens = false }) => {
+  const { data, error, isLoading } = useGetTop25Query(
+    isWomens ? "women" : "men"
+  );
   const filteredTeams = TEAMS.filter((team) => !!team.isMenTeam).filter(
     (team) => Object.keys(data || {}).includes(team["SR key"])
   );

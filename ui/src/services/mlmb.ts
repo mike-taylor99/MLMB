@@ -10,8 +10,8 @@ export const mlmbApi = createApi({
     mode: "cors",
   }),
   endpoints: (builder) => ({
-    getTop25: builder.query<{ [name: string]: number }, void>({
-      query: () => `top25`,
+    getTop25: builder.query<{ [name: string]: number }, "men" | "women">({
+      query: (arg) => `top-25/${arg}`,
     }),
     predict: builder.mutation<MatchupOutput[], MatchupInput[]>({
       query: (data) => ({
