@@ -9,9 +9,12 @@ import {
 } from "@fluentui/react";
 import { useNavigate } from "react-router-dom";
 import { Top25 } from "./Top25";
+import { useState } from "react";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [isWomens, setIsWomens] = useState(false);
+
   return (
     <Stack
       horizontalAlign="center"
@@ -99,7 +102,7 @@ export const Home: React.FC = () => {
                 },
               }}
             >
-              <Top25 />
+              <Top25 isWomens={isWomens} />
             </Stack>
           </div>
           <Stack horizontal>
@@ -112,11 +115,12 @@ export const Home: React.FC = () => {
             </StackItem>
             <StackItem>
               <Dropdown
-                defaultSelectedKey={"men"}
+                selectedKey={isWomens ? "women" : "men"}
                 options={[
                   { key: "men", text: "Men's top 25" },
-                  { key: "women", text: "Women's top 25", disabled: true },
+                  { key: "women", text: "Women's top 25" },
                 ]}
+                onChange={(_ev, opt) => setIsWomens(opt?.key === "women")}
               />
             </StackItem>
           </Stack>
