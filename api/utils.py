@@ -63,7 +63,7 @@ def generate_aml_matchups(matchups, blob_storage_manager):
     for matchup in matchups:
         model = matchup['model']
         isNeutral, isWomens = matchup['isNeutral'], matchup.get('isWomens', False)
-        matchup_stats = blob_storage_manager.get_matchup_stats(matchup['team1'], matchup['team2'], get_span_number(model))
+        matchup_stats = blob_storage_manager.get_matchup_stats(matchup['team1'], matchup['team2'], get_span_number(model), matchup.get('isWomens', False))
         aml_matchups.append({
             'model': model, 
             'team1': matchup_stats['team1']["stats"], 
@@ -82,7 +82,7 @@ def generate_predictions(matchups, blob_storage_manager):
     for i in range(len(matchups)):
         matchup = matchups[i]
         model = matchup['model']
-        matchup_stats =blob_storage_manager.get_matchup_stats(matchup['team1'], matchup['team2'], get_span_number(model))
+        matchup_stats = blob_storage_manager.get_matchup_stats(matchup['team1'], matchup['team2'], get_span_number(model), matchup.get('isWomens', False))
         matchup['team1LastPlayed'], matchup['team2LastPlayed'] = matchup_stats['team1']["lastPlayed"], matchup_stats['team2']["lastPlayed"]
         matchup['predict'], matchup['predictProba'] = aml_predictions[i]['predict'], aml_predictions[i]['predictProba']
         return_body.append(matchup)
@@ -92,8 +92,10 @@ def generate_predictions(matchups, blob_storage_manager):
 class AzureBlobStorageManager:
     def __init__(self, connection_string: str):
         self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-        self.team_stats = self.download_team_stats()
-        self.top25 = self.download_top25()
+        self.mens_team_stats = self.download_team_stats()
+        self.womens_team_stats = self.download_team_stats(isWomens=True)
+        self.mens_top25 = self.download_top25(isWomens=False)
+        self.womens_top25 = self.download_top25(isWomens=True)
 
     def upload_dict_to_blob(self, container_name: str, blob_name: str, data_dict: dict):
         """
@@ -128,24 +130,28 @@ class AzureBlobStorageManager:
         json_data = blob_data.decode()
         return json.loads(json_data)
     
-    def download_team_stats(self):
-        return self.download_dict_from_blob('mlmb-api', 'team-stats')
+    def download_team_stats(self, isWomens = False):
+        type = 'womens-' if isWomens else ''
+        return self.download_dict_from_blob('mlmb-api', f'{type}team-stats')
     
-    def get_matchup_stats(self, team1: str, team2: str, span: int) -> dict:
-        stats = self.team_stats
+    def get_matchup_stats(self, team1: str, team2: str, span: int, isWomens = False) -> dict:
+        stats = self.womens_team_stats if isWomens else self.mens_team_stats
         team1_stats, team2_stats = stats[f'{span}'][team1], stats[f'{span}'][team2]
         return {'team1': team1_stats, 'team2': team2_stats}
     
-    def download_top25(self):
-        return self.download_dict_from_blob('mlmb-api', 'top25')
+    def download_top25(self, isWomens = False):
+        type = 'womens-' if isWomens else ''
+        return self.download_dict_from_blob('mlmb-api', f'{type}top25')
     
-    def get_top25(self):
-        return self.top25
+    def get_top25(self, isWomens = False):
+        return self.womens_top25 if isWomens else self.mens_top25
     
     def reset_blob(self, key: str) -> bool:
         if key != os.getenv('RESET_KEY'):
             return False
         
-        self.team_stats = self.download_team_stats()
-        self.top25 = self.download_top25()
+        self.mens_team_stats = self.download_team_stats()
+        self.womens_team_stats = self.download_team_stats(isWomens=True)
+        self.mens_top25 = self.download_top25(isWomens=False)
+        self.womens_top25 = self.download_top25(isWomens=True)
         return True

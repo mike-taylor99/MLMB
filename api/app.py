@@ -21,6 +21,14 @@ def predict():
 def get_top25():
    return blob_storage_manager.get_top25()
 
+@app.route('/top-25/men')
+def get_mens_top_25():
+   return blob_storage_manager.get_top25(isWomens = False)
+
+@app.route('/top-25/women')
+def get_womens_top_25():
+   return blob_storage_manager.get_top25(isWomens = True)
+
 @app.route('/reset_blob', methods=['POST'])
 def reset_blob():
    reset_key = request.get_json()['key']
