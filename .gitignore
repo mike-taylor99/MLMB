@@ -2,4 +2,4 @@ data/seasons/
 *.ipynb_checkpoints/
 .vscode/
 data/
-*my_data.json
+*.json
