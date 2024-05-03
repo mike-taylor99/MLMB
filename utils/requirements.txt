@@ -99,7 +99,7 @@ terminado @ file:///C:/ci_311/terminado_1678228513830/work
 threadpoolctl==3.2.0
 tinycss2 @ file:///C:/ci_311/tinycss2_1676425376744/work
 tornado @ file:///C:/b/abs_0cbrstidzg/croot/tornado_1696937003724/work
-tqdm==4.66.1
+tqdm==4.66.3
 traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1704212992681/work
 typing_extensions @ file:///C:/b/abs_72cdotwc_6/croot/typing_extensions_1705599364138/work
 tzdata==2023.4
