@@ -87,7 +87,7 @@ requests @ file:///C:/b/abs_316c2inijk/croot/requests_1690400295842/work
 rfc3339-validator @ file:///C:/b/abs_ddfmseb_vm/croot/rfc3339-validator_1683077054906/work
 rfc3986-validator @ file:///C:/b/abs_6e9azihr8o/croot/rfc3986-validator_1683059049737/work
 rpds-py @ file:///C:/b/abs_76j4g4la23/croot/rpds-py_1698947348047/work
-scikit-learn==1.4.0
+scikit-learn==1.5.0
 scipy==1.12.0
 Send2Trash @ file:///C:/b/abs_08dh49ew26/croot/send2trash_1699371173324/work
 sip @ file:///C:/b/abs_edevan3fce/croot/sip_1698675983372/work
