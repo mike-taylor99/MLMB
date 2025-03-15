@@ -18,11 +18,6 @@ export const Home: React.FC = () => {
 
   return (
     <Stack>
-      <MessageBar isMultiline>
-        Congratulations to the UConn Huskies! 🎉🏀 They’ve secured their sixth
-        NCAA Men’s Basketball National Championship in 2024, achieving a
-        remarkable back-to-back victory. 🏆🏆 Way to go, Huskies! 🐾🔥
-      </MessageBar>
       <Stack
         horizontalAlign="center"
         tokens={{ childrenGap: 10 }}
