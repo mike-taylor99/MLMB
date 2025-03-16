@@ -397,6 +397,23 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
               onClick: _onAddMatchup as any,
             },
             {
+              key: "duplicate",
+              text: "Duplicate",
+              iconProps: { iconName: "Copy" },
+              disabled: _selection.getSelectedCount() < 1,
+              onClick: () => {
+                const indices = _selection.getSelectedIndices();
+                const newValues = [...values];
+                indices.forEach((index) => {
+                  if (index >= 0 && index < values.length) {
+                    const duplicatedItem = { ...values[index] };
+                    newValues.push(duplicatedItem);
+                  }
+                });
+                setValues(newValues);
+              },
+            },
+            {
               key: "delete",
               text: "Delete",
               iconProps: { iconName: "Delete" },
