@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import io
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import azure.functions as func
 import numpy as np
 import joblib
@@ -89,6 +90,30 @@ def load_model(model_name: str, is_womens: bool = False):
     except Exception as e:
         logging.error(f"Failed to load model {model_name}: {e}")
         raise
+
+def load_models_parallel(model_names: list, is_womens: bool = False):
+    """Load multiple models in parallel."""
+    cache_key = 'womens' if is_womens else 'mens'
+    
+    # Filter to only models not already cached
+    models_to_load = [name for name in model_names if name not in _models_cache[cache_key]]
+    
+    if not models_to_load:
+        return  # All models already cached
+    
+    def load_single(model_name):
+        try:
+            return model_name, load_model(model_name, is_womens)
+        except Exception as e:
+            logging.warning(f"Failed to load model {model_name}: {e}")
+            return model_name, None
+    
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = {executor.submit(load_single, name): name for name in models_to_load}
+        for future in as_completed(futures):
+            model_name, model = future.result()
+            if model is not None:
+                logging.info(f"Loaded model: {model_name}")
 
 def get_span_number(model_name: str) -> int:
     """Extract span number from model name (e.g., '3span_ensemble' -> 3)."""
@@ -180,16 +205,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             cache_key = 'womens' if is_womens else 'mens'
             
             if 'ensemble' in model_name:
-                # Load all models for this span if not cached
+                # Load all models for this span in parallel
                 model_types = ['logistic_regression_model', 'knn_model', 'random_forest', 
                               'gradient_boosting', 'multilayer_perceptron', 'support_vector_machine_model']
+                model_names_to_load = [f'{span}span_{model_type}' for model_type in model_types]
                 
-                for model_type in model_types:
-                    full_name = f'{span}span_{model_type}'
-                    try:
-                        load_model(full_name, is_womens)
-                    except:
-                        continue  # Skip models that don't exist
+                # Parallel loading - much faster on cold start
+                load_models_parallel(model_names_to_load, is_womens)
                 
                 result = ensemble_predict(input_data, _models_cache[cache_key], span)
             else:
