@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'mlmb-func-hbhybddvdmgneyep'
+  AZURE_FUNCTIONAPP_NAME: 'mlmb-func'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'api'
   PYTHON_VERSION: '3.11'
 
