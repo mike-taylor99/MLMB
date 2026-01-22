@@ -2,16 +2,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { MatchupInput, MatchupOutput } from "./types";
 
 // Define a service using a base URL and expected endpoints
+// Uses /api for Azure Static Web Apps Functions (hosted together with frontend)
 export const mlmbApi = createApi({
   reducerPath: "mlmb",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://mlmb-api.azurewebsites.net/",
-    credentials: "same-origin",
-    mode: "cors",
+    baseUrl: "/api",
   }),
   endpoints: (builder) => ({
     getTop25: builder.query<{ [name: string]: number }, "men" | "women">({
-      query: (arg) => `top-25/${arg}`,
+      query: (arg) => `top25/${arg}`,
     }),
     predict: builder.mutation<MatchupOutput[], MatchupInput[]>({
       query: (data) => ({

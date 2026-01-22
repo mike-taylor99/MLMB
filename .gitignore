@@ -1,4 +1,6 @@
 data/seasons/
 *.ipynb_checkpoints/
 .vscode/
-*.json
+
+# Generated data files
+utils/notebook/*.json
