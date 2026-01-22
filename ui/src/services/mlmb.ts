@@ -1,12 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { MatchupInput, MatchupOutput } from "./types";
 
+// API base URL - uses environment variable in production, localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7071";
+
 // Define a service using a base URL and expected endpoints
-// Uses /api for Azure Static Web Apps Functions (hosted together with frontend)
 export const mlmbApi = createApi({
   reducerPath: "mlmb",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: API_BASE_URL,
   }),
   endpoints: (builder) => ({
     getTop25: builder.query<{ [name: string]: number }, "men" | "women">({
