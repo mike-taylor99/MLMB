@@ -39,12 +39,18 @@ export const Prediction: React.FC = () => {
           matchup.gender === "women" ? !!team.isWomenTeam : !!team.isMenTeam,
         );
 
-        const team1 = teams.find((team) => team["SR key"] === matchup.team1);
-        const team2 = teams.find((team) => team["SR key"] === matchup.team2);
+        const homeTeam = teams.find(
+          (team) => team["SR key"] === matchup.home_team,
+        );
+        const awayTeam = teams.find(
+          (team) => team["SR key"] === matchup.away_team,
+        );
 
         if (!!!matchup.model) matchupErrors.model = "A model is required.";
-        if (!!!team1) matchupErrors.team1 = "A valid team name is required.";
-        if (!!!team2) matchupErrors.team2 = "A valid team name is required.";
+        if (!!!homeTeam)
+          matchupErrors.home_team = "A valid team name is required.";
+        if (!!!awayTeam)
+          matchupErrors.away_team = "A valid team name is required.";
 
         return matchupErrors;
       });

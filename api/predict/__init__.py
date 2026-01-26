@@ -31,25 +31,27 @@ def ensemble_predict(input_data: np.ndarray, models: dict) -> tuple[float, float
         models: Dict of models to use (should already be filtered and sorted).
     
     Returns:
-        Tuple of (team1_probability, team2_probability).
+        Tuple of (home_win_probability, away_win_probability).
     """
     if not models:
         raise ValueError("No models provided for ensemble prediction")
     
+    # Accumulate probabilities: [0] = away wins, [1] = home wins
     predict_proba = [0.0, 0.0]
     model_names = []
     
     # Models dict should already be in sorted order from get_models_parallel
     for name, model in models.items():
         proba = model.predict_proba(input_data)
-        predict_proba[0] += proba[0][0]
-        predict_proba[1] += proba[0][1]
+        predict_proba[0] += proba[0][0]  # P(away wins)
+        predict_proba[1] += proba[0][1]  # P(home wins)
         model_names.append(name)
     
     num_models = len(models)
     logging.info(f"Ensemble prediction used {num_models} models: {model_names}")
     
-    return predict_proba[0] / num_models, predict_proba[1] / num_models
+    # Return (home_prob, away_prob)
+    return predict_proba[1] / num_models, predict_proba[0] / num_models
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     """
@@ -59,8 +61,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     Request body:
     {
-        "team1": "duke",
-        "team2": "connecticut",
+        "home_team": "duke",
+        "away_team": "connecticut",
         "span": 3,              # Optional, default: 3
         "neutral": false,       # Optional, default: false
         "gender": "men",        # Optional, default: "men"
@@ -69,16 +71,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     Response:
     {
-        "team1": "duke",
-        "team1_probability": 0.5218,
-        "team1_last_played": "2026-01-17",
-        "team2": "connecticut",
-        "team2_probability": 0.4782,
-        "team2_last_played": "2026-01-17",
-        "winner": "team1",
-        "confidence": 0.5218,
-        "span": 3,
+        "home_team": "duke",
+        "away_team": "connecticut",
+        "home_win_probability": 0.5218,
+        "home_last_played": "2026-01-17",
+        "away_last_played": "2026-01-17",
+        "predicted_winner": "duke",
         "neutral": false,
+        "span": 3,
         "gender": "men",
         "model": "ensemble"
     }
@@ -90,17 +90,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         data = req.get_json()
         
         # Extract and validate request fields
-        team1_name = data.get('team1')
-        team2_name = data.get('team2')
+        home_team = data.get('home_team')
+        away_team = data.get('away_team')
         span = data.get('span', 3)
         neutral = data.get('neutral', False)
         gender = data.get('gender', 'men')
         model_type = data.get('model', 'ensemble')
         
         # Validate required fields
-        if not team1_name or not team2_name:
+        if not home_team or not away_team:
             return func.HttpResponse(
-                json.dumps({"error": {"code": "missing_teams", "message": "team1 and team2 are required"}}),
+                json.dumps({"error": {"code": "missing_teams", "message": "home_team and away_team are required"}}),
                 mimetype="application/json",
                 status_code=400
             )
@@ -132,14 +132,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         is_womens = gender == 'women'
         
         # Look up team stats from Blob Storage
-        matchup_stats = blob_service.get_matchup_stats(team1_name, team2_name, span, is_womens)
-        team1_stats = matchup_stats['team1']['stats']
-        team2_stats = matchup_stats['team2']['stats']
-        team1_last_played = matchup_stats['team1']['lastPlayed']
-        team2_last_played = matchup_stats['team2']['lastPlayed']
+        # Note: In training data, first position = home team stats, second position = away team stats
+        matchup_stats = blob_service.get_matchup_stats(home_team, away_team, span, is_womens)
+        home_stats = matchup_stats['team1']['stats']  # team1 in blob = first requested team = home
+        away_stats = matchup_stats['team2']['stats']  # team2 in blob = second requested team = away
+        home_last_played = matchup_stats['team1']['lastPlayed']
+        away_last_played = matchup_stats['team2']['lastPlayed']
         
-        # Prepare input: [team2_stats + team1_stats + neutral]
-        input_data = np.array([team2_stats + team1_stats + [int(neutral)]])
+        # Prepare input: [home_stats + away_stats + neutral]
+        # Model trained with home team first, away team second
+        input_data = np.array([home_stats + away_stats + [int(neutral)]])
         
         if model_type == 'ensemble':
             # Load all models for this span in parallel and get them in sorted order
@@ -148,34 +150,29 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # Returns models dict in sorted order for deterministic results
             ensemble_models = blob_service.get_models_parallel(model_names_to_load, is_womens)
             
-            team1_prob, team2_prob = ensemble_predict(input_data, ensemble_models)
+            # ensemble_predict returns (home_prob, away_prob)
+            home_prob, away_prob = ensemble_predict(input_data, ensemble_models)
         else:
             # Single model prediction
             blob_model_name = f'{span}span_{MODEL_NAME_MAP[model_type]}'
             model = blob_service.get_model(blob_model_name, is_womens)
             proba = model.predict_proba(input_data)
-            team1_prob, team2_prob = proba[0][0], proba[0][1]
+            # proba[0][0] = P(away wins), proba[0][1] = P(home wins)
+            home_prob, away_prob = proba[0][1], proba[0][0]
         
-        # Determine winner and confidence
-        if team1_prob >= team2_prob:
-            winner = 'team1'
-            confidence = team1_prob
-        else:
-            winner = 'team2'
-            confidence = team2_prob
+        # Determine predicted winner (actual team name)
+        predicted_winner = home_team if home_prob >= away_prob else away_team
         
         # Build response
         response = {
-            'team1': team1_name,
-            'team1_probability': round(team1_prob, 4),
-            'team1_last_played': team1_last_played,
-            'team2': team2_name,
-            'team2_probability': round(team2_prob, 4),
-            'team2_last_played': team2_last_played,
-            'winner': winner,
-            'confidence': round(confidence, 4),
-            'span': span,
+            'home_team': home_team,
+            'away_team': away_team,
+            'home_win_probability': round(home_prob, 4),
+            'home_last_played': home_last_played,
+            'away_last_played': away_last_played,
+            'predicted_winner': predicted_winner,
             'neutral': neutral,
+            'span': span,
             'gender': gender,
             'model': model_type
         }

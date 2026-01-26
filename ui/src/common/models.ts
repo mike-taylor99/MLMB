@@ -12,8 +12,8 @@ export interface ITeam {
 
 // New form input matching the API contract
 export interface IMatchupFormInput {
-  team1: string;
-  team2: string;
+  home_team: string;
+  away_team: string;
   span: 3 | 5 | 7;
   neutral: boolean;
   gender: "men" | "women";

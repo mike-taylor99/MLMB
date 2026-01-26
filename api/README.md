@@ -8,6 +8,8 @@ This folder contains the serverless API functions for MLMB, designed to run as A
 | -------------------- | ------ | ------------------------------- |
 | `/predictions`       | POST   | Get game predictions            |
 | `/rankings/{gender}` | GET    | Get top 25 rankings (men/women) |
+| `/teams`             | GET    | List teams (paginated)          |
+| `/teams/{key}`       | GET    | Get single team by key          |
 
 ## Local Development
 
@@ -64,8 +66,8 @@ POST /predictions
 Content-Type: application/json
 
 {
-  "team1": "duke",
-  "team2": "connecticut",
+  "home_team": "duke",
+  "away_team": "connecticut",
   "span": 3,              # Optional: 3, 5, or 7 (default: 3)
   "neutral": false,       # Optional: true/false (default: false)
   "gender": "men",        # Optional: "men" or "women" (default: "men")
@@ -87,16 +89,14 @@ Content-Type: application/json
 
 ```json
 {
-  "team1": "duke",
-  "team1_probability": 0.5218,
-  "team1_last_played": "2026-01-17",
-  "team2": "connecticut",
-  "team2_probability": 0.4782,
-  "team2_last_played": "2026-01-17",
-  "winner": "team1",
-  "confidence": 0.5218,
-  "span": 3,
+  "home_team": "duke",
+  "away_team": "connecticut",
+  "home_win_probability": 0.5218,
+  "home_last_played": "2026-01-17",
+  "away_last_played": "2026-01-17",
+  "predicted_winner": "duke",
   "neutral": false,
+  "span": 3,
   "gender": "men",
   "model": "ensemble"
 }
@@ -123,6 +123,65 @@ GET /rankings/women
 }
 ```
 
+### Teams Endpoint
+
+List teams with pagination (OpenAI-style cursor pagination):
+
+```bash
+GET /teams                    # First 100 teams
+GET /teams?limit=50           # First 50 teams
+GET /teams?after=duke         # Next page after "duke"
+GET /teams?gender=men         # Filter to men's programs
+GET /teams?gender=women       # Filter to women's programs
+GET /teams/connecticut        # Single team lookup
+```
+
+**Query Parameters:**
+
+| Parameter | Type   | Default | Description                    |
+| --------- | ------ | ------- | ------------------------------ |
+| `limit`   | int    | 100     | Items per page (max: 500)      |
+| `after`   | string | —       | Cursor: team key for next page |
+| `gender`  | string | —       | Filter: `men` or `women`       |
+
+**List Response:**
+
+```json
+{
+  "data": [
+    {
+      "key": "duke",
+      "school": "Duke",
+      "name": "Duke University",
+      "location": "Durham, North Carolina",
+      "ncaa_key": "duke",
+      "color": "#002D72",
+      "has_mens_program": true,
+      "has_womens_program": true
+    }
+  ],
+  "first_id": "abilene-christian",
+  "last_id": "concordia-seminary",
+  "has_more": true,
+  "updated_at": "2026-01-25T12:00:00Z"
+}
+```
+
+**Single Team Response:**
+
+```json
+{
+  "key": "connecticut",
+  "school": "Connecticut",
+  "name": "University of Connecticut",
+  "location": "Storrs, Connecticut",
+  "ncaa_key": "uconn",
+  "color": "#0C2340",
+  "has_mens_program": true,
+  "has_womens_program": true
+}
+```
+
 ### Error Responses
 
 All errors follow a structured format:
@@ -140,10 +199,11 @@ All errors follow a structured format:
 
 | Code               | HTTP Status | Description                              |
 | ------------------ | ----------- | ---------------------------------------- |
-| `missing_teams`    | 400         | team1 and team2 are required             |
+| `missing_teams`    | 400         | home_team and away_team are required     |
 | `invalid_span`     | 400         | span must be 3, 5, or 7                  |
 | `invalid_gender`   | 400         | gender must be 'men' or 'women'          |
 | `invalid_model`    | 400         | model must be one of the valid options   |
+| `team_not_found`   | 404         | Team key not found in /teams/{key}       |
 | `validation_error` | 400         | Team not found or other validation error |
 | `internal_error`   | 500         | Internal server error                    |
 

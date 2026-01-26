@@ -149,7 +149,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
             column: { currentWidth },
           } = props;
           const team = teams.find(
-            (team) => team["SR key"] === (item as IMatchupFormInput).team1,
+            (team) => team["SR key"] === (item as IMatchupFormInput).away_team,
           );
           return (
             <Stack
@@ -182,8 +182,8 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
         },
       },
       {
-        key: "team1",
-        name: "Team 1 (Away)",
+        key: "away_team",
+        name: "Away Team",
         minWidth: 300,
         isResizable: false,
       },
@@ -200,7 +200,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
             column: { currentWidth },
           } = props;
           const team = teams.find(
-            (team) => team["SR key"] === (item as IMatchupFormInput).team2,
+            (team) => team["SR key"] === (item as IMatchupFormInput).home_team,
           );
           return (
             <Stack
@@ -233,8 +233,8 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
         },
       },
       {
-        key: "team2",
-        name: "Team 2 (Home)",
+        key: "home_team",
+        name: "Home Team",
         minWidth: 300,
         isResizable: false,
       },
@@ -275,7 +275,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
           />
         </Stack>
       );
-    if (["team1", "team2"].includes(column?.key || ""))
+    if (["away_team", "home_team"].includes(column?.key || ""))
       return (
         <ComboBox
           fieldName={`[${index}].${column?.key}`}
