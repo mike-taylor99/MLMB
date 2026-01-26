@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { MatchupInput, MatchupOutput } from "./types";
+import {
+  PredictionRequest,
+  PredictionResponse,
+  RankingsResponse,
+} from "./types";
 
 // API base URL - uses environment variable in production, localhost for development
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7071";
@@ -11,12 +15,12 @@ export const mlmbApi = createApi({
     baseUrl: API_BASE_URL,
   }),
   endpoints: (builder) => ({
-    getTop25: builder.query<{ [name: string]: number }, "men" | "women">({
-      query: (arg) => `top25/${arg}`,
+    getRankings: builder.query<RankingsResponse, "men" | "women">({
+      query: (gender) => `rankings/${gender}`,
     }),
-    predict: builder.mutation<MatchupOutput[], MatchupInput[]>({
+    predict: builder.mutation<PredictionResponse, PredictionRequest>({
       query: (data) => ({
-        url: "/predict",
+        url: "/predictions",
         method: "POST",
         body: data,
       }),
@@ -26,4 +30,4 @@ export const mlmbApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetTop25Query, usePredictMutation } = mlmbApi;
+export const { useGetRankingsQuery, usePredictMutation } = mlmbApi;

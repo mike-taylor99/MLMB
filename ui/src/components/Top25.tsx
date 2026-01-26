@@ -8,7 +8,7 @@ import {
   DetailsList,
 } from "@fluentui/react";
 import { useConst } from "@fluentui/react-hooks";
-import { useGetTop25Query } from "../services/mlmb";
+import { useGetRankingsQuery } from "../services/mlmb";
 import { teams as TEAMS } from "../assets/teams";
 import { ITeam } from "../common/models";
 import no_logo from "../assets/no-logo.svg";
@@ -66,18 +66,23 @@ export interface ITop25Props {
 }
 
 export const Top25: React.FC<ITop25Props> = ({ isWomens = false }) => {
-  const { data, error, isLoading } = useGetTop25Query(
-    isWomens ? "women" : "men"
+  const { data, error, isLoading } = useGetRankingsQuery(
+    isWomens ? "women" : "men",
   );
-  const filteredTeams = TEAMS.filter((team) => !!team.isMenTeam).filter(
-    (team) => Object.keys(data || {}).includes(team["SR key"])
-  );
-  const items = filteredTeams
-    .map((team) => ({
-      ...team,
-      score: data?.[team["SR key"]],
-    }))
-    .sort((a, b) => (b?.score || 0) - (a?.score || 0));
+
+  // Map rankings data to team metadata for display
+  const items = (data?.rankings || []).map((ranking) => {
+    const teamMetadata = TEAMS.find(
+      (team) =>
+        team["SR key"] === ranking.team &&
+        (isWomens ? team.isWomenTeam : team.isMenTeam),
+    );
+    return {
+      ...teamMetadata,
+      rank: ranking.rank,
+      score: ranking.rating,
+    };
+  });
 
   const columns: IColumn[] = useConst(() => {
     return [

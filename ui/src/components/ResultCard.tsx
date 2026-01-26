@@ -1,25 +1,27 @@
 import { Stack, StackItem, Text, getTheme } from "@fluentui/react";
 import { teams as TEAMS } from "../assets/teams";
 import no_logo from "../assets/no-logo.svg";
-import { MatchupOutput } from "../services/types";
+import { PredictionResponse } from "../services/types";
 
-export interface IResultCard extends MatchupOutput {}
+export interface IResultCard extends PredictionResponse {}
 
 export const ResultCard: React.FC<IResultCard> = ({
   model,
-  isNeutral,
+  neutral,
   team1,
   team2,
-  team1LastPlayed,
-  team2LastPlayed,
-  predict,
-  predictProba,
-  isWomens,
+  team1_last_played,
+  team2_last_played,
+  team1_probability,
+  team2_probability,
+  winner,
+  gender,
 }) => {
   const theme = getTheme();
+  const isWomens = gender === "women";
 
   const teams = TEAMS.filter((team) =>
-    isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+    isWomens ? !!team.isWomenTeam : !!team.isMenTeam,
   );
   const team1Metadata = teams.find((team) => team["SR key"] === team1);
   const team2Metadata = teams.find((team) => team["SR key"] === team2);
@@ -101,10 +103,10 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="large">
             {team1Metadata?.["NCAA Name"] ?? team1Metadata?.School}
           </Text>
-          <Text variant="medium">{`(${(predictProba[0] * 100).toFixed(2)}%)${
-            isNeutral ? "" : " Away"
+          <Text variant="medium">{`(${(team1_probability * 100).toFixed(2)}%)${
+            neutral ? "" : " Away"
           }`}</Text>
-          <Text variant="xSmall">{team1LastPlayed}</Text>
+          <Text variant="xSmall">{team1_last_played}</Text>
         </Stack>
         <Stack
           grow
@@ -116,7 +118,7 @@ export const ResultCard: React.FC<IResultCard> = ({
             variant="xxLargePlus"
             styles={{ root: { letterSpacing: "10px" } }}
           >
-            {`${predict[0] == 1 ? "L" : "W"} - ${predict[0] == 1 ? "W" : "L"}`}
+            {`${winner === "team2" ? "L" : "W"} - ${winner === "team2" ? "W" : "L"}`}
           </Text>
         </Stack>
         <Stack
@@ -127,10 +129,10 @@ export const ResultCard: React.FC<IResultCard> = ({
           <Text variant="large">
             {team2Metadata?.["NCAA Name"] ?? team2Metadata?.School}
           </Text>
-          <Text variant="medium">{`${isNeutral ? "" : "Home "}(${(
-            predictProba[1] * 100
+          <Text variant="medium">{`${neutral ? "" : "Home "}(${(
+            team2_probability * 100
           ).toFixed(2)}%)`}</Text>
-          <Text variant="xSmall">{team2LastPlayed}</Text>
+          <Text variant="xSmall">{team2_last_played}</Text>
         </Stack>
       </Stack>
     </Stack>

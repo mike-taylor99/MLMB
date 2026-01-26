@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["get"],
-      "route": "top25/{gender}"
+      "route": "rankings/{gender}"
     },
     {
       "type": "http",
