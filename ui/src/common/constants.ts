@@ -1,8 +1,8 @@
 import { IMatchupFormInput } from "./models";
 
 export const EMPTY_FORM_MATCHUP: IMatchupFormInput = {
-  team1: "",
-  team2: "",
+  home_team: "",
+  away_team: "",
   span: 3,
   neutral: true,
   gender: "men",

@@ -65,6 +65,7 @@ class BlobStorageService:
             'mens': None,
             'womens': None
         }
+        self._teams_cache: Optional[tuple] = None  # (teams_list, last_modified)
         
         # Container names
         self.MODELS_CONTAINER = 'mlmb-models'
@@ -187,6 +188,40 @@ class BlobStorageService:
             return data, last_modified
         except Exception as e:
             logging.error(f"Failed to load top 25 ({blob_name}): {e}")
+            raise
+    
+    # ==================== Teams ====================
+    
+    def get_teams(self) -> tuple[list, str]:
+        """
+        Load teams data from Blob Storage with caching.
+        
+        Returns:
+            Tuple of (teams list, last_modified ISO string)
+        """
+        if self._teams_cache is not None:
+            return self._teams_cache
+        
+        blob_name = 'teams'
+        logging.info(f"Loading teams: {blob_name}")
+        
+        try:
+            blob_client = self.client.get_blob_client(
+                container=self.API_CONTAINER,
+                blob=blob_name
+            )
+            # Get blob properties for last_modified
+            properties = blob_client.get_blob_properties()
+            last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+            
+            blob_data = blob_client.download_blob().readall()
+            data = json.loads(blob_data.decode())
+            
+            # Cache both data and metadata
+            self._teams_cache = (data, last_modified)
+            return data, last_modified
+        except Exception as e:
+            logging.error(f"Failed to load teams ({blob_name}): {e}")
             raise
     
     # ==================== Models ====================

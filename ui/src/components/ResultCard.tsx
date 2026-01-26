@@ -8,13 +8,12 @@ export interface IResultCard extends PredictionResponse {}
 export const ResultCard: React.FC<IResultCard> = ({
   model,
   neutral,
-  team1,
-  team2,
-  team1_last_played,
-  team2_last_played,
-  team1_probability,
-  team2_probability,
-  winner,
+  home_team,
+  away_team,
+  home_last_played,
+  away_last_played,
+  home_win_probability,
+  predicted_winner,
   gender,
 }) => {
   const theme = getTheme();
@@ -23,8 +22,8 @@ export const ResultCard: React.FC<IResultCard> = ({
   const teams = TEAMS.filter((team) =>
     isWomens ? !!team.isWomenTeam : !!team.isMenTeam,
   );
-  const team1Metadata = teams.find((team) => team["SR key"] === team1);
-  const team2Metadata = teams.find((team) => team["SR key"] === team2);
+  const homeMetadata = teams.find((team) => team["SR key"] === home_team);
+  const awayMetadata = teams.find((team) => team["SR key"] === away_team);
 
   return (
     <Stack
@@ -49,7 +48,7 @@ export const ResultCard: React.FC<IResultCard> = ({
           styles={{
             root: {
               padding: 10,
-              backgroundColor: team1Metadata?.["background-color"],
+              backgroundColor: awayMetadata?.["background-color"],
             },
           }}
         >
@@ -57,15 +56,15 @@ export const ResultCard: React.FC<IResultCard> = ({
             style={{
               height: 60,
               backgroundColor:
-                !team1Metadata?.["NCAA key"] ||
-                !team1Metadata?.["background-color"]
+                !awayMetadata?.["NCAA key"] ||
+                !awayMetadata?.["background-color"]
                   ? theme.palette.neutralTertiary
                   : undefined,
             }}
             src={
-              !!team1Metadata?.["NCAA key"] &&
-              !!team1Metadata?.["background-color"]
-                ? `https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/${team1Metadata?.["NCAA key"]}.svg`
+              !!awayMetadata?.["NCAA key"] &&
+              !!awayMetadata?.["background-color"]
+                ? `https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/${awayMetadata?.["NCAA key"]}.svg`
                 : no_logo
             }
           />
@@ -76,7 +75,7 @@ export const ResultCard: React.FC<IResultCard> = ({
           styles={{
             root: {
               padding: 10,
-              backgroundColor: team2Metadata?.["background-color"],
+              backgroundColor: homeMetadata?.["background-color"],
             },
           }}
         >
@@ -84,15 +83,15 @@ export const ResultCard: React.FC<IResultCard> = ({
             style={{
               height: 60,
               backgroundColor:
-                !team2Metadata?.["NCAA key"] ||
-                !team2Metadata?.["background-color"]
+                !homeMetadata?.["NCAA key"] ||
+                !homeMetadata?.["background-color"]
                   ? theme.palette.neutralTertiary
                   : undefined,
             }}
             src={
-              !!team2Metadata?.["NCAA key"] &&
-              !!team2Metadata?.["background-color"]
-                ? `https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/${team2Metadata?.["NCAA key"]}.svg`
+              !!homeMetadata?.["NCAA key"] &&
+              !!homeMetadata?.["background-color"]
+                ? `https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/${homeMetadata?.["NCAA key"]}.svg`
                 : no_logo
             }
           />
@@ -101,12 +100,12 @@ export const ResultCard: React.FC<IResultCard> = ({
       <Stack horizontal>
         <Stack grow styles={{ root: { flexBasis: "100%" } }}>
           <Text variant="large">
-            {team1Metadata?.["NCAA Name"] ?? team1Metadata?.School}
+            {awayMetadata?.["NCAA Name"] ?? awayMetadata?.School}
           </Text>
-          <Text variant="medium">{`(${(team1_probability * 100).toFixed(2)}%)${
+          <Text variant="medium">{`(${((1 - home_win_probability) * 100).toFixed(2)}%)${
             neutral ? "" : " Away"
           }`}</Text>
-          <Text variant="xSmall">{team1_last_played}</Text>
+          <Text variant="xSmall">{away_last_played}</Text>
         </Stack>
         <Stack
           grow
@@ -118,7 +117,7 @@ export const ResultCard: React.FC<IResultCard> = ({
             variant="xxLargePlus"
             styles={{ root: { letterSpacing: "10px" } }}
           >
-            {`${winner === "team2" ? "L" : "W"} - ${winner === "team2" ? "W" : "L"}`}
+            {`${predicted_winner === home_team ? "L" : "W"} - ${predicted_winner === home_team ? "W" : "L"}`}
           </Text>
         </Stack>
         <Stack
@@ -127,12 +126,12 @@ export const ResultCard: React.FC<IResultCard> = ({
           styles={{ root: { flexBasis: "100%" } }}
         >
           <Text variant="large">
-            {team2Metadata?.["NCAA Name"] ?? team2Metadata?.School}
+            {homeMetadata?.["NCAA Name"] ?? homeMetadata?.School}
           </Text>
           <Text variant="medium">{`${neutral ? "" : "Home "}(${(
-            team2_probability * 100
+            home_win_probability * 100
           ).toFixed(2)}%)`}</Text>
-          <Text variant="xSmall">{team2_last_played}</Text>
+          <Text variant="xSmall">{home_last_played}</Text>
         </Stack>
       </Stack>
     </Stack>
