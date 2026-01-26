@@ -143,7 +143,7 @@ class BlobStorageService:
     
     # ==================== Top 25 ====================
     
-    def get_top25(self, is_womens: bool = False) -> Dict:
+    def get_top25(self, is_womens: bool = False) -> tuple[Dict, str]:
         """
         Load top 25 rankings from Blob Storage with caching.
         
@@ -151,7 +151,7 @@ class BlobStorageService:
             is_womens: Whether to load women's rankings
             
         Returns:
-            Dict of top 25 data
+            Tuple of (data dict, last_modified ISO string)
         """
         cache_key = self._get_cache_key(is_womens)
         
@@ -166,10 +166,16 @@ class BlobStorageService:
                 container=self.API_CONTAINER,
                 blob=blob_name
             )
+            # Get blob properties for last_modified
+            properties = blob_client.get_blob_properties()
+            last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+            
             blob_data = blob_client.download_blob().readall()
             data = json.loads(blob_data.decode())
-            self._top25_cache[cache_key] = data
-            return data
+            
+            # Cache both data and metadata
+            self._top25_cache[cache_key] = (data, last_modified)
+            return data, last_modified
         except Exception as e:
             logging.error(f"Failed to load top 25 ({blob_name}): {e}")
             raise
