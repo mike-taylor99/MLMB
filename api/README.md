@@ -1,13 +1,13 @@
-# MLMB API (Azure Static Web Apps Functions)
+# MLMB API (Azure Functions)
 
-This folder contains the serverless API functions for MLMB, designed to run as Azure Static Web Apps managed functions.
+This folder contains the serverless API functions for MLMB, designed to run as Azure Functions (Flex Consumption).
 
 ## Endpoints
 
-| Endpoint              | Method | Description                     |
-| --------------------- | ------ | ------------------------------- |
-| `/api/predict`        | POST   | Get game predictions            |
-| `/api/top25/{gender}` | GET    | Get top 25 rankings (men/women) |
+| Endpoint             | Method | Description                     |
+| -------------------- | ------ | ------------------------------- |
+| `/predictions`       | POST   | Get game predictions            |
+| `/rankings/{gender}` | GET    | Get top 25 rankings (men/women) |
 
 ## Local Development
 
@@ -48,53 +48,104 @@ Create `local.settings.json` with:
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "python",
     "AZURE_STORAGE_CONNECTION_STRING": "<your-connection-string>"
+  },
+  "Host": {
+    "CORS": "*"
   }
 }
 ```
 
 ## API Usage
 
-### Predict Endpoint
+### Predictions Endpoint
 
 ```bash
-POST /api/predict
+POST /predictions
 Content-Type: application/json
 
-[
-  {
-    "model": "3span_ensemble",   # or "5span_ensemble", "7span_ensemble"
-    "isNeutral": true,
-    "isWomens": false,
-    "team1": "connecticut",       # team slug
-    "team2": "duke"               # team slug
-  }
-]
+{
+  "team1": "duke",
+  "team2": "connecticut",
+  "span": 3,              # Optional: 3, 5, or 7 (default: 3)
+  "neutral": false,       # Optional: true/false (default: false)
+  "gender": "men",        # Optional: "men" or "women" (default: "men")
+  "model": "ensemble"     # Optional: see model options below (default: "ensemble")
+}
+```
+
+**Model Options:**
+
+- `ensemble` - Ensemble of all models (recommended)
+- `logistic_regression`
+- `knn` - K-Nearest Neighbors
+- `random_forest`
+- `gradient_boosting`
+- `mlp` - Neural Network (Multilayer Perceptron)
+- `svm` - Support Vector Machine
+
+**Response:**
+
+```json
+{
+  "team1": "duke",
+  "team1_probability": 0.5218,
+  "team1_last_played": "2026-01-17",
+  "team2": "connecticut",
+  "team2_probability": 0.4782,
+  "team2_last_played": "2026-01-17",
+  "winner": "team1",
+  "confidence": 0.5218,
+  "span": 3,
+  "neutral": false,
+  "gender": "men",
+  "model": "ensemble"
+}
+```
+
+### Rankings Endpoint
+
+```bash
+GET /rankings/men
+GET /rankings/women
 ```
 
 **Response:**
 
 ```json
-[
-  {
-    "model": "3span_ensemble",
-    "isNeutral": true,
-    "isWomens": false,
-    "team1": "connecticut",
-    "team2": "duke",
-    "predict": [1],
-    "predictProba": [0.35, 0.65],
-    "team1LastPlayed": "2026-01-15",
-    "team2LastPlayed": "2026-01-14"
+{
+  "gender": "men",
+  "updated_at": "2026-01-25T12:00:00Z",
+  "rankings": [
+    { "rank": 1, "team": "kansas", "rating": 94.13 },
+    { "rank": 2, "team": "auburn", "rating": 93.87 },
+    ...
+  ]
+}
+```
+
+### Error Responses
+
+All errors follow a structured format:
+
+```json
+{
+  "error": {
+    "code": "error_code",
+    "message": "Human readable message"
   }
-]
+}
 ```
 
-### Top 25 Endpoint
+**Error Codes:**
 
-```bash
-GET /api/top25/mens
-GET /api/top25/womens
-```
+| Code               | HTTP Status | Description                              |
+| ------------------ | ----------- | ---------------------------------------- |
+| `missing_teams`    | 400         | team1 and team2 are required             |
+| `invalid_span`     | 400         | span must be 3, 5, or 7                  |
+| `invalid_gender`   | 400         | gender must be 'men' or 'women'          |
+| `invalid_model`    | 400         | model must be one of the valid options   |
+| `validation_error` | 400         | Team not found or other validation error |
+| `internal_error`   | 500         | Internal server error                    |
 
 ## Deployment
 

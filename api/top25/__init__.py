@@ -1,6 +1,5 @@
 import json
 import logging
-from datetime import datetime, timezone
 import azure.functions as func
 
 from shared.blob_service import get_blob_service
@@ -37,7 +36,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             )
         
         is_womens = gender == 'women'
-        data = blob_service.get_top25(is_womens)
+        data, last_modified = blob_service.get_top25(is_womens)
         
         # Transform { team: rating } dict to ranked array
         sorted_teams = sorted(data.items(), key=lambda x: x[1], reverse=True)
@@ -48,7 +47,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
         response = {
             "gender": gender,
-            "updated_at": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+            "updated_at": last_modified,
             "rankings": rankings
         }
         
