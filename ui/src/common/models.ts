@@ -10,10 +10,19 @@ export interface ITeam {
   isWomenTeam?: boolean;
 }
 
+// New form input matching the API contract
 export interface IMatchupFormInput {
-  model: string;
-  isNeutral: boolean;
   team1: string;
   team2: string;
-  isWomens?: boolean;
+  span: 3 | 5 | 7;
+  neutral: boolean;
+  gender: "men" | "women";
+  model:
+    | "ensemble"
+    | "logistic_regression"
+    | "knn"
+    | "random_forest"
+    | "gradient_boosting"
+    | "mlp"
+    | "svm";
 }

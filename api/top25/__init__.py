@@ -1,69 +1,67 @@
 import json
 import logging
-import os
+from datetime import datetime, timezone
 import azure.functions as func
-from azure.storage.blob import BlobServiceClient
 
-# Cache for top 25 data
-_top25_cache = {
-    'mens': None,
-    'womens': None
-}
+from shared.blob_service import get_blob_service
 
-def get_blob_service_client():
-    """Get Azure Blob Storage client."""
-    conn_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-    return BlobServiceClient.from_connection_string(conn_str)
-
-def load_top25(is_womens: bool = False) -> dict:
-    """Load top 25 data from Blob Storage with caching."""
-    cache_key = 'womens' if is_womens else 'mens'
-    
-    if _top25_cache[cache_key] is not None:
-        return _top25_cache[cache_key]
-    
-    try:
-        blob_service = get_blob_service_client()
-        container_name = 'mlmb-api'
-        blob_name = 'womens-top25' if is_womens else 'top25'
-        
-        blob_client = blob_service.get_blob_client(container=container_name, blob=blob_name)
-        blob_data = blob_client.download_blob().readall()
-        
-        data = json.loads(blob_data.decode())
-        _top25_cache[cache_key] = data
-        
-        return data
-    except Exception as e:
-        logging.error(f"Failed to load top 25 data: {e}")
-        raise
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Top 25 function triggered')
+    """
+    Handle rankings requests.
+    
+    GET /rankings/{gender}
+    
+    Response:
+    {
+        "gender": "men",
+        "updated_at": "2026-01-25T12:00:00Z",
+        "rankings": [
+            { "rank": 1, "team": "kansas", "rating": 94.13 },
+            { "rank": 2, "team": "auburn", "rating": 93.87 },
+            ...
+        ]
+    }
+    """
+    logging.info('Rankings function triggered')
     
     try:
+        blob_service = get_blob_service()
         gender = req.route_params.get('gender', 'men').lower()
         
         if gender not in ['men', 'women']:
             return func.HttpResponse(
-                json.dumps({"error": "Invalid gender. Use 'men' or 'women'."}),
+                json.dumps({"error": {"code": "invalid_gender", "message": "gender must be 'men' or 'women'"}}),
                 mimetype="application/json",
                 status_code=400
             )
         
         is_womens = gender == 'women'
-        data = load_top25(is_womens)
+        data = blob_service.get_top25(is_womens)
+        
+        # Transform { team: rating } dict to ranked array
+        sorted_teams = sorted(data.items(), key=lambda x: x[1], reverse=True)
+        rankings = [
+            {"rank": i + 1, "team": team, "rating": round(rating, 2)}
+            for i, (team, rating) in enumerate(sorted_teams)
+        ]
+        
+        response = {
+            "gender": gender,
+            "updated_at": datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+            "rankings": rankings
+        }
         
         return func.HttpResponse(
-            json.dumps(data),
+            json.dumps(response),
             mimetype="application/json",
             status_code=200
         )
     
     except Exception as e:
-        logging.error(f"Top 25 error: {e}")
+        logging.error(f"Rankings error: {e}")
         return func.HttpResponse(
-            json.dumps({"error": "Failed to retrieve top 25 data"}),
+            json.dumps({"error": {"code": "internal_error", "message": "Failed to retrieve rankings"}}),
             mimetype="application/json",
             status_code=500
         )

@@ -13,7 +13,6 @@ import {
   Selection,
   CheckboxVisibility,
   Spinner,
-  DropdownMenuItemType,
 } from "@fluentui/react";
 import { useConst, useForceUpdate } from "@fluentui/react-hooks";
 import { teams as TEAMS } from "../assets/teams";
@@ -24,7 +23,11 @@ import { Dropdown } from "./formik/Dropdown";
 import { ComboBox } from "./formik/ComboBox";
 import { useFormikContext } from "formik";
 import { Toggle } from "./formik/Toggle";
-import { EMPTY_FORM_MATCHUP } from "../common/constants";
+import {
+  EMPTY_FORM_MATCHUP,
+  MODEL_OPTIONS,
+  SPAN_OPTIONS,
+} from "../common/constants";
 
 const classNames = mergeStyleSets({
   header: {
@@ -78,11 +81,11 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
     new Selection({
       selectionMode: SelectionMode.multiple,
       onSelectionChanged: forceUpdate,
-    })
+    }),
   );
 
   const teams = TEAMS.filter((team) =>
-    isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+    isWomens ? !!team.isWomenTeam : !!team.isMenTeam,
   );
 
   const comboBoxOptions: IComboBoxOption[] = teams.map((team) => ({
@@ -116,15 +119,21 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
   const columns: IColumn[] = useConst(() => {
     return [
       {
-        key: "model",
-        name: "Model",
-        minWidth: 300,
+        key: "span",
+        name: "Span",
+        minWidth: 150,
         isResizable: false,
       },
       {
-        key: "isNeutral",
-        name: "Is neutral site?",
-        minWidth: 150,
+        key: "model",
+        name: "Model",
+        minWidth: 200,
+        isResizable: false,
+      },
+      {
+        key: "neutral",
+        name: "Site",
+        minWidth: 120,
         isResizable: false,
       },
       {
@@ -140,7 +149,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
             column: { currentWidth },
           } = props;
           const team = teams.find(
-            (team) => team["SR key"] === (item as IMatchupFormInput).team1
+            (team) => team["SR key"] === (item as IMatchupFormInput).team1,
           );
           return (
             <Stack
@@ -191,7 +200,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
             column: { currentWidth },
           } = props;
           const team = teams.find(
-            (team) => team["SR key"] === (item as IMatchupFormInput).team2
+            (team) => team["SR key"] === (item as IMatchupFormInput).team2,
           );
           return (
             <Stack
@@ -235,126 +244,28 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
   const onRenderColumn = (
     item?: IMatchupFormInput,
     index?: number,
-    column?: IColumn
+    column?: IColumn,
   ): React.ReactNode => {
     const value =
       item && column && column.fieldName
         ? item[column.fieldName as keyof IMatchupFormInput] || ""
         : "";
 
+    if (column?.key === "span")
+      return (
+        <Dropdown
+          fieldName={`[${index}].${column?.key}`}
+          options={SPAN_OPTIONS}
+        />
+      );
     if (column?.key === "model")
       return (
         <Dropdown
           fieldName={`[${index}].${column?.key}`}
-          options={[
-            {
-              key: "Header1",
-              text: "Recommended",
-              itemType: DropdownMenuItemType.Header,
-            },
-            {
-              key: "3span_ensemble",
-              text: "Ensemble (3 game lookback)",
-            },
-            {
-              key: "5span_ensemble",
-              text: "Ensemble (5 game lookback)",
-            },
-            {
-              key: "7span_ensemble",
-              text: "Ensemble (7 game lookback)",
-            },
-            {
-              key: "Header2",
-              text: "3 game lookback",
-              itemType: DropdownMenuItemType.Header,
-            },
-            {
-              key: "3span_gradient_boosting",
-              text: "Gradient Boosting (3 game lookback)",
-            },
-            {
-              key: "3span_knn_model",
-              text: "K Nearest Neighbors (3 game lookback)",
-            },
-            {
-              key: "3span_logistic_regression_model",
-              text: "Logistic Regression (3 game lookback)",
-            },
-            {
-              key: "3span_multilayer_perceptron",
-              text: "Multilayer Perceptron (3 game lookback)",
-            },
-            {
-              key: "3span_random_forest",
-              text: "Random Forest (3 game lookback)",
-            },
-            {
-              key: "3span_support_vector_machine_model",
-              text: "Support Vector Machine (3 game lookback)",
-            },
-            {
-              key: "Header3",
-              text: "5 game lookback",
-              itemType: DropdownMenuItemType.Header,
-            },
-            {
-              key: "5span_gradient_boosting",
-              text: "Gradient Boosting (5 game lookback)",
-            },
-            {
-              key: "5span_knn_model",
-              text: "K Nearest Neighbors (5 game lookback)",
-            },
-            {
-              key: "5span_logistic_regression_model",
-              text: "Logistic Regression (5 game lookback)",
-            },
-            {
-              key: "5span_multilayer_perceptron",
-              text: "Multilayer Perceptron (5 game lookback)",
-            },
-            {
-              key: "5span_random_forest",
-              text: "Random Forest (5 game lookback)",
-            },
-            {
-              key: "5span_support_vector_machine_model",
-              text: "Support Vector Machine (5 game lookback)",
-            },
-            {
-              key: "Header4",
-              text: "7 game lookback",
-              itemType: DropdownMenuItemType.Header,
-            },
-            {
-              key: "7span_gradient_boosting",
-              text: "Gradient Boosting (7 game lookback)",
-            },
-            {
-              key: "7span_knn_model",
-              text: "K Nearest Neighbors (7 game lookback)",
-            },
-            {
-              key: "7span_logistic_regression_model",
-              text: "Logistic Regression (7 game lookback)",
-            },
-            {
-              key: "7span_multilayer_perceptron",
-              text: "Multilayer Perceptron (7 game lookback)",
-            },
-            {
-              key: "7span_random_forest",
-              text: "Random Forest (7 game lookback)",
-            },
-            {
-              key: "7span_support_vector_machine_model",
-              text: "Support Vector Machine (7 game lookback)",
-            },
-          ]}
+          options={MODEL_OPTIONS}
         />
       );
-    if (column?.key === "isNeutral")
+    if (column?.key === "neutral")
       return (
         <Stack grow verticalAlign="end">
           <Toggle
@@ -373,7 +284,7 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
           autoComplete="on"
           onInputValueChange={(text, options) =>
             options.filter(
-              (team) => !text || isSearchTextIncluded(team as any, text)
+              (team) => !text || isSearchTextIncluded(team as any, text),
             )
           }
         />
@@ -382,7 +293,10 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
   };
 
   const _onAddMatchup = () =>
-    setValues([...values, { ...EMPTY_FORM_MATCHUP, isWomens }]);
+    setValues([
+      ...values,
+      { ...EMPTY_FORM_MATCHUP, gender: isWomens ? "women" : "men" },
+    ]);
 
   return (
     <Stack horizontalAlign="center" styles={{ root: { padding: "0px 20px" } }}>
@@ -432,7 +346,12 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
                 setValues(
                   newValues.length > 0
                     ? newValues
-                    : [{ ...EMPTY_FORM_MATCHUP, isWomens }]
+                    : [
+                        {
+                          ...EMPTY_FORM_MATCHUP,
+                          gender: isWomens ? "women" : "men",
+                        },
+                      ],
                 );
               },
             },

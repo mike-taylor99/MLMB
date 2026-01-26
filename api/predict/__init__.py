@@ -1,244 +1,187 @@
 import json
 import logging
-import os
-import re
-import io
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import azure.functions as func
 import numpy as np
-import joblib
-from azure.storage.blob import BlobServiceClient
 
-# Cache for loaded models and team stats
-_models_cache = {
-    'mens': {},
-    'womens': {}
+from shared.blob_service import get_blob_service
+
+# Valid model types
+VALID_MODELS = {
+    'ensemble', 'logistic_regression', 'knn', 'random_forest',
+    'gradient_boosting', 'mlp', 'svm'
 }
 
-_team_stats_cache = {
-    'mens': None,
-    'womens': None
+# Model name mapping (short name -> blob storage name)
+MODEL_NAME_MAP = {
+    'logistic_regression': 'logistic_regression_model',
+    'knn': 'knn_model',
+    'random_forest': 'random_forest',
+    'gradient_boosting': 'gradient_boosting',
+    'mlp': 'multilayer_perceptron',
+    'svm': 'support_vector_machine_model'
 }
 
-def get_blob_service_client():
-    """Get Azure Blob Storage client."""
-    conn_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-    return BlobServiceClient.from_connection_string(conn_str)
 
-def load_team_stats(is_womens: bool = False) -> dict:
-    """Load team stats from Blob Storage with caching."""
-    cache_key = 'womens' if is_womens else 'mens'
+def ensemble_predict(input_data: np.ndarray, models: dict) -> tuple[float, float]:
+    """
+    Run ensemble prediction using provided models.
     
-    if _team_stats_cache[cache_key] is not None:
-        return _team_stats_cache[cache_key]
+    Args:
+        input_data: Feature array for prediction.
+        models: Dict of models to use (should already be filtered and sorted).
     
-    try:
-        blob_service = get_blob_service_client()
-        container_name = 'mlmb-api'
-        blob_name = 'womens-team-stats' if is_womens else 'team-stats'
-        
-        blob_client = blob_service.get_blob_client(container=container_name, blob=blob_name)
-        blob_data = blob_client.download_blob().readall()
-        
-        data = json.loads(blob_data.decode())
-        _team_stats_cache[cache_key] = data
-        
-        return data
-    except Exception as e:
-        logging.error(f"Failed to load team stats: {e}")
-        raise
-
-def get_matchup_stats(team1: str, team2: str, span: int, is_womens: bool = False) -> dict:
-    """Get stats for both teams in a matchup."""
-    stats = load_team_stats(is_womens)
-    span_key = str(span)
+    Returns:
+        Tuple of (team1_probability, team2_probability).
+    """
+    if not models:
+        raise ValueError("No models provided for ensemble prediction")
     
-    if span_key not in stats:
-        raise ValueError(f"Invalid span: {span}")
-    
-    span_stats = stats[span_key]
-    
-    if team1 not in span_stats:
-        raise ValueError(f"Team not found: {team1}")
-    if team2 not in span_stats:
-        raise ValueError(f"Team not found: {team2}")
-    
-    return {
-        'team1': span_stats[team1],
-        'team2': span_stats[team2]
-    }
-
-def load_model(model_name: str, is_womens: bool = False):
-    """Load model from Blob Storage with caching."""
-    cache_key = 'womens' if is_womens else 'mens'
-    
-    if model_name in _models_cache[cache_key]:
-        return _models_cache[cache_key][model_name]
-    
-    try:
-        blob_service = get_blob_service_client()
-        container_name = 'mlmb-models'
-        blob_path = f"{'womens' if is_womens else 'mens'}/{model_name}.pkl"
-        
-        blob_client = blob_service.get_blob_client(container=container_name, blob=blob_path)
-        model_bytes = blob_client.download_blob().readall()
-        
-        model = joblib.load(io.BytesIO(model_bytes))
-        _models_cache[cache_key][model_name] = model
-        
-        return model
-    except Exception as e:
-        logging.error(f"Failed to load model {model_name}: {e}")
-        raise
-
-def load_models_parallel(model_names: list, is_womens: bool = False):
-    """Load multiple models in parallel."""
-    cache_key = 'womens' if is_womens else 'mens'
-    
-    # Filter to only models not already cached
-    models_to_load = [name for name in model_names if name not in _models_cache[cache_key]]
-    
-    if not models_to_load:
-        return  # All models already cached
-    
-    def load_single(model_name):
-        try:
-            return model_name, load_model(model_name, is_womens)
-        except Exception as e:
-            logging.warning(f"Failed to load model {model_name}: {e}")
-            return model_name, None
-    
-    with ThreadPoolExecutor(max_workers=6) as executor:
-        futures = {executor.submit(load_single, name): name for name in models_to_load}
-        for future in as_completed(futures):
-            model_name, model = future.result()
-            if model is not None:
-                logging.info(f"Loaded model: {model_name}")
-
-def get_span_number(model_name: str) -> int:
-    """Extract span number from model name (e.g., '3span_ensemble' -> 3)."""
-    match = re.search(r"(\d+)span", model_name)
-    return int(match.group(1)) if match else None
-
-def ensemble_predict(input_data: np.ndarray, models: dict, span: int) -> dict:
-    """Run ensemble prediction across all models for a given span."""
-    counter = 0
     predict_proba = [0.0, 0.0]
+    model_names = []
     
-    for key, model in models.items():
-        if f'{span}span_' in key:
-            proba = model.predict_proba(input_data)
-            predict_proba[0] += proba[0][0]
-            predict_proba[1] += proba[0][1]
-            counter += 1
+    # Models dict should already be in sorted order from get_models_parallel
+    for name, model in models.items():
+        proba = model.predict_proba(input_data)
+        predict_proba[0] += proba[0][0]
+        predict_proba[1] += proba[0][1]
+        model_names.append(name)
     
-    if counter == 0:
-        raise ValueError(f"No models found for span {span}")
+    num_models = len(models)
+    logging.info(f"Ensemble prediction used {num_models} models: {model_names}")
     
-    return {
-        'predict': [round(predict_proba[1] / counter)],
-        'predictProba': [predict_proba[0] / counter, predict_proba[1] / counter]
-    }
+    return predict_proba[0] / num_models, predict_proba[1] / num_models
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     """
     Handle prediction requests.
     
-    Expected request body:
-    [
-        {
-            "model": "3span_ensemble",
-            "isNeutral": true,
-            "isWomens": false,
-            "team1": "connecticut",   # Team name (string)
-            "team2": "duke"           # Team name (string)
-        }
-    ]
+    POST /predictions
+    
+    Request body:
+    {
+        "team1": "duke",
+        "team2": "connecticut",
+        "span": 3,              # Optional, default: 3
+        "neutral": false,       # Optional, default: false
+        "gender": "men",        # Optional, default: "men"
+        "model": "ensemble"     # Optional, default: "ensemble"
+    }
     
     Response:
-    [
-        {
-            "model": "3span_ensemble",
-            "isNeutral": true,
-            "isWomens": false,
-            "team1": "connecticut",
-            "team2": "duke",
-            "predict": [1],
-            "predictProba": [0.35, 0.65],
-            "team1LastPlayed": "2026-01-15",
-            "team2LastPlayed": "2026-01-14"
-        }
-    ]
+    {
+        "team1": "duke",
+        "team1_probability": 0.5218,
+        "team1_last_played": "2026-01-17",
+        "team2": "connecticut",
+        "team2_probability": 0.4782,
+        "team2_last_played": "2026-01-17",
+        "winner": "team1",
+        "confidence": 0.5218,
+        "span": 3,
+        "neutral": false,
+        "gender": "men",
+        "model": "ensemble"
+    }
     """
     logging.info('Prediction function triggered')
     
     try:
-        matchups = req.get_json()
+        blob_service = get_blob_service()
+        data = req.get_json()
         
-        if not isinstance(matchups, list):
-            matchups = [matchups]
+        # Extract and validate request fields
+        team1_name = data.get('team1')
+        team2_name = data.get('team2')
+        span = data.get('span', 3)
+        neutral = data.get('neutral', False)
+        gender = data.get('gender', 'men')
+        model_type = data.get('model', 'ensemble')
         
-        results = []
+        # Validate required fields
+        if not team1_name or not team2_name:
+            return func.HttpResponse(
+                json.dumps({"error": {"code": "missing_teams", "message": "team1 and team2 are required"}}),
+                mimetype="application/json",
+                status_code=400
+            )
         
-        for matchup in matchups:
-            model_name = matchup['model']
-            is_womens = matchup.get('isWomens', False)
-            is_neutral = matchup.get('isNeutral', False)
-            team1_name = matchup['team1']  # Team name string
-            team2_name = matchup['team2']  # Team name string
+        # Validate span
+        if span not in [3, 5, 7]:
+            return func.HttpResponse(
+                json.dumps({"error": {"code": "invalid_span", "message": "span must be 3, 5, or 7"}}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
+        # Validate gender
+        if gender not in ['men', 'women']:
+            return func.HttpResponse(
+                json.dumps({"error": {"code": "invalid_gender", "message": "gender must be 'men' or 'women'"}}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
+        # Validate model
+        if model_type not in VALID_MODELS:
+            return func.HttpResponse(
+                json.dumps({"error": {"code": "invalid_model", "message": f"model must be one of: {', '.join(sorted(VALID_MODELS))}"}}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
+        is_womens = gender == 'women'
+        
+        # Look up team stats from Blob Storage
+        matchup_stats = blob_service.get_matchup_stats(team1_name, team2_name, span, is_womens)
+        team1_stats = matchup_stats['team1']['stats']
+        team2_stats = matchup_stats['team2']['stats']
+        team1_last_played = matchup_stats['team1']['lastPlayed']
+        team2_last_played = matchup_stats['team2']['lastPlayed']
+        
+        # Prepare input: [team2_stats + team1_stats + neutral]
+        input_data = np.array([team2_stats + team1_stats + [int(neutral)]])
+        
+        if model_type == 'ensemble':
+            # Load all models for this span in parallel and get them in sorted order
+            model_names_to_load = [f'{span}span_{blob_name}' for blob_name in MODEL_NAME_MAP.values()]
             
-            # Get span from model name
-            span = get_span_number(model_name)
-            if span is None:
-                raise ValueError(f"Could not determine span from model name: {model_name}")
+            # Returns models dict in sorted order for deterministic results
+            ensemble_models = blob_service.get_models_parallel(model_names_to_load, is_womens)
             
-            # Look up team stats from Blob Storage
-            matchup_stats = get_matchup_stats(team1_name, team2_name, span, is_womens)
-            team1_stats = matchup_stats['team1']['stats']
-            team2_stats = matchup_stats['team2']['stats']
-            team1_last_played = matchup_stats['team1']['lastPlayed']
-            team2_last_played = matchup_stats['team2']['lastPlayed']
-            
-            # Prepare input: [team2_stats + team1_stats + is_neutral]
-            input_data = np.array([team2_stats + team1_stats + [int(is_neutral)]])
-            
-            cache_key = 'womens' if is_womens else 'mens'
-            
-            if 'ensemble' in model_name:
-                # Load all models for this span in parallel
-                model_types = ['logistic_regression_model', 'knn_model', 'random_forest', 
-                              'gradient_boosting', 'multilayer_perceptron', 'support_vector_machine_model']
-                model_names_to_load = [f'{span}span_{model_type}' for model_type in model_types]
-                
-                # Parallel loading - much faster on cold start
-                load_models_parallel(model_names_to_load, is_womens)
-                
-                result = ensemble_predict(input_data, _models_cache[cache_key], span)
-            else:
-                model = load_model(model_name, is_womens)
-                predict = model.predict(input_data)
-                predict_proba = model.predict_proba(input_data)
-                result = {
-                    'predict': predict.tolist(),
-                    'predictProba': predict_proba.tolist()[0]
-                }
-            
-            # Build response matching MatchupOutput interface
-            response_matchup = {
-                'model': model_name,
-                'isNeutral': is_neutral,
-                'isWomens': is_womens,
-                'team1': team1_name,
-                'team2': team2_name,
-                'predict': result['predict'],
-                'predictProba': result['predictProba'],
-                'team1LastPlayed': team1_last_played,
-                'team2LastPlayed': team2_last_played
-            }
-            results.append(response_matchup)
+            team1_prob, team2_prob = ensemble_predict(input_data, ensemble_models)
+        else:
+            # Single model prediction
+            blob_model_name = f'{span}span_{MODEL_NAME_MAP[model_type]}'
+            model = blob_service.get_model(blob_model_name, is_womens)
+            proba = model.predict_proba(input_data)
+            team1_prob, team2_prob = proba[0][0], proba[0][1]
+        
+        # Determine winner and confidence
+        if team1_prob >= team2_prob:
+            winner = 'team1'
+            confidence = team1_prob
+        else:
+            winner = 'team2'
+            confidence = team2_prob
+        
+        # Build response
+        response = {
+            'team1': team1_name,
+            'team1_probability': round(team1_prob, 4),
+            'team1_last_played': team1_last_played,
+            'team2': team2_name,
+            'team2_probability': round(team2_prob, 4),
+            'team2_last_played': team2_last_played,
+            'winner': winner,
+            'confidence': round(confidence, 4),
+            'span': span,
+            'neutral': neutral,
+            'gender': gender,
+            'model': model_type
+        }
         
         return func.HttpResponse(
-            json.dumps(results),
+            json.dumps(response),
             mimetype="application/json",
             status_code=200
         )
@@ -246,14 +189,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except ValueError as e:
         logging.error(f"Validation error: {e}")
         return func.HttpResponse(
-            json.dumps({"error": str(e)}),
+            json.dumps({"error": {"code": "validation_error", "message": str(e)}}),
             mimetype="application/json",
             status_code=400
         )
     except Exception as e:
         logging.error(f"Prediction error: {e}")
         return func.HttpResponse(
-            json.dumps({"error": "Internal server error"}),
+            json.dumps({"error": {"code": "internal_error", "message": "Internal server error"}}),
             mimetype="application/json",
             status_code=500
         )

@@ -7,29 +7,36 @@ import { ResultCard } from "./ResultCard";
 import { useState } from "react";
 import { DefaultButton, Stack, StackItem } from "@fluentui/react";
 import { usePredictMutation } from "../services/mlmb";
-import { MatchupOutput } from "../services/types";
+import { PredictionResponse } from "../services/types";
 
 export const Prediction: React.FC = () => {
-  const [results, setResults] = useState<MatchupOutput[] | undefined>(
-    undefined
+  const [results, setResults] = useState<PredictionResponse[] | undefined>(
+    undefined,
   );
   const [isWomens, setIsWomens] = useState(false);
   const [predict] = usePredictMutation();
-  // const [predict, { isLoading, isError }] = usePredictMutation();
 
   const formikConfig: FormikConfig<IMatchupFormInput[]> = {
     enableReinitialize: true,
-    initialValues: [{ ...EMPTY_FORM_MATCHUP, isWomens }],
+    initialValues: [
+      { ...EMPTY_FORM_MATCHUP, gender: isWomens ? "women" : "men" },
+    ],
     initialTouched: [],
     onSubmit: async (values) => {
-      const apiResults = await predict(values);
-      setResults((apiResults as any)?.data || undefined);
+      // Submit each matchup individually and collect results
+      const apiResults = await Promise.all(
+        values.map(async (matchup) => {
+          const result = await predict(matchup);
+          return (result as any)?.data as PredictionResponse;
+        }),
+      );
+      setResults(apiResults.filter(Boolean));
     },
     validate: (values) => {
       const errors = values.map((matchup) => {
         let matchupErrors: FormikErrors<IMatchupFormInput> = {};
         const teams = TEAMS.filter((team) =>
-          matchup.isWomens ? !!team.isWomenTeam : !!team.isMenTeam
+          matchup.gender === "women" ? !!team.isWomenTeam : !!team.isMenTeam,
         );
 
         const team1 = teams.find((team) => team["SR key"] === matchup.team1);
@@ -43,7 +50,7 @@ export const Prediction: React.FC = () => {
       });
 
       const containsNonEmptyObjects = (
-        arr: FormikErrors<IMatchupFormInput>[]
+        arr: FormikErrors<IMatchupFormInput>[],
       ): boolean => {
         return arr.some((obj) => Object.keys(obj).length > 0);
       };
