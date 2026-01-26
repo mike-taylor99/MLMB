@@ -13,6 +13,15 @@ from typing import Any, Dict, List, Optional
 import joblib
 from azure.storage.blob import BlobServiceClient
 
+# Pre-import sklearn to avoid circular import errors during parallel model loading
+# This ensures all sklearn modules are fully initialized before ThreadPoolExecutor starts
+import sklearn.base
+import sklearn.ensemble
+import sklearn.linear_model
+import sklearn.neighbors
+import sklearn.neural_network
+import sklearn.svm
+
 
 class BlobStorageService:
     """
