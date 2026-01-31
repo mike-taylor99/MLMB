@@ -67,6 +67,13 @@ class BlobStorageService:
         }
         self._teams_cache: Optional[tuple] = None  # (teams_list, last_modified)
         
+        # Per-resource locks to prevent parallel downloads of the same resource
+        self._team_stats_locks: Dict[str, Lock] = {'mens': Lock(), 'womens': Lock()}
+        self._top25_locks: Dict[str, Lock] = {'mens': Lock(), 'womens': Lock()}
+        self._teams_lock = Lock()
+        self._model_locks: Dict[str, Lock] = {}  # Dynamic per-model locks
+        self._model_locks_lock = Lock()  # Lock for creating model locks
+        
         # Container names
         self.MODELS_CONTAINER = 'mlmb-models'
         self.API_CONTAINER = 'mlmb-api'
@@ -92,6 +99,7 @@ class BlobStorageService:
     def get_team_stats(self, is_womens: bool = False) -> Dict:
         """
         Load team stats from Blob Storage with caching.
+        Thread-safe: uses double-checked locking to prevent parallel downloads.
         
         Args:
             is_womens: Whether to load women's stats
@@ -101,24 +109,31 @@ class BlobStorageService:
         """
         cache_key = self._get_cache_key(is_womens)
         
+        # Fast path - already cached
         if self._team_stats_cache[cache_key] is not None:
             return self._team_stats_cache[cache_key]
         
-        blob_name = 'womens-team-stats' if is_womens else 'team-stats'
-        logging.info(f"Loading team stats: {blob_name}")
-        
-        try:
-            blob_client = self.client.get_blob_client(
-                container=self.API_CONTAINER, 
-                blob=blob_name
-            )
-            blob_data = blob_client.download_blob().readall()
-            data = json.loads(blob_data.decode())
-            self._team_stats_cache[cache_key] = data
-            return data
-        except Exception as e:
-            logging.error(f"Failed to load team stats ({blob_name}): {e}")
-            raise
+        # Slow path - acquire lock to prevent parallel downloads
+        with self._team_stats_locks[cache_key]:
+            # Double-check after acquiring lock
+            if self._team_stats_cache[cache_key] is not None:
+                return self._team_stats_cache[cache_key]
+            
+            blob_name = 'womens-team-stats' if is_womens else 'team-stats'
+            logging.info(f"Loading team stats: {blob_name}")
+            
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.API_CONTAINER, 
+                    blob=blob_name
+                )
+                blob_data = blob_client.download_blob().readall()
+                data = json.loads(blob_data.decode())
+                self._team_stats_cache[cache_key] = data
+                return data
+            except Exception as e:
+                logging.error(f"Failed to load team stats ({blob_name}): {e}")
+                raise
     
     def get_matchup_stats(self, team1: str, team2: str, span: int, is_womens: bool = False) -> Dict:
         """
@@ -156,6 +171,7 @@ class BlobStorageService:
     def get_top25(self, is_womens: bool = False) -> tuple[Dict, str]:
         """
         Load top 25 rankings from Blob Storage with caching.
+        Thread-safe: uses double-checked locking to prevent parallel downloads.
         
         Args:
             is_womens: Whether to load women's rankings
@@ -165,70 +181,99 @@ class BlobStorageService:
         """
         cache_key = self._get_cache_key(is_womens)
         
+        # Fast path - already cached
         if self._top25_cache[cache_key] is not None:
             return self._top25_cache[cache_key]
         
-        blob_name = 'womens-top25' if is_womens else 'top25'
-        logging.info(f"Loading top 25: {blob_name}")
-        
-        try:
-            blob_client = self.client.get_blob_client(
-                container=self.API_CONTAINER,
-                blob=blob_name
-            )
-            # Get blob properties for last_modified
-            properties = blob_client.get_blob_properties()
-            last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+        # Slow path - acquire lock to prevent parallel downloads
+        with self._top25_locks[cache_key]:
+            # Double-check after acquiring lock
+            if self._top25_cache[cache_key] is not None:
+                return self._top25_cache[cache_key]
             
-            blob_data = blob_client.download_blob().readall()
-            data = json.loads(blob_data.decode())
+            blob_name = 'womens-top25' if is_womens else 'top25'
+            logging.info(f"Loading top 25: {blob_name}")
             
-            # Cache both data and metadata
-            self._top25_cache[cache_key] = (data, last_modified)
-            return data, last_modified
-        except Exception as e:
-            logging.error(f"Failed to load top 25 ({blob_name}): {e}")
-            raise
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.API_CONTAINER,
+                    blob=blob_name
+                )
+                # Get blob properties for last_modified
+                properties = blob_client.get_blob_properties()
+                last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+                
+                blob_data = blob_client.download_blob().readall()
+                data = json.loads(blob_data.decode())
+                
+                # Cache both data and metadata
+                self._top25_cache[cache_key] = (data, last_modified)
+                return data, last_modified
+            except Exception as e:
+                logging.error(f"Failed to load top 25 ({blob_name}): {e}")
+                raise
     
     # ==================== Teams ====================
     
     def get_teams(self) -> tuple[list, str]:
         """
         Load teams data from Blob Storage with caching.
+        Thread-safe: uses double-checked locking to prevent parallel downloads.
         
         Returns:
             Tuple of (teams list, last_modified ISO string)
         """
+        # Fast path - already cached
         if self._teams_cache is not None:
             return self._teams_cache
         
-        blob_name = 'teams'
-        logging.info(f"Loading teams: {blob_name}")
-        
-        try:
-            blob_client = self.client.get_blob_client(
-                container=self.API_CONTAINER,
-                blob=blob_name
-            )
-            # Get blob properties for last_modified
-            properties = blob_client.get_blob_properties()
-            last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+        # Slow path - acquire lock to prevent parallel downloads
+        with self._teams_lock:
+            # Double-check after acquiring lock
+            if self._teams_cache is not None:
+                return self._teams_cache
             
-            blob_data = blob_client.download_blob().readall()
-            data = json.loads(blob_data.decode())
+            blob_name = 'teams'
+            logging.info(f"Loading teams: {blob_name}")
             
-            # Cache both data and metadata
-            self._teams_cache = (data, last_modified)
-            return data, last_modified
-        except Exception as e:
-            logging.error(f"Failed to load teams ({blob_name}): {e}")
-            raise
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.API_CONTAINER,
+                    blob=blob_name
+                )
+                # Get blob properties for last_modified
+                properties = blob_client.get_blob_properties()
+                last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
+                
+                blob_data = blob_client.download_blob().readall()
+                data = json.loads(blob_data.decode())
+                
+                # Cache both data and metadata
+                self._teams_cache = (data, last_modified)
+                return data, last_modified
+            except Exception as e:
+                logging.error(f"Failed to load teams ({blob_name}): {e}")
+                raise
     
     # ==================== Models ====================
+    
+    def _get_model_lock(self, model_name: str, is_womens: bool) -> Lock:
+        """
+        Get or create a lock for a specific model.
+        Thread-safe creation of per-model locks.
+        """
+        lock_key = f"{self._get_cache_key(is_womens)}_{model_name}"
+        if lock_key not in self._model_locks:
+            with self._model_locks_lock:
+                # Double-check after acquiring lock
+                if lock_key not in self._model_locks:
+                    self._model_locks[lock_key] = Lock()
+        return self._model_locks[lock_key]
     
     def get_model(self, model_name: str, is_womens: bool = False) -> Any:
         """
         Load a single model from Blob Storage with caching.
+        Thread-safe: uses per-model locks to prevent parallel downloads of the same model.
         
         Args:
             model_name: Name of the model (without .pkl extension)
@@ -239,25 +284,32 @@ class BlobStorageService:
         """
         cache_key = self._get_cache_key(is_womens)
         
+        # Fast path - already cached
         if model_name in self._models_cache[cache_key]:
             return self._models_cache[cache_key][model_name]
         
-        gender_path = 'womens' if is_womens else 'mens'
-        blob_path = f"{gender_path}/{model_name}.pkl"
-        
-        try:
-            blob_client = self.client.get_blob_client(
-                container=self.MODELS_CONTAINER,
-                blob=blob_path
-            )
-            model_bytes = blob_client.download_blob().readall()
-            model = joblib.load(io.BytesIO(model_bytes))
-            self._models_cache[cache_key][model_name] = model
-            logging.info(f"Loaded model: {model_name}")
-            return model
-        except Exception as e:
-            logging.error(f"Failed to load model {model_name}: {e}")
-            raise
+        # Slow path - acquire per-model lock to prevent parallel downloads
+        with self._get_model_lock(model_name, is_womens):
+            # Double-check after acquiring lock
+            if model_name in self._models_cache[cache_key]:
+                return self._models_cache[cache_key][model_name]
+            
+            gender_path = 'womens' if is_womens else 'mens'
+            blob_path = f"{gender_path}/{model_name}.pkl"
+            
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.MODELS_CONTAINER,
+                    blob=blob_path
+                )
+                model_bytes = blob_client.download_blob().readall()
+                model = joblib.load(io.BytesIO(model_bytes))
+                self._models_cache[cache_key][model_name] = model
+                logging.info(f"Loaded model: {model_name}")
+                return model
+            except Exception as e:
+                logging.error(f"Failed to load model {model_name}: {e}")
+                raise
     
     def get_models_parallel(self, model_names: List[str], is_womens: bool = False) -> Dict[str, Any]:
         """
