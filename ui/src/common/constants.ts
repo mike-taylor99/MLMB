@@ -5,7 +5,7 @@ export const EMPTY_FORM_MATCHUP: IMatchupFormInput = {
   away_team: "",
   span: 3,
   neutral: true,
-  gender: "men",
+  sport: "ncaam_basketball",
   model: "ensemble",
 };
 

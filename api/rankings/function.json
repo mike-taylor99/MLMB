@@ -6,8 +6,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"],
-      "route": "predictions"
+      "methods": ["get"],
+      "route": "rankings/{sport}"
     },
     {
       "type": "http",

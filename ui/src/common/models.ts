@@ -16,7 +16,7 @@ export interface IMatchupFormInput {
   away_team: string;
   span: 3 | 5 | 7;
   neutral: boolean;
-  gender: "men" | "women";
+  sport: "ncaam_basketball" | "ncaaw_basketball";
   model:
     | "ensemble"
     | "logistic_regression"

@@ -19,7 +19,10 @@ export const Prediction: React.FC = () => {
   const formikConfig: FormikConfig<IMatchupFormInput[]> = {
     enableReinitialize: true,
     initialValues: [
-      { ...EMPTY_FORM_MATCHUP, gender: isWomens ? "women" : "men" },
+      {
+        ...EMPTY_FORM_MATCHUP,
+        sport: isWomens ? "ncaaw_basketball" : "ncaam_basketball",
+      },
     ],
     initialTouched: [],
     onSubmit: async (values) => {
@@ -36,7 +39,9 @@ export const Prediction: React.FC = () => {
       const errors = values.map((matchup) => {
         let matchupErrors: FormikErrors<IMatchupFormInput> = {};
         const teams = TEAMS.filter((team) =>
-          matchup.gender === "women" ? !!team.isWomenTeam : !!team.isMenTeam,
+          matchup.sport === "ncaaw_basketball"
+            ? !!team.isWomenTeam
+            : !!team.isMenTeam,
         );
 
         const homeTeam = teams.find(

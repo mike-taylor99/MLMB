@@ -67,7 +67,7 @@ export interface ITop25Props {
 
 export const Top25: React.FC<ITop25Props> = ({ isWomens = false }) => {
   const { data, error, isLoading } = useGetRankingsQuery(
-    isWomens ? "women" : "men",
+    isWomens ? "ncaaw_basketball" : "ncaam_basketball",
   );
 
   // Map rankings data to team metadata for display
