@@ -4,12 +4,21 @@ This folder contains the serverless API functions for MLMB, designed to run as A
 
 ## Endpoints
 
-| Endpoint             | Method | Description                     |
-| -------------------- | ------ | ------------------------------- |
-| `/predictions`       | POST   | Get game predictions            |
-| `/rankings/{gender}` | GET    | Get top 25 rankings (men/women) |
-| `/teams`             | GET    | List teams (paginated)          |
-| `/teams/{key}`       | GET    | Get single team by key          |
+| Endpoint            | Method | Description                      |
+| ------------------- | ------ | -------------------------------- |
+| `/predictions`      | POST   | Create prediction (with caching) |
+| `/predictions`      | GET    | Query prediction history         |
+| `/predictions/{id}` | GET    | Get prediction by ID             |
+| `/rankings/{sport}` | GET    | Get top 25 rankings              |
+| `/teams`            | GET    | List teams (paginated)           |
+| `/teams/{id}`       | GET    | Get single team by ID            |
+
+## Sports
+
+Currently supported sports:
+
+- `ncaam_basketball` - NCAA Men's Basketball
+- `ncaaw_basketball` - NCAA Women's Basketball
 
 ## Local Development
 
@@ -49,7 +58,8 @@ Create `local.settings.json` with:
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "python",
-    "AZURE_STORAGE_CONNECTION_STRING": "<your-connection-string>"
+    "AZURE_STORAGE_CONNECTION_STRING": "<your-connection-string>",
+    "COSMOS_CONNECTION_STRING": "<your-cosmos-connection-string>"
   },
   "Host": {
     "CORS": "*"
@@ -61,6 +71,8 @@ Create `local.settings.json` with:
 
 ### Predictions Endpoint
 
+**Create Prediction (POST):**
+
 ```bash
 POST /predictions
 Content-Type: application/json
@@ -68,10 +80,10 @@ Content-Type: application/json
 {
   "home_team": "duke",
   "away_team": "connecticut",
-  "span": 3,              # Optional: 3, 5, or 7 (default: 3)
-  "neutral": false,       # Optional: true/false (default: false)
-  "gender": "men",        # Optional: "men" or "women" (default: "men")
-  "model": "ensemble"     # Optional: see model options below (default: "ensemble")
+  "span": 3,                          # Optional: 3, 5, or 7 (default: 3)
+  "neutral": false,                   # Optional: true/false (default: false)
+  "sport": "ncaam_basketball",        # Optional: see sports above (default: "ncaam_basketball")
+  "model": "ensemble"                 # Optional: see model options below (default: "ensemble")
 }
 ```
 
@@ -87,33 +99,74 @@ Content-Type: application/json
 
 **Response:**
 
+Predictions are cached using content-hash based IDs. Identical requests return the same `id` instantly.
+
 ```json
 {
+  "id": "pred_a3f2b8c1d4e5f6a7b8c9d0e1f2a3b4c5",
+  "type": "prediction",
+  "model": "ensemble",
+  "span": 3,
+  "sport": "ncaam_basketball",
   "home_team": "duke",
   "away_team": "connecticut",
-  "home_win_probability": 0.5218,
-  "home_last_played": "2026-01-17",
-  "away_last_played": "2026-01-17",
-  "predicted_winner": "duke",
+  "home_last_played": "2026-01-28",
+  "away_last_played": "2026-01-27",
   "neutral": false,
-  "span": 3,
-  "gender": "men",
-  "model": "ensemble"
+  "home_win_probability": 0.5218,
+  "created_at": "2026-01-30T12:00:00Z"
+}
+```
+
+**Get Prediction by ID:**
+
+```bash
+GET /predictions/pred_a3f2b8c1d4e5f6a7b8c9d0e1f2a3b4c5?sport=ncaam_basketball
+```
+
+**Query Prediction History:**
+
+```bash
+GET /predictions?sport=ncaam_basketball&home_team=duke&limit=20
+```
+
+**Query Parameters:**
+
+| Parameter       | Type   | Required | Description                       |
+| --------------- | ------ | -------- | --------------------------------- |
+| `sport`         | string | Yes      | Sport code (partition key)        |
+| `home_team`     | string | No       | Filter by home team               |
+| `away_team`     | string | No       | Filter by away team               |
+| `model_version` | string | No       | Filter by model version           |
+| `start_date`    | string | No       | Filter after date (ISO format)    |
+| `end_date`      | string | No       | Filter before date (ISO format)   |
+| `limit`         | int    | No       | Max results (default 20, max 100) |
+| `before_id`     | string | No       | Cursor: get items before this ID  |
+| `after_id`      | string | No       | Cursor: get items after this ID   |
+
+**History Response:**
+
+```json
+{
+  "data": [...],
+  "has_more": true,
+  "first_id": "pred_abc123...",
+  "last_id": "pred_xyz789..."
 }
 ```
 
 ### Rankings Endpoint
 
 ```bash
-GET /rankings/men
-GET /rankings/women
+GET /rankings/ncaam_basketball
+GET /rankings/ncaaw_basketball
 ```
 
 **Response:**
 
 ```json
 {
-  "gender": "men",
+  "sport": "ncaam_basketball",
   "updated_at": "2026-01-25T12:00:00Z",
   "rankings": [
     { "rank": 1, "team": "kansas", "rating": 94.13 },
@@ -125,24 +178,26 @@ GET /rankings/women
 
 ### Teams Endpoint
 
-List teams with pagination (OpenAI-style cursor pagination):
+List teams with cursor pagination:
 
 ```bash
-GET /teams                    # First 100 teams
-GET /teams?limit=50           # First 50 teams
-GET /teams?after=duke         # Next page after "duke"
-GET /teams?gender=men         # Filter to men's programs
-GET /teams?gender=women       # Filter to women's programs
-GET /teams/connecticut        # Single team lookup
+GET /teams                                  # First 100 teams
+GET /teams?limit=50                         # First 50 teams
+GET /teams?after_id=duke                    # Next page after "duke"
+GET /teams?before_id=duke                   # Previous page before "duke"
+GET /teams?sport=ncaam_basketball           # Filter to men's programs
+GET /teams?sport=ncaaw_basketball           # Filter to women's programs
+GET /teams/connecticut                      # Single team lookup
 ```
 
 **Query Parameters:**
 
-| Parameter | Type   | Default | Description                    |
-| --------- | ------ | ------- | ------------------------------ |
-| `limit`   | int    | 100     | Items per page (max: 500)      |
-| `after`   | string | —       | Cursor: team key for next page |
-| `gender`  | string | —       | Filter: `men` or `women`       |
+| Parameter   | Type   | Default | Description                                      |
+| ----------- | ------ | ------- | ------------------------------------------------ |
+| `limit`     | int    | 100     | Items per page (max: 500)                        |
+| `after_id`  | string | —       | Get teams after this ID (forward pagination)     |
+| `before_id` | string | —       | Get teams before this ID (backward pagination)   |
+| `sport`     | string | —       | Filter: `ncaam_basketball` or `ncaaw_basketball` |
 
 **List Response:**
 
@@ -150,20 +205,19 @@ GET /teams/connecticut        # Single team lookup
 {
   "data": [
     {
-      "key": "duke",
+      "id": "duke",
+      "type": "team",
       "school": "Duke",
       "name": "Duke University",
       "location": "Durham, North Carolina",
       "ncaa_key": "duke",
       "color": "#002D72",
-      "has_mens_program": true,
-      "has_womens_program": true
+      "sports": ["ncaam_basketball", "ncaaw_basketball"]
     }
   ],
   "first_id": "abilene-christian",
   "last_id": "concordia-seminary",
-  "has_more": true,
-  "updated_at": "2026-01-25T12:00:00Z"
+  "has_more": true
 }
 ```
 
@@ -171,14 +225,14 @@ GET /teams/connecticut        # Single team lookup
 
 ```json
 {
-  "key": "connecticut",
+  "id": "connecticut",
+  "type": "team",
   "school": "Connecticut",
   "name": "University of Connecticut",
   "location": "Storrs, Connecticut",
   "ncaa_key": "uconn",
   "color": "#0C2340",
-  "has_mens_program": true,
-  "has_womens_program": true
+  "sports": ["ncaam_basketball", "ncaaw_basketball"]
 }
 ```
 
@@ -201,11 +255,39 @@ All errors follow a structured format:
 | ------------------ | ----------- | ---------------------------------------- |
 | `missing_teams`    | 400         | home_team and away_team are required     |
 | `invalid_span`     | 400         | span must be 3, 5, or 7                  |
-| `invalid_gender`   | 400         | gender must be 'men' or 'women'          |
+| `invalid_sport`    | 400         | sport must be a valid sport code         |
+| `missing_sport`    | 400         | sport query parameter is required        |
 | `invalid_model`    | 400         | model must be one of the valid options   |
 | `team_not_found`   | 404         | Team key not found in /teams/{key}       |
+| `not_found`        | 404         | Prediction not found                     |
 | `validation_error` | 400         | Team not found or other validation error |
 | `internal_error`   | 500         | Internal server error                    |
+
+## Architecture
+
+### Model Versioning
+
+Models are tracked via `models_manifest.json` in blob storage:
+
+- Each model has version history with `current` pointer
+- Enables rollback, A/B testing, and training lineage
+- Model versions are included in prediction IDs for traceability
+
+### Prediction Caching
+
+Predictions use content-hash based IDs:
+
+- `pred_{SHA256(inputs + model_version + stats_version)}`
+- Identical requests = identical IDs = automatic deduplication
+- Cache lookup is O(1) via Cosmos DB point read (~10ms)
+
+### Feature Schema
+
+Features are defined in `feature_schema.json`:
+
+- Ensures training/inference alignment
+- Named DataFrames eliminate sklearn warnings
+- Schema version tracked in manifest
 
 ## Deployment
 

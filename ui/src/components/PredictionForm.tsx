@@ -295,7 +295,10 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
   const _onAddMatchup = () =>
     setValues([
       ...values,
-      { ...EMPTY_FORM_MATCHUP, gender: isWomens ? "women" : "men" },
+      {
+        ...EMPTY_FORM_MATCHUP,
+        sport: isWomens ? "ncaaw_basketball" : "ncaam_basketball",
+      },
     ]);
 
   return (
@@ -349,7 +352,9 @@ export const PredictionForm: React.FC<IPredictionForm> = ({
                     : [
                         {
                           ...EMPTY_FORM_MATCHUP,
-                          gender: isWomens ? "women" : "men",
+                          sport: isWomens
+                            ? "ncaaw_basketball"
+                            : "ncaam_basketball",
                         },
                       ],
                 );

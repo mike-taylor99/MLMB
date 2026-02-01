@@ -13,11 +13,10 @@ export const ResultCard: React.FC<IResultCard> = ({
   home_last_played,
   away_last_played,
   home_win_probability,
-  predicted_winner,
-  gender,
+  sport,
 }) => {
   const theme = getTheme();
-  const isWomens = gender === "women";
+  const isWomens = sport === "ncaaw_basketball";
 
   const teams = TEAMS.filter((team) =>
     isWomens ? !!team.isWomenTeam : !!team.isMenTeam,
@@ -117,7 +116,7 @@ export const ResultCard: React.FC<IResultCard> = ({
             variant="xxLargePlus"
             styles={{ root: { letterSpacing: "10px" } }}
           >
-            {`${predicted_winner === home_team ? "L" : "W"} - ${predicted_winner === home_team ? "W" : "L"}`}
+            {`${home_win_probability >= 0.5 ? "L" : "W"} - ${home_win_probability >= 0.5 ? "W" : "L"}`}
           </Text>
         </Stack>
         <Stack

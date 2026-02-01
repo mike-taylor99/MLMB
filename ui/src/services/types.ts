@@ -1,10 +1,13 @@
+// Sport type
+export type Sport = "ncaam_basketball" | "ncaaw_basketball";
+
 // Request type for POST /predictions
 export interface PredictionRequest {
   home_team: string;
   away_team: string;
   span?: 3 | 5 | 7;
   neutral?: boolean;
-  gender?: "men" | "women";
+  sport?: Sport;
   model?:
     | "ensemble"
     | "logistic_regression"
@@ -15,23 +18,46 @@ export interface PredictionRequest {
     | "svm";
 }
 
-// Response type for POST /predictions
+// Response type for POST /predictions and GET /predictions/{id}
 export interface PredictionResponse {
+  id: string;
+  type: "prediction";
+  model: string;
+  span: 3 | 5 | 7;
+  sport: Sport;
   home_team: string;
   away_team: string;
-  home_win_probability: number;
   home_last_played: string;
   away_last_played: string;
-  predicted_winner: string;
   neutral: boolean;
-  span: 3 | 5 | 7;
-  gender: "men" | "women";
-  model: string;
+  home_win_probability: number;
+  created_at: string;
 }
 
-// Response type for GET /rankings/{gender}
+// Response type for GET /predictions (history) - cursor pagination
+export interface PredictionsListResponse {
+  data: PredictionResponse[];
+  has_more: boolean;
+  first_id: string | null;
+  last_id: string | null;
+}
+
+// Query parameters for GET /predictions (history)
+export interface PredictionsHistoryQuery {
+  sport: Sport;
+  home_team?: string;
+  away_team?: string;
+  model_version?: string;
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+  before_id?: string;
+  after_id?: string;
+}
+
+// Response type for GET /rankings/{sport}
 export interface RankingsResponse {
-  gender: "men" | "women";
+  sport: Sport;
   updated_at: string;
   rankings: RankingEntry[];
 }

@@ -7,10 +7,12 @@ import json
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 from threading import Lock
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import joblib
+import pandas as pd
 from azure.storage.blob import BlobServiceClient
 
 # Pre-import sklearn to avoid circular import errors during parallel model loading
@@ -52,24 +54,30 @@ class BlobStorageService:
             
         self._client: Optional[BlobServiceClient] = None
         
-        # Caches
+        # Caches - keyed by sport code
         self._models_cache: Dict[str, Dict[str, Any]] = {
-            'mens': {},
-            'womens': {}
+            'ncaam_basketball': {},
+            'ncaaw_basketball': {}
         }
         self._team_stats_cache: Dict[str, Optional[Dict]] = {
-            'mens': None,
-            'womens': None
+            'ncaam_basketball': None,
+            'ncaaw_basketball': None
         }
         self._top25_cache: Dict[str, Optional[Dict]] = {
-            'mens': None,
-            'womens': None
+            'ncaam_basketball': None,
+            'ncaaw_basketball': None
         }
         self._teams_cache: Optional[tuple] = None  # (teams_list, last_modified)
         
+        # Manifest and schema caches
+        self._models_manifest_cache: Optional[Dict] = None
+        self._feature_schema_cache: Optional[Dict] = None
+        self._manifest_lock = Lock()
+        self._schema_lock = Lock()
+        
         # Per-resource locks to prevent parallel downloads of the same resource
-        self._team_stats_locks: Dict[str, Lock] = {'mens': Lock(), 'womens': Lock()}
-        self._top25_locks: Dict[str, Lock] = {'mens': Lock(), 'womens': Lock()}
+        self._team_stats_locks: Dict[str, Lock] = {'ncaam_basketball': Lock(), 'ncaaw_basketball': Lock()}
+        self._top25_locks: Dict[str, Lock] = {'ncaam_basketball': Lock(), 'ncaaw_basketball': Lock()}
         self._teams_lock = Lock()
         self._model_locks: Dict[str, Lock] = {}  # Dynamic per-model locks
         self._model_locks_lock = Lock()  # Lock for creating model locks
@@ -92,7 +100,8 @@ class BlobStorageService:
         return self._client
     
     def _get_cache_key(self, is_womens: bool) -> str:
-        return 'womens' if is_womens else 'mens'
+        """Get cache key from is_womens flag."""
+        return 'ncaaw_basketball' if is_womens else 'ncaam_basketball'
     
     # ==================== Team Stats ====================
     
@@ -165,6 +174,175 @@ class BlobStorageService:
             'team1': span_stats[team1],
             'team2': span_stats[team2]
         }
+    
+    # ==================== Models Manifest ====================
+    
+    def get_models_manifest(self) -> Dict:
+        """
+        Load the models manifest from Blob Storage with caching.
+        The manifest tracks model versions, paths, and metadata.
+        
+        Returns:
+            Dict containing manifest data
+        """
+        if self._models_manifest_cache is not None:
+            return self._models_manifest_cache
+        
+        with self._manifest_lock:
+            if self._models_manifest_cache is not None:
+                return self._models_manifest_cache
+            
+            # Try loading from blob storage first, fall back to local file
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.MODELS_CONTAINER,
+                    blob='models_manifest.json'
+                )
+                blob_data = blob_client.download_blob().readall()
+                self._models_manifest_cache = json.loads(blob_data.decode())
+                logging.info("Loaded models manifest from blob storage")
+            except Exception as e:
+                logging.warning(f"Failed to load manifest from blob, using local: {e}")
+                # Fall back to local file
+                local_path = Path(__file__).parent / 'models_manifest.json'
+                with open(local_path, 'r') as f:
+                    self._models_manifest_cache = json.load(f)
+                logging.info("Loaded models manifest from local file")
+            
+            return self._models_manifest_cache
+    
+    def get_model_version(self, sport: str, span: int, model_type: str) -> str:
+        """
+        Get the current model version for a specific model.
+        
+        Args:
+            sport: Sport code (e.g., 'ncaam_basketball', 'ncaaw_basketball')
+            span: 3, 5, or 7
+            model_type: Model type key (e.g., 'logistic_regression', 'knn')
+            
+        Returns:
+            Current version string (e.g., 'v1')
+        """
+        manifest = self.get_models_manifest()
+        span_key = f'{span}span'
+        
+        try:
+            return manifest[sport][span_key][model_type]['current']
+        except KeyError:
+            logging.warning(f"Model not in manifest: {sport}/{span_key}/{model_type}, defaulting to v1")
+            return 'v1'
+    
+    def get_model_blob_path(self, sport: str, span: int, model_type: str, version: Optional[str] = None) -> str:
+        """
+        Get the blob path for a specific model version.
+        
+        Args:
+            sport: Sport code (e.g., 'ncaam_basketball', 'ncaaw_basketball')
+            span: 3, 5, or 7
+            model_type: Model type key
+            version: Specific version or None for current
+            
+        Returns:
+            Blob path string
+        """
+        manifest = self.get_models_manifest()
+        span_key = f'{span}span'
+        
+        try:
+            model_info = manifest[sport][span_key][model_type]
+            if version is None:
+                version = model_info['current']
+            return model_info['versions'][version]['blob_path']
+        except KeyError:
+            # Fall back to legacy path format
+            logging.warning(f"Model path not in manifest, using legacy format")
+            from predict import MODEL_NAME_MAP
+            blob_name = MODEL_NAME_MAP.get(model_type, model_type)
+            return f"{sport}/{span}span_{blob_name}.pkl"
+    
+    # ==================== Feature Schema ====================
+    
+    def get_feature_schema(self) -> Dict:
+        """
+        Load the feature schema from Blob Storage with caching.
+        The schema defines feature names for DataFrame construction.
+        
+        Returns:
+            Dict containing schema data
+        """
+        if self._feature_schema_cache is not None:
+            return self._feature_schema_cache
+        
+        with self._schema_lock:
+            if self._feature_schema_cache is not None:
+                return self._feature_schema_cache
+            
+            # Try loading from blob storage first, fall back to local file
+            try:
+                blob_client = self.client.get_blob_client(
+                    container=self.MODELS_CONTAINER,
+                    blob='feature_schema.json'
+                )
+                blob_data = blob_client.download_blob().readall()
+                self._feature_schema_cache = json.loads(blob_data.decode())
+                logging.info("Loaded feature schema from blob storage")
+            except Exception as e:
+                logging.warning(f"Failed to load schema from blob, using local: {e}")
+                # Fall back to local file
+                local_path = Path(__file__).parent / 'feature_schema.json'
+                with open(local_path, 'r') as f:
+                    self._feature_schema_cache = json.load(f)
+                logging.info("Loaded feature schema from local file")
+            
+            return self._feature_schema_cache
+    
+    def get_feature_names(self) -> List[str]:
+        """
+        Get the full ordered list of feature names for model input.
+        
+        Returns:
+            List of feature names in order: [home_features, away_features, extra_features]
+        """
+        schema = self.get_feature_schema()
+        
+        # Build full feature list: home + away (with prefix) + extras
+        home_features = schema['features']  # No prefix for home
+        away_prefix = schema.get('away_prefix', 'opp_')
+        away_features = [f"{away_prefix}{f}" for f in schema['features']]
+        extra_features = schema.get('extra_features', ['Neutral'])
+        
+        return home_features + away_features + extra_features
+    
+    def build_feature_dataframe(
+        self, 
+        home_stats: List[float], 
+        away_stats: List[float], 
+        neutral: bool
+    ) -> pd.DataFrame:
+        """
+        Build a named DataFrame for model prediction.
+        
+        This ensures feature names match what the model was trained with,
+        eliminating sklearn warnings about unnamed features.
+        
+        Args:
+            home_stats: List of home team statistics
+            away_stats: List of away team statistics  
+            neutral: Whether game is at neutral site
+            
+        Returns:
+            Single-row DataFrame with named columns
+        """
+        feature_names = self.get_feature_names()
+        feature_values = home_stats + away_stats + [int(neutral)]
+        
+        if len(feature_values) != len(feature_names):
+            raise ValueError(
+                f"Feature count mismatch: got {len(feature_values)} values, "
+                f"expected {len(feature_names)} features"
+            )
+        
+        return pd.DataFrame([dict(zip(feature_names, feature_values))])
     
     # ==================== Top 25 ====================
     
@@ -294,8 +472,8 @@ class BlobStorageService:
             if model_name in self._models_cache[cache_key]:
                 return self._models_cache[cache_key][model_name]
             
-            gender_path = 'womens' if is_womens else 'mens'
-            blob_path = f"{gender_path}/{model_name}.pkl"
+            # Use sport code as path prefix (ncaam_basketball/ or ncaaw_basketball/)
+            blob_path = f"{cache_key}/{model_name}.pkl"
             
             try:
                 blob_client = self.client.get_blob_client(
@@ -369,34 +547,42 @@ class BlobStorageService:
         Clear cached data.
         
         Args:
-            cache_type: 'models', 'stats', 'top25', or None for all
+            cache_type: 'models', 'stats', 'top25', 'manifest', 'schema', or None for all
         """
         if cache_type is None or cache_type == 'models':
-            self._models_cache = {'mens': {}, 'womens': {}}
+            self._models_cache = {'ncaam_basketball': {}, 'ncaaw_basketball': {}}
             logging.info("Cleared models cache")
             
         if cache_type is None or cache_type == 'stats':
-            self._team_stats_cache = {'mens': None, 'womens': None}
+            self._team_stats_cache = {'ncaam_basketball': None, 'ncaaw_basketball': None}
             logging.info("Cleared team stats cache")
             
         if cache_type is None or cache_type == 'top25':
-            self._top25_cache = {'mens': None, 'womens': None}
+            self._top25_cache = {'ncaam_basketball': None, 'ncaaw_basketball': None}
             logging.info("Cleared top 25 cache")
+        
+        if cache_type is None or cache_type == 'manifest':
+            self._models_manifest_cache = None
+            logging.info("Cleared models manifest cache")
+        
+        if cache_type is None or cache_type == 'schema':
+            self._feature_schema_cache = None
+            logging.info("Cleared feature schema cache")
     
     def get_cache_stats(self) -> Dict:
         """Get current cache statistics."""
         return {
             'models': {
-                'mens': len(self._models_cache['mens']),
-                'womens': len(self._models_cache['womens'])
+                'ncaam_basketball': len(self._models_cache['ncaam_basketball']),
+                'ncaaw_basketball': len(self._models_cache['ncaaw_basketball'])
             },
             'team_stats': {
-                'mens': self._team_stats_cache['mens'] is not None,
-                'womens': self._team_stats_cache['womens'] is not None
+                'ncaam_basketball': self._team_stats_cache['ncaam_basketball'] is not None,
+                'ncaaw_basketball': self._team_stats_cache['ncaaw_basketball'] is not None
             },
             'top25': {
-                'mens': self._top25_cache['mens'] is not None,
-                'womens': self._top25_cache['womens'] is not None
+                'ncaam_basketball': self._top25_cache['ncaam_basketball'] is not None,
+                'ncaaw_basketball': self._top25_cache['ncaaw_basketball'] is not None
             }
         }
 
