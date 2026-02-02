@@ -128,7 +128,7 @@ class BlobStorageService:
             if self._team_stats_cache[cache_key] is not None:
                 return self._team_stats_cache[cache_key]
             
-            blob_name = 'womens-team-stats' if is_womens else 'team-stats'
+            blob_name = f'{cache_key}/team-stats'
             logging.info(f"Loading team stats: {blob_name}")
             
             try:
@@ -262,13 +262,16 @@ class BlobStorageService:
     
     # ==================== Feature Schema ====================
     
-    def get_feature_schema(self) -> Dict:
+    def get_feature_schema(self, is_womens: bool = False) -> Dict:
         """
-        Load the feature schema from Blob Storage with caching.
+        Load the feature schema from team stats' _meta field with caching.
         The schema defines feature names for DataFrame construction.
         
+        Args:
+            is_womens: Whether to load women's schema (both should be identical)
+            
         Returns:
-            Dict containing schema data
+            Dict containing schema data with 'features', 'away_prefix', 'extra_features'
         """
         if self._feature_schema_cache is not None:
             return self._feature_schema_cache
@@ -277,23 +280,13 @@ class BlobStorageService:
             if self._feature_schema_cache is not None:
                 return self._feature_schema_cache
             
-            # Try loading from blob storage first, fall back to local file
-            try:
-                blob_client = self.client.get_blob_client(
-                    container=self.MODELS_CONTAINER,
-                    blob='feature_schema.json'
-                )
-                blob_data = blob_client.download_blob().readall()
-                self._feature_schema_cache = json.loads(blob_data.decode())
-                logging.info("Loaded feature schema from blob storage")
-            except Exception as e:
-                logging.warning(f"Failed to load schema from blob, using local: {e}")
-                # Fall back to local file
-                local_path = Path(__file__).parent / 'feature_schema.json'
-                with open(local_path, 'r') as f:
-                    self._feature_schema_cache = json.load(f)
-                logging.info("Loaded feature schema from local file")
+            # Get feature schema from team stats _meta field
+            team_stats = self.get_team_stats(is_womens)
+            if '_meta' not in team_stats:
+                raise ValueError("Team stats missing _meta field with feature schema")
             
+            self._feature_schema_cache = team_stats['_meta']
+            logging.info("Loaded feature schema from team stats _meta")
             return self._feature_schema_cache
     
     def get_feature_names(self) -> List[str]:
@@ -369,7 +362,7 @@ class BlobStorageService:
             if self._top25_cache[cache_key] is not None:
                 return self._top25_cache[cache_key]
             
-            blob_name = 'womens-top25' if is_womens else 'top25'
+            blob_name = f'{cache_key}/top25'
             logging.info(f"Loading top 25: {blob_name}")
             
             try:
