@@ -9,6 +9,7 @@ This folder contains the serverless API functions for MLMB, designed to run as A
 | `/predictions`      | POST   | Create prediction (with caching) |
 | `/predictions`      | GET    | Query prediction history         |
 | `/predictions/{id}` | GET    | Get prediction by ID             |
+| `/predictions/batch` | POST   | Batch predictions (up to 500) |
 | `/rankings/{sport}` | GET    | Get top 25 rankings              |
 | `/teams`            | GET    | List teams (paginated)           |
 | `/teams/{id}`       | GET    | Get single team by ID            |
@@ -155,6 +156,93 @@ GET /predictions?sport=ncaam_basketball&home_team=duke&limit=20
 }
 ```
 
+### Batch Endpoint
+
+High-performance batch predictions for generating rankings or bulk processing. Models are loaded once and reused for all predictions.
+
+**Request (POST):**
+
+```bash
+POST /predictions/batch
+Content-Type: application/json
+
+{
+  "input": [
+    {
+      "home_team": "duke",
+      "away_team": "connecticut",
+      "span": 3,                          # Optional: 3, 5, or 7 (default: 3)
+      "neutral": false,                   # Optional: true/false (default: false)
+      "sport": "ncaam_basketball",        # Optional: see sports above (default: "ncaam_basketball")
+      "model": "ensemble"                 # Optional: see model options below (default: "ensemble")
+    },
+    {
+      "home_team": "kansas",
+      "away_team": "kentucky",
+      "span": 5,
+      "sport": "ncaam_basketball"
+    }
+  ]
+}
+```
+
+**Response:**
+
+Results are returned in the same order as the input array. Failed predictions include an `error` field instead of the full response.
+
+```json
+{
+  "type": "prediction_batch",
+  "output": [
+    {
+      "id": "pred_a3f2b8c1d4e5f6a7b8c9d0e1f2a3b4c5",
+      "type": "prediction",
+      "model": "ensemble",
+      "span": 3,
+      "sport": "ncaam_basketball",
+      "home_team": "duke",
+      "away_team": "connecticut",
+      "home_last_played": "2026-01-28",
+      "away_last_played": "2026-01-27",
+      "neutral": false,
+      "home_win_probability": 0.5218,
+      "created_at": "2026-01-30T12:00:00Z"
+    },
+    {
+      "id": "pred_b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9",
+      "type": "prediction",
+      "model": "ensemble",
+      "span": 5,
+      "sport": "ncaam_basketball",
+      "home_team": "kansas",
+      "away_team": "kentucky",
+      "home_last_played": "2026-01-29",
+      "away_last_played": "2026-01-28",
+      "neutral": false,
+      "home_win_probability": 0.6413,
+      "created_at": "2026-01-30T12:00:00Z"
+    }
+  ]
+}
+```
+
+**Error Response (per-prediction):**
+
+```json
+{
+  "type": "error",
+  "error": {
+    "code": "validation_error",
+    "message": "Stats not found for team: invalid-team"
+  }
+}
+```
+
+**Limits:**
+
+- Maximum batch size: 500 predictions per request
+- Results are stored in Cosmos DB (skips existing records)
+
 ### Rankings Endpoint
 
 ```bash
@@ -242,6 +330,7 @@ All errors follow a structured format:
 
 ```json
 {
+  "type": "error",
   "error": {
     "code": "error_code",
     "message": "Human readable message"

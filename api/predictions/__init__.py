@@ -9,30 +9,14 @@ Routes:
 import json
 import logging
 import azure.functions as func
-import pandas as pd
 
 from shared.blob_service import get_blob_service
 from shared.pagination import build_list_response, parse_pagination_params
 from shared.predictions_store import get_predictions_store, PredictionsStore
-
-
-# Valid model types
-VALID_MODELS = {
-    'ensemble', 'logistic_regression', 'knn', 'random_forest',
-    'gradient_boosting', 'mlp', 'svm'
-}
-
-# Model name mapping (short name -> blob storage name)
-MODEL_NAME_MAP = {
-    'logistic_regression': 'logistic_regression_model',
-    'knn': 'knn_model',
-    'random_forest': 'random_forest',
-    'gradient_boosting': 'gradient_boosting',
-    'mlp': 'multilayer_perceptron',
-    'svm': 'support_vector_machine_model'
-}
-
-VALID_SPORTS = ['ncaam_basketball', 'ncaaw_basketball']
+from shared.prediction_service import (
+    VALID_MODELS, VALID_SPORTS, MODEL_NAME_MAP,
+    validate_prediction_request, run_prediction
+)
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -47,11 +31,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         else:
             return handle_list(req)
     
-    return func.HttpResponse(
-        json.dumps({"error": {"code": "method_not_allowed", "message": "Method not allowed"}}),
-        mimetype="application/json",
-        status_code=405
-    )
+    return _error_response("method_not_allowed", "Method not allowed", 405)
 
 
 # =============================================================================
@@ -79,40 +59,22 @@ def handle_create(req: func.HttpRequest) -> func.HttpResponse:
         predictions_store = get_predictions_store()
         data = req.get_json()
         
-        # Extract and validate request fields
-        home_team = data.get('home_team')
-        away_team = data.get('away_team')
-        span = data.get('span', 3)
-        neutral = data.get('neutral', False)
-        sport = data.get('sport', 'ncaam_basketball')
-        model_type = data.get('model', 'ensemble')
+        # Validate request
+        try:
+            validated = validate_prediction_request(data)
+        except ValueError as e:
+            return _error_response("validation_error", str(e), 400)
         
-        # Validate required fields
-        if not home_team or not away_team:
-            return _error_response("missing_teams", "home_team and away_team are required", 400)
+        home_team = validated['home_team']
+        away_team = validated['away_team']
+        span = validated['span']
+        sport = validated['sport']
+        model_type = validated['model']
+        neutral = validated['neutral']
+        is_womens = validated['is_womens']
         
-        # Normalize team names
-        home_team = home_team.lower()
-        away_team = away_team.lower()
-        
-        # Validate span
-        if span not in [3, 5, 7]:
-            return _error_response("invalid_span", "span must be 3, 5, or 7", 400)
-        
-        # Validate sport
-        if sport not in VALID_SPORTS:
-            return _error_response("invalid_sport", f"sport must be one of: {', '.join(VALID_SPORTS)}", 400)
-        
-        # Validate model
-        if model_type not in VALID_MODELS:
-            return _error_response("invalid_model", f"model must be one of: {', '.join(sorted(VALID_MODELS))}", 400)
-        
-        is_womens = sport == 'ncaaw_basketball'
-        
-        # Look up team stats from Blob Storage
+        # Get team stats to generate prediction ID for cache check
         matchup_stats = blob_service.get_matchup_stats(home_team, away_team, span, is_womens)
-        home_stats = matchup_stats['team1']['stats']
-        away_stats = matchup_stats['team2']['stats']
         home_last_played = matchup_stats['team1']['lastPlayed']
         away_last_played = matchup_stats['team2']['lastPlayed']
         
@@ -147,43 +109,19 @@ def handle_create(req: func.HttpRequest) -> func.HttpResponse:
         
         logging.info(f"Cache miss for prediction: {prediction_id}")
         
-        # Build named DataFrame for prediction
-        input_data = blob_service.build_feature_dataframe(home_stats, away_stats, neutral)
-        
-        # Generate feature hash for traceability
-        feature_values = home_stats + away_stats + [int(neutral)]
-        feature_hash = PredictionsStore.generate_feature_hash(feature_values)
-        
-        if model_type == 'ensemble':
-            model_names_to_load = [f'{span}span_{blob_name}' for blob_name in MODEL_NAME_MAP.values()]
-            ensemble_models = blob_service.get_models_parallel(model_names_to_load, is_womens)
-            home_prob, away_prob = _ensemble_predict(input_data, ensemble_models)
-        else:
-            blob_model_name = f'{span}span_{MODEL_NAME_MAP[model_type]}'
-            model = blob_service.get_model(blob_model_name, is_womens)
-            proba = model.predict_proba(input_data)
-            home_prob, away_prob = proba[0][1], proba[0][0]
-        
-        predicted_winner = home_team if home_prob >= away_prob else away_team
-        
-        # Build and store prediction record
-        prediction_record = predictions_store.build_prediction_record(
-            prediction_id=prediction_id,
+        # Run prediction using shared service
+        result, cosmos_record = run_prediction(
+            blob_service=blob_service,
             home_team=home_team,
             away_team=away_team,
-            home_last_played=home_last_played,
-            away_last_played=away_last_played,
             span=span,
-            neutral=neutral,
             sport=sport,
-            model=model_type,
-            model_version=model_version,
-            feature_hash=feature_hash,
-            home_win_probability=home_prob,
-            predicted_winner=predicted_winner
+            model_type=model_type,
+            neutral=neutral
         )
         
-        stored = predictions_store.create_prediction(prediction_record)
+        # Store and return
+        stored = predictions_store.create_prediction(cosmos_record)
         return _success_response(_format_prediction(stored))
     
     except ValueError as e:
@@ -286,26 +224,6 @@ def handle_list(req: func.HttpRequest) -> func.HttpResponse:
 # Helpers
 # =============================================================================
 
-def _ensemble_predict(input_data: pd.DataFrame, models: dict) -> tuple[float, float]:
-    """Run ensemble prediction using provided models."""
-    if not models:
-        raise ValueError("No models provided for ensemble prediction")
-    
-    predict_proba = [0.0, 0.0]
-    model_names = []
-    
-    for name, model in models.items():
-        proba = model.predict_proba(input_data)
-        predict_proba[0] += proba[0][0]
-        predict_proba[1] += proba[0][1]
-        model_names.append(name)
-    
-    num_models = len(models)
-    logging.info(f"Ensemble prediction used {num_models} models: {model_names}")
-    
-    return predict_proba[1] / num_models, predict_proba[0] / num_models
-
-
 def _format_prediction(prediction: dict) -> dict:
     """Format a prediction record for API response."""
     result = prediction.get('result', {})
@@ -338,7 +256,7 @@ def _success_response(data: dict) -> func.HttpResponse:
 def _error_response(code: str, message: str, status_code: int) -> func.HttpResponse:
     """Return an error JSON response."""
     return func.HttpResponse(
-        json.dumps({"error": {"code": code, "message": message}}),
+        json.dumps({"type": "error", "error": {"code": code, "message": message}}),
         mimetype="application/json",
         status_code=status_code
     )
