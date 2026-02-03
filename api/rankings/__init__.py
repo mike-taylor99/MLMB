@@ -38,7 +38,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
         if sport not in VALID_SPORTS:
             return func.HttpResponse(
-                json.dumps({"error": {"code": "invalid_sport", "message": f"sport must be one of: {', '.join(VALID_SPORTS)}"}}),
+                json.dumps({"type": "error", "error": {"code": "invalid_sport", "message": f"sport must be one of: {', '.join(VALID_SPORTS)}"}}),
                 mimetype="application/json",
                 status_code=400
             )
@@ -68,7 +68,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except Exception as e:
         logging.error(f"Rankings error: {e}")
         return func.HttpResponse(
-            json.dumps({"error": {"code": "internal_error", "message": "Failed to retrieve rankings"}}),
+            json.dumps({"type": "error", "error": {"code": "internal_error", "message": "Failed to retrieve rankings"}}),
             mimetype="application/json",
             status_code=500
         )

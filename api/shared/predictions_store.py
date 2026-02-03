@@ -168,6 +168,109 @@ class PredictionsStore:
             logging.error(f"Error creating prediction: {e}")
             raise
     
+    def create_predictions_bulk(self, predictions: List[Dict]) -> tuple[int, int]:
+        """
+        Create multiple predictions, skipping any that already exist.
+        
+        Strategy:
+        1. Query for existing IDs (one query per partition)
+        2. Filter to only new predictions
+        3. Batch create only new ones
+        
+        This preserves original records while maintaining batch efficiency.
+        
+        Args:
+            predictions: List of prediction records to create
+            
+        Returns:
+            Tuple of (created_count, skipped_count)
+        """
+        if not predictions:
+            return 0, 0
+        
+        # Group by partition key (sport)
+        by_sport: Dict[str, List[Dict]] = {}
+        for pred in predictions:
+            sport = pred['sport']
+            if sport not in by_sport:
+                by_sport[sport] = []
+            by_sport[sport].append(pred)
+        
+        total_created = 0
+        total_skipped = 0
+        
+        for sport, sport_predictions in by_sport.items():
+            # Get all IDs we want to create
+            all_ids = [p['id'] for p in sport_predictions]
+            
+            # Query for which IDs already exist
+            existing_ids = self._get_existing_ids(sport, all_ids)
+            
+            # Filter to only new predictions
+            new_predictions = [p for p in sport_predictions if p['id'] not in existing_ids]
+            skipped = len(sport_predictions) - len(new_predictions)
+            total_skipped += skipped
+            
+            if not new_predictions:
+                continue
+            
+            # Batch create new predictions (100 per batch)
+            batch_size = 100
+            for i in range(0, len(new_predictions), batch_size):
+                batch = new_predictions[i:i + batch_size]
+                operations = [("create", (pred,), {}) for pred in batch]
+                
+                try:
+                    self.container.execute_item_batch(
+                        batch_operations=operations,
+                        partition_key=sport
+                    )
+                    total_created += len(batch)
+                except Exception as e:
+                    logging.error(f"Batch create error for {sport}: {e}")
+                    # Fall back to individual creates
+                    for pred in batch:
+                        try:
+                            self.container.create_item(body=pred)
+                            total_created += 1
+                        except CosmosResourceExistsError:
+                            total_skipped += 1
+                        except Exception as inner_e:
+                            logging.error(f"Create failed for {pred.get('id')}: {inner_e}")
+        
+        logging.info(f"Bulk write: {total_created} created, {total_skipped} skipped (already existed)")
+        return total_created, total_skipped
+    
+    def _get_existing_ids(self, sport: str, ids: List[str]) -> set:
+        """
+        Query for which prediction IDs already exist in a partition.
+        
+        Uses batched IN queries (max 256 items per query) for efficiency.
+        """
+        existing = set()
+        batch_size = 256  # Cosmos IN clause limit
+        
+        for i in range(0, len(ids), batch_size):
+            batch_ids = ids[i:i + batch_size]
+            placeholders = ', '.join([f'@id{j}' for j in range(len(batch_ids))])
+            parameters = [{"name": f"@id{j}", "value": id_val} for j, id_val in enumerate(batch_ids)]
+            
+            query = f"SELECT c.id FROM c WHERE c.sport = @sport AND c.id IN ({placeholders})"
+            parameters.append({"name": "@sport", "value": sport})
+            
+            try:
+                results = self.container.query_items(
+                    query=query,
+                    parameters=parameters,
+                    enable_cross_partition_query=False
+                )
+                for item in results:
+                    existing.add(item['id'])
+            except Exception as e:
+                logging.warning(f"Error checking existing IDs: {e}")
+        
+        return existing
+    
     def query_predictions(
         self,
         sport: str,

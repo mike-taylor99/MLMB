@@ -74,7 +74,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             
             if not team:
                 return func.HttpResponse(
-                    json.dumps({"error": {"code": "team_not_found", "message": f"Team not found: {team_id}"}}),
+                    json.dumps({"type": "error", "error": {"code": "team_not_found", "message": f"Team not found: {team_id}"}}),
                     mimetype="application/json",
                     status_code=404
                 )
@@ -94,7 +94,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         valid_sports = ['ncaam_basketball', 'ncaaw_basketball']
         if sport and sport not in valid_sports:
             return func.HttpResponse(
-                json.dumps({"error": {"code": "invalid_sport", "message": f"sport must be one of: {', '.join(valid_sports)}"}}),
+                json.dumps({"type": "error", "error": {"code": "invalid_sport", "message": f"sport must be one of: {', '.join(valid_sports)}"}}),
                 mimetype="application/json",
                 status_code=400
             )
@@ -164,7 +164,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except Exception as e:
         logging.error(f"Teams error: {e}")
         return func.HttpResponse(
-            json.dumps({"error": {"code": "internal_error", "message": "Internal server error"}}),
+            json.dumps({"type": "error", "error": {"code": "internal_error", "message": "Internal server error"}}),
             mimetype="application/json",
             status_code=500
         )
