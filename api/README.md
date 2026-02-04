@@ -4,15 +4,16 @@ This folder contains the serverless API functions for MLMB, designed to run as A
 
 ## Endpoints
 
-| Endpoint            | Method | Description                      |
-| ------------------- | ------ | -------------------------------- |
-| `/predictions`      | POST   | Create prediction (with caching) |
-| `/predictions`      | GET    | Query prediction history         |
-| `/predictions/{id}` | GET    | Get prediction by ID             |
-| `/predictions/batch` | POST   | Batch predictions (up to 500) |
-| `/rankings/{sport}` | GET    | Get top 25 rankings              |
-| `/teams`            | GET    | List teams (paginated)           |
-| `/teams/{id}`       | GET    | Get single team by ID            |
+| Endpoint             | Method | Description                      |
+| -------------------- | ------ | -------------------------------- |
+| `/health`            | GET    | Health check                     |
+| `/predictions`       | POST   | Create prediction (with caching) |
+| `/predictions`       | GET    | Query prediction history         |
+| `/predictions/{id}`  | GET    | Get prediction by ID             |
+| `/predictions/batch` | POST   | Batch predictions (up to 500)    |
+| `/rankings/{sport}`  | GET    | Get top 25 rankings              |
+| `/teams`             | GET    | List teams (paginated)           |
+| `/teams/{id}`        | GET    | Get single team by ID            |
 
 ## Sports
 
@@ -133,17 +134,16 @@ GET /predictions?sport=ncaam_basketball&home_team=duke&limit=20
 
 **Query Parameters:**
 
-| Parameter       | Type   | Required | Description                       |
-| --------------- | ------ | -------- | --------------------------------- |
-| `sport`         | string | Yes      | Sport code (partition key)        |
-| `home_team`     | string | No       | Filter by home team               |
-| `away_team`     | string | No       | Filter by away team               |
-| `model_version` | string | No       | Filter by model version           |
-| `start_date`    | string | No       | Filter after date (ISO format)    |
-| `end_date`      | string | No       | Filter before date (ISO format)   |
-| `limit`         | int    | No       | Max results (default 20, max 100) |
-| `before_id`     | string | No       | Cursor: get items before this ID  |
-| `after_id`      | string | No       | Cursor: get items after this ID   |
+| Parameter    | Type   | Required | Description                       |
+| ------------ | ------ | -------- | --------------------------------- |
+| `sport`      | string | Yes      | Sport code (partition key)        |
+| `home_team`  | string | No       | Filter by home team               |
+| `away_team`  | string | No       | Filter by away team               |
+| `start_date` | string | No       | Filter after date (ISO format)    |
+| `end_date`   | string | No       | Filter before date (ISO format)   |
+| `limit`      | int    | No       | Max results (default 20, max 100) |
+| `before_id`  | string | No       | Cursor: get items before this ID  |
+| `after_id`   | string | No       | Cursor: get items after this ID   |
 
 **History Response:**
 
@@ -340,17 +340,35 @@ All errors follow a structured format:
 
 **Error Codes:**
 
-| Code               | HTTP Status | Description                              |
-| ------------------ | ----------- | ---------------------------------------- |
-| `missing_teams`    | 400         | home_team and away_team are required     |
-| `invalid_span`     | 400         | span must be 3, 5, or 7                  |
-| `invalid_sport`    | 400         | sport must be a valid sport code         |
-| `missing_sport`    | 400         | sport query parameter is required        |
-| `invalid_model`    | 400         | model must be one of the valid options   |
-| `team_not_found`   | 404         | Team key not found in /teams/{key}       |
-| `not_found`        | 404         | Prediction not found                     |
-| `validation_error` | 400         | Team not found or other validation error |
-| `internal_error`   | 500         | Internal server error                    |
+| Code               | HTTP Status | Description                      |
+| ------------------ | ----------- | -------------------------------- |
+| `validation_error` | 400/422     | Invalid input or team not found  |
+| `invalid_sport`    | 400         | sport must be a valid sport code |
+| `batch_too_large`  | 400         | Batch exceeds 500 predictions    |
+| `not_found`        | 404         | Resource not found               |
+| `internal_error`   | 500         | Internal server error            |
+
+### Request Tracing
+
+All responses include an `X-Request-ID` header for debugging:
+
+```bash
+# Auto-generated
+curl -i http://localhost:7071/health
+# Response header: X-Request-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+
+# Pass your own for distributed tracing
+curl -H "X-Request-ID: my-trace-123" http://localhost:7071/health
+# Response header: X-Request-ID: my-trace-123
+```
+
+### OpenAPI Documentation
+
+Interactive API docs available at:
+
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
+- OpenAPI JSON: `/openapi.json`
 
 ## Architecture
 
