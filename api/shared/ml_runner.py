@@ -1,14 +1,15 @@
 """
-Shared prediction logic for single and batch endpoints.
+ML Runner - low-level machine learning model execution.
 
-Contains constants, validation, and prediction execution shared between
-/predictions and /batch endpoints.
+Loads sklearn models and runs predictions. This is the core ML engine
+that the business logic layer (app/services) calls into.
 """
 import logging
 import pandas as pd
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
+from app.constants import VALID_SPORTS, VALID_SPANS, VALID_MODELS
 from shared.blob_service import BlobStorageService
 from shared.predictions_store import PredictionsStore
 
@@ -16,11 +17,6 @@ from shared.predictions_store import PredictionsStore
 # =============================================================================
 # Constants
 # =============================================================================
-
-VALID_MODELS = {
-    'ensemble', 'logistic_regression', 'knn', 'random_forest',
-    'gradient_boosting', 'mlp', 'svm'
-}
 
 MODEL_NAME_MAP = {
     'logistic_regression': 'logistic_regression_model',
@@ -30,9 +26,6 @@ MODEL_NAME_MAP = {
     'mlp': 'multilayer_perceptron',
     'svm': 'support_vector_machine_model'
 }
-
-VALID_SPORTS = ['ncaam_basketball', 'ncaaw_basketball']
-VALID_SPANS = [3, 5, 7]
 
 
 # =============================================================================

@@ -1,0 +1,11 @@
+{
+  "jupyter.jupyterServerType": "local",
+  "appService.defaultWebAppToDeploy": "undefined/subscriptions/c54e1660-b5d4-4510-8512-57b573559d5d/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/mlmb-api",
+  "appService.deploySubpath": "api",
+  "azureFunctions.deploySubpath": "api",
+  "azureFunctions.scmDoBuildDuringDeployment": true,
+  "azureFunctions.pythonVenv": ".venv",
+  "azureFunctions.projectLanguage": "Python",
+  "azureFunctions.projectRuntime": "~4",
+  "debug.internalConsoleOptions": "neverOpen"
+}
