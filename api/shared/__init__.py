@@ -1,1 +1,1 @@
-# Shared module for Azure Functions
+# Shared services (blob storage, predictions store)

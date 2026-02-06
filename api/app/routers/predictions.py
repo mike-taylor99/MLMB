@@ -144,7 +144,7 @@ async def batch_predictions_endpoint(
     """
     Process multiple predictions in a single request.
 
-    Models are loaded once and reused. Results are written to Cosmos DB
+    Models are loaded once and reused. Results are cached to Cosmos DB
     in the background. Order is preserved - response[i] matches request[i].
     """
     if len(request.input) > settings.max_batch_size:

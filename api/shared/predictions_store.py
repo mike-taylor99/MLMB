@@ -5,13 +5,14 @@ Provides prediction history, caching via content-hash IDs, and query capabilitie
 import hashlib
 import json
 import logging
-import os
 from datetime import datetime, timezone
 from threading import Lock
 from typing import Any, Dict, List, Optional
 
 from azure.cosmos import CosmosClient, PartitionKey
 from azure.cosmos.exceptions import CosmosResourceExistsError, CosmosResourceNotFoundError
+
+from app.config import get_settings
 
 
 class PredictionsStore:
@@ -54,9 +55,9 @@ class PredictionsStore:
     def container(self):
         """Get or create the Cosmos DB container."""
         if self._container is None:
-            conn_str = os.getenv('COSMOS_CONNECTION_STRING')
+            conn_str = get_settings().cosmos_connection_string
             if not conn_str:
-                raise ValueError("COSMOS_CONNECTION_STRING environment variable not set")
+                raise ValueError("COSMOS_CONNECTION_STRING not configured")
             
             self._client = CosmosClient.from_connection_string(conn_str)
             self._database = self._client.create_database_if_not_exists(id=self.DATABASE_NAME)

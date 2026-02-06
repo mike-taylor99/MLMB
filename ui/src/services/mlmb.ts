@@ -9,7 +9,7 @@ import {
 } from "./types";
 
 // API base URL - uses environment variable in production, localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:7071";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Define a service using a base URL and expected endpoints
 export const mlmbApi = createApi({
