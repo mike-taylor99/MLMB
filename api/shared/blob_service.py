@@ -5,7 +5,6 @@ Provides centralized caching and access for all endpoints.
 import io
 import json
 import logging
-import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from threading import Lock
@@ -93,9 +92,10 @@ class BlobStorageService:
     def client(self) -> BlobServiceClient:
         """Get or create the BlobServiceClient."""
         if self._client is None:
-            conn_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+            from app.config import get_settings
+            conn_str = get_settings().azure_storage_connection_string
             if not conn_str:
-                raise ValueError("AZURE_STORAGE_CONNECTION_STRING environment variable not set")
+                raise ValueError("AZURE_STORAGE_CONNECTION_STRING not configured")
             self._client = BlobServiceClient.from_connection_string(conn_str)
         return self._client
     

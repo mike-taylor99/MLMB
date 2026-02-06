@@ -1,6 +1,6 @@
-# MLMB API (Azure Functions)
+# MLMB API
 
-This folder contains the serverless API functions for MLMB, designed to run as Azure Functions (Flex Consumption).
+FastAPI application serving ML predictions for NCAA basketball, deployed on Azure Container Apps.
 
 ## Endpoints
 
@@ -26,19 +26,17 @@ Currently supported sports:
 
 ### Prerequisites
 
-1. Install [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
-2. Python 3.11+
+- Python 3.11+
+- Docker (optional, for container builds)
 
 ### Setup
 
 ```bash
-# Create and activate virtual environment
 cd api
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1  # Windows
 # source .venv/bin/activate   # Mac/Linux
 
-# Install dependencies
 pip install -r requirements.txt
 ```
 
@@ -47,26 +45,24 @@ pip install -r requirements.txt
 ```bash
 cd api
 .\.venv\Scripts\Activate.ps1
-func start
+uvicorn app.main:create_app --factory --reload --port 8000
+```
+
+Or with Docker:
+
+```bash
+cd api
+docker build -t mlmb-api .
+docker run -p 8000:8000 --env-file .env mlmb-api
 ```
 
 ### Environment Variables
 
-Create `local.settings.json` with:
+Create a `.env` file in the `api/` directory:
 
-```json
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "python",
-    "AZURE_STORAGE_CONNECTION_STRING": "<your-connection-string>",
-    "COSMOS_CONNECTION_STRING": "<your-cosmos-connection-string>"
-  },
-  "Host": {
-    "CORS": "*"
-  }
-}
+```
+AZURE_STORAGE_CONNECTION_STRING=<your-connection-string>
+COSMOS_CONNECTION_STRING=<your-cosmos-connection-string>
 ```
 
 ## API Usage
@@ -354,11 +350,11 @@ All responses include an `X-Request-ID` header for debugging:
 
 ```bash
 # Auto-generated
-curl -i http://localhost:7071/health
+curl -i http://localhost:8000/health
 # Response header: X-Request-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 # Pass your own for distributed tracing
-curl -H "X-Request-ID: my-trace-123" http://localhost:7071/health
+curl -H "X-Request-ID: my-trace-123" http://localhost:8000/health
 # Response header: X-Request-ID: my-trace-123
 ```
 
@@ -398,4 +394,6 @@ Features are defined in `feature_schema.json`:
 
 ## Deployment
 
-This API deploys automatically with the Static Web App when you push to the `master` branch.
+The API deploys automatically to Azure Container Apps when you push to the `master` branch (via `.github/workflows/deploy-api.yml`).
+
+The workflow builds a Docker image, pushes it to Azure Container Registry, and updates the Container App.

@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+local.settings.json
+.git/
+.gitignore
+.dockerignore
+.funcignore
+Dockerfile
