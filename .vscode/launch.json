@@ -2,14 +2,41 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Python Functions",
+      "name": "API: FastAPI",
       "type": "debugpy",
-      "request": "attach",
-      "connect": {
-        "host": "localhost",
-        "port": 9091
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "app.main:create_app",
+        "--factory",
+        "--reload",
+        "--port",
+        "8000"
+      ],
+      "cwd": "${workspaceFolder}/api",
+      "envFile": "${workspaceFolder}/api/.env",
+      "jinja": true
+    },
+    {
+      "name": "Pipeline: Team Stats",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "team_stats.generate",
+      "cwd": "${workspaceFolder}/pipelines",
+      "envFile": "${workspaceFolder}/api/.env",
+      "jinja": true
+    },
+    {
+      "name": "Pipeline: Top 25",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "top25.generate",
+      "cwd": "${workspaceFolder}/pipelines",
+      "envFile": "${workspaceFolder}/api/.env",
+      "env": {
+        "API_BASE_URL": "http://localhost:8000"
       },
-      "preLaunchTask": "func: host start"
+      "jinja": true
     }
   ]
 }

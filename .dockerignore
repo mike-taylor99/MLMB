@@ -1,0 +1,47 @@
+# Git
+.git/
+.github/
+
+# Virtual environments
+.venv/
+api/.venv/
+**/node_modules/
+
+# Dev container
+.devcontainer/
+
+# IDE
+.vscode/
+
+# Infrastructure definitions
+infra/
+
+# Environment files (secrets)
+.env
+api/.env
+
+# UI (not needed in API/pipeline image)
+ui/
+
+# Machine learning notebooks (not needed yet)
+machine-learning/
+
+# Utilities / notebooks
+utils/
+
+# Raw season data (large, not needed in image)
+data/seasons/
+data/dataset/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Misc
+*.md
+LICENSE

@@ -1,17 +1,22 @@
-name: Deploy API to Container Apps
+name: Build & Deploy
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'api/**'
-      - '.github/workflows/deploy-api.yml'
+      - "api/**"
+      - "pipelines/**"
+      - "data/mens_teams.csv"
+      - "data/womens_teams.csv"
+      - "requirements.txt"
+      - "Dockerfile"
+      - ".github/workflows/deploy-api.yml"
   workflow_dispatch:
 
 env:
   ACR_NAME: mlmbacr
-  IMAGE_NAME: mlmb-api
+  IMAGE_NAME: mlmb
   CONTAINER_APP_NAME: mlmb-api
   RESOURCE_GROUP: mlmb
 
@@ -32,15 +37,21 @@ jobs:
 
       - name: Build and push image
         run: |
-          cd api
           docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
                        -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest .
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      - name: Deploy to Container Apps
+      - name: Deploy API to Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Update Container Apps Jobs
+        run: |
+          az containerapp job update -n mlmb-team-stats -g ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          az containerapp job update -n mlmb-top25 -g ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}

@@ -3,3 +3,11 @@ data/seasons/
 
 # Generated data files
 utils/notebook/*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Environment / secrets
+.env

@@ -1,0 +1,29 @@
+# =============================================================================
+# MLMB - Unified Python dependencies
+# Shared across API, pipelines, and (eventually) ML training
+# =============================================================================
+
+# --- Web framework (API) ---
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# --- Data science / ML ---
+scikit-learn==1.4.1.post1
+joblib==1.3.2
+numpy==1.26.4
+pandas==2.1.4
+
+# --- Web scraping (pipelines) ---
+requests==2.31.0
+beautifulsoup4==4.12.3
+lxml==5.1.0
+tqdm==4.66.1
+
+# --- Azure services ---
+azure-storage-blob==12.19.0
+azure-cosmos==4.5.1
+
+# --- Config ---
+python-dotenv==1.0.0

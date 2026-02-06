@@ -2,32 +2,35 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "func",
-      "label": "func: host start",
-      "command": "host start",
-      "problemMatcher": "$func-python-watch",
-      "isBackground": true,
-      "dependsOn": "pip install (functions)",
+      "label": "API: Start",
+      "type": "shell",
+      "command": "uvicorn app.main:create_app --factory --reload --port 8000",
       "options": {
-        "cwd": "${workspaceFolder}/api"
-      }
+        "cwd": "${workspaceFolder}/api",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/api"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": []
     },
     {
-      "label": "pip install (functions)",
+      "label": "Docker: Build",
       "type": "shell",
-      "osx": {
-        "command": "${config:azureFunctions.pythonVenv}/bin/python -m pip install -r requirements.txt"
-      },
-      "windows": {
-        "command": "${config:azureFunctions.pythonVenv}\\Scripts\\python -m pip install -r requirements.txt"
-      },
-      "linux": {
-        "command": "${config:azureFunctions.pythonVenv}/bin/python -m pip install -r requirements.txt"
-      },
-      "problemMatcher": [],
+      "command": "docker build -t mlmb:local .",
       "options": {
-        "cwd": "${workspaceFolder}/api"
-      }
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "pip install",
+      "type": "shell",
+      "command": "pip install -r requirements.txt",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
     }
   ]
 }

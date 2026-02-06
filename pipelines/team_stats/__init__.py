@@ -1,0 +1,1 @@
+# Team stats pipeline entrypoint
