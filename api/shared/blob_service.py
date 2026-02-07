@@ -2,6 +2,7 @@
 Singleton service for Azure Blob Storage interactions.
 Provides centralized caching and access for all endpoints.
 """
+import gzip
 import io
 import json
 import logging
@@ -22,6 +23,16 @@ import sklearn.linear_model
 import sklearn.neighbors
 import sklearn.neural_network
 import sklearn.svm
+
+# Model name mapping (used for preloading)
+MODEL_NAME_MAP = {
+    'logistic_regression': 'logistic_regression_model',
+    'knn': 'knn_model',
+    'random_forest': 'random_forest',
+    'gradient_boosting': 'gradient_boosting',
+    'mlp': 'multilayer_perceptron',
+    'svm': 'support_vector_machine_model'
+}
 
 
 class BlobStorageService:
@@ -466,14 +477,26 @@ class BlobStorageService:
                 return self._models_cache[cache_key][model_name]
             
             # Use sport code as path prefix (ncaam_basketball/ or ncaaw_basketball/)
-            blob_path = f"{cache_key}/{model_name}.pkl"
+            # Try compressed (.pkl.gz) first, fall back to uncompressed (.pkl)
+            blob_path_gz = f"{cache_key}/{model_name}.pkl.gz"
+            blob_path_raw = f"{cache_key}/{model_name}.pkl"
             
             try:
-                blob_client = self.client.get_blob_client(
-                    container=self.MODELS_CONTAINER,
-                    blob=blob_path
-                )
-                model_bytes = blob_client.download_blob().readall()
+                try:
+                    blob_client = self.client.get_blob_client(
+                        container=self.MODELS_CONTAINER,
+                        blob=blob_path_gz
+                    )
+                    compressed = blob_client.download_blob().readall()
+                    model_bytes = gzip.decompress(compressed)
+                except Exception:
+                    # Fall back to uncompressed
+                    blob_client = self.client.get_blob_client(
+                        container=self.MODELS_CONTAINER,
+                        blob=blob_path_raw
+                    )
+                    model_bytes = blob_client.download_blob().readall()
+                
                 model = joblib.load(io.BytesIO(model_bytes))
                 self._models_cache[cache_key][model_name] = model
                 logging.info(f"Loaded model: {model_name}")
@@ -532,6 +555,55 @@ class BlobStorageService:
         
         # Return models in sorted order for deterministic iteration
         return {name: self._models_cache[cache_key][name] for name in sorted(model_names)}
+    
+    # ==================== Eager Loading ====================
+    
+    def preload_all(self) -> Dict:
+        """
+        Eagerly load ALL data from Blob Storage at startup.
+        Downloads everything in parallel for fastest cold start.
+        
+        Returns:
+            Dict with timing and size statistics
+        """
+        import time
+        stats = {}
+        overall_start = time.time()
+        
+        # 1. Load manifest + feature schema (small, needed by everything)
+        t0 = time.time()
+        self.get_models_manifest()
+        self.get_feature_schema(is_womens=False)
+        stats['manifest_and_schema'] = round(time.time() - t0, 2)
+        
+        # 2. Load API data in parallel (team stats, top25, teams)
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=5) as ex:
+            ex.submit(self.get_team_stats, False)
+            ex.submit(self.get_team_stats, True)
+            ex.submit(self.get_top25, False)
+            ex.submit(self.get_top25, True)
+            ex.submit(self.get_teams)
+        stats['api_data'] = round(time.time() - t0, 2)
+        
+        # 3. Load ALL models in parallel (the big one)
+        t0 = time.time()
+        all_model_names = []
+        for span in [3, 5, 7]:
+            for blob_name in MODEL_NAME_MAP.values():
+                all_model_names.append(f'{span}span_{blob_name}')
+        
+        # Load both sports in parallel
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            men_future = ex.submit(self.get_models_parallel, all_model_names, False)
+            women_future = ex.submit(self.get_models_parallel, all_model_names, True)
+            men_future.result()
+            women_future.result()
+        stats['models'] = round(time.time() - t0, 2)
+        
+        stats['total'] = round(time.time() - overall_start, 2)
+        stats['cache'] = self.get_cache_stats()
+        return stats
     
     # ==================== Cache Management ====================
     
