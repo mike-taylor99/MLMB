@@ -5,6 +5,7 @@ merge home/away opponent data.
 
 import os
 import logging
+from io import StringIO
 import numpy as np
 import pandas as pd
 
@@ -21,7 +22,8 @@ logger = logging.getLogger(__name__)
 def create_basic_gamelog(school_key: str, season: int, is_womens: bool = False) -> None:
     """Parse basic gamelog HTML into a clean CSV."""
     html_path = get_team_season_file_path(school_key, season, f"{school_key}_basic.html", is_womens)
-    df = pd.read_html(html_path)[0]
+    with open(html_path, "r", encoding="utf-8") as f:
+        df = pd.read_html(StringIO(f.read()))[0]
 
     # Drop opponent columns
     opp_cols = [c for c in df.columns if "Opponent" in c[0]]
@@ -62,7 +64,8 @@ def create_basic_gamelog(school_key: str, season: int, is_womens: bool = False) 
 def create_advanced_gamelog(school_key: str, season: int, is_womens: bool = False) -> None:
     """Parse advanced gamelog HTML into a clean CSV."""
     html_path = get_team_season_file_path(school_key, season, f"{school_key}_advanced.html", is_womens)
-    df = pd.read_html(html_path)[0]
+    with open(html_path, "r", encoding="utf-8") as f:
+        df = pd.read_html(StringIO(f.read()))[0]
 
     # Drop defensive columns
     def_cols = [c for c in df.columns if "Defensive" in c[0]]
