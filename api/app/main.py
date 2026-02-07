@@ -6,6 +6,7 @@ exception handlers, and routers.
 """
 
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,39 @@ def _configure_logging() -> None:
     root_logger.handlers = [handler]
     root_logger.setLevel(logging.INFO)
 
+    # Suppress verbose Azure SDK HTTP request/response logging
+    logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(
+        logging.WARNING
+    )
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    """Startup/shutdown lifespan handler — eagerly loads all blob data."""
+    from app.config import get_settings
+
+    settings = get_settings()
+
+    if settings.azure_storage_connection_string:
+        from shared.blob_service import get_blob_service
+
+        blob_service = get_blob_service()
+        try:
+            logging.info("Preloading all data from Blob Storage...")
+            stats = blob_service.preload_all()
+            logging.info(
+                f"Preload complete in {stats['total']}s "
+                f"(manifest: {stats['manifest_and_schema']}s, "
+                f"api_data: {stats['api_data']}s, "
+                f"models: {stats['models']}s)"
+            )
+        except Exception as e:
+            logging.error(f"Preload failed (app will lazy-load on demand): {e}")
+    else:
+        logging.warning("No Azure Storage connection string — skipping preload")
+
+    yield  # App runs here
+
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
@@ -37,10 +71,11 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title="MLMB API",
-        description="Machine Learning March Bracket - NCAA Basketball Prediction API",
+        description="Machine Learning on Men's Basketball - NCAA Basketball Prediction API",
         version="2.0.0",
         docs_url="/docs",
         redoc_url="/redoc",
+        lifespan=_lifespan,
     )
 
     # Request ID middleware (must be added first to wrap everything)
@@ -95,7 +130,9 @@ def _register_exception_handlers(app: FastAPI) -> None:
         request_id = get_request_id()
         errors = exc.errors()
         message = "; ".join([f"{e['loc'][-1]}: {e['msg']}" for e in errors])
-        response = ErrorResponse(error=ErrorDetail(code="validation_error", message=message))
+        response = ErrorResponse(
+            error=ErrorDetail(code="validation_error", message=message)
+        )
         return JSONResponse(
             status_code=400,
             content=response.model_dump(),

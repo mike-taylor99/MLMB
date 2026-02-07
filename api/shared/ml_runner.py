@@ -10,22 +10,8 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
 from app.constants import VALID_SPORTS, VALID_SPANS, VALID_MODELS
-from shared.blob_service import BlobStorageService
+from shared.blob_service import BlobStorageService, MODEL_NAME_MAP
 from shared.predictions_store import PredictionsStore
-
-
-# =============================================================================
-# Constants
-# =============================================================================
-
-MODEL_NAME_MAP = {
-    'logistic_regression': 'logistic_regression_model',
-    'knn': 'knn_model',
-    'random_forest': 'random_forest',
-    'gradient_boosting': 'gradient_boosting',
-    'mlp': 'multilayer_perceptron',
-    'svm': 'support_vector_machine_model'
-}
 
 
 # =============================================================================
