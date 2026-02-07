@@ -51,7 +51,11 @@ jobs:
 
       - name: Update Container Apps Jobs
         run: |
-          az containerapp job update -n mlmb-team-stats -g ${{ env.RESOURCE_GROUP }} \
+          az containerapp job update \
+            --name mlmb-team-stats \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
             --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          az containerapp job update -n mlmb-top25 -g ${{ env.RESOURCE_GROUP }} \
+          az containerapp job update \
+            --name mlmb-top25 \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
             --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}

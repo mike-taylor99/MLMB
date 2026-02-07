@@ -41,8 +41,12 @@ def main() -> None:
         logger.warning("AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally.")
 
     logger.info(f"Starting team stats pipeline for season {season}")
-    generate_and_upload_team_stats(season, connection_string=connection_string)
+    success = generate_and_upload_team_stats(season, connection_string=connection_string)
     logger.info("Team stats pipeline complete.")
+
+    if not success:
+        logger.error("One or more sports failed to generate stats.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

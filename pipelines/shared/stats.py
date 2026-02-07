@@ -133,13 +133,27 @@ def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens
 
 def generate_and_upload_team_stats(
     season: int, spans: list[int] = DEFAULT_SPANS, connection_string: str | None = None
-) -> None:
-    """Generate team stats for both genders and upload to blob storage."""
+) -> bool:
+    """Generate team stats for both genders and upload to blob storage.
+
+    Returns True if all sports generated successfully, False otherwise.
+    """
+    failures = []
     for is_womens in [False, True]:
         sport = "ncaaw_basketball" if is_womens else "ncaam_basketball"
         logger.info(f"=== Generating {sport} team stats ===")
 
-        stats = generate_team_stats(season, spans, is_womens)
+        try:
+            stats = generate_team_stats(season, spans, is_womens)
+        except Exception as e:
+            logger.error(f"Failed to generate {sport} team stats: {e}")
+            failures.append(sport)
+            continue
+
+        if not stats:
+            logger.warning(f"No stats generated for {sport}")
+            failures.append(sport)
+            continue
 
         blob_name = f"{sport}/team-stats"
         data = json.dumps(stats, indent=2)
@@ -153,3 +167,5 @@ def generate_and_upload_team_stats(
             with open(out_file, "w") as f:
                 f.write(data)
             logger.info(f"Wrote {out_file} (no connection string — local only)")
+
+    return len(failures) == 0
