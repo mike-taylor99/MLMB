@@ -7,6 +7,7 @@ import io
 import json
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
 from typing import Any, Dict, List, Optional, Tuple
@@ -397,10 +398,14 @@ class BlobStorageService:
     
     # ==================== Teams ====================
     
+    # Path to data/ directory (works in Docker /app/data and local /workspace/data)
+    _DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'data'
+    
     def get_teams(self) -> tuple[list, str]:
         """
-        Load teams data from Blob Storage with caching.
-        Thread-safe: uses double-checked locking to prevent parallel downloads.
+        Load teams from local CSV files with caching.
+        Reads mens_teams.csv and womens_teams.csv baked into the container image,
+        merges them into a unified list, and caches the result.
         
         Returns:
             Tuple of (teams list, last_modified ISO string)
@@ -409,32 +414,64 @@ class BlobStorageService:
         if self._teams_cache is not None:
             return self._teams_cache
         
-        # Slow path - acquire lock to prevent parallel downloads
+        # Slow path - acquire lock to prevent parallel loads
         with self._teams_lock:
             # Double-check after acquiring lock
             if self._teams_cache is not None:
                 return self._teams_cache
             
-            blob_name = 'teams'
-            logging.info(f"Loading teams: {blob_name}")
+            logging.info("Loading teams from local CSV files")
             
             try:
-                blob_client = self.client.get_blob_client(
-                    container=self.API_CONTAINER,
-                    blob=blob_name
+                mens_csv = self._DATA_DIR / 'mens_teams.csv'
+                womens_csv = self._DATA_DIR / 'womens_teams.csv'
+                
+                mens_df = pd.read_csv(mens_csv)
+                womens_df = pd.read_csv(womens_csv)
+                
+                mens_keys = set(mens_df['SR key'])
+                womens_keys = set(womens_df['SR key'])
+                
+                # Start with men's teams, mark programs
+                merged_df = mens_df.copy()
+                merged_df['has_mens_program'] = True
+                merged_df['has_womens_program'] = merged_df['SR key'].isin(womens_keys)
+                
+                # Add women-only teams
+                womens_only = womens_df[~womens_df['SR key'].isin(mens_keys)].copy()
+                womens_only['has_mens_program'] = False
+                womens_only['has_womens_program'] = True
+                merged_df = pd.concat([merged_df, womens_only], ignore_index=True)
+                
+                # Transform to API format
+                teams_list = []
+                for _, row in merged_df.iterrows():
+                    teams_list.append({
+                        'key': row['SR key'] if pd.notna(row['SR key']) else None,
+                        'school': row['School'] if pd.notna(row['School']) else None,
+                        'name': row['NCAA Name'] if pd.notna(row.get('NCAA Name')) else None,
+                        'location': row['City, State'] if pd.notna(row['City, State']) else None,
+                        'ncaa_key': row['NCAA key'] if pd.notna(row.get('NCAA key')) else None,
+                        'color': row['background-color'] if pd.notna(row.get('background-color')) else None,
+                        'has_mens_program': bool(row.get('has_mens_program', False)),
+                        'has_womens_program': bool(row.get('has_womens_program', False)),
+                    })
+                
+                # Filter out teams without a key and sort
+                teams_list = sorted(
+                    [t for t in teams_list if t['key']],
+                    key=lambda x: x['key']
                 )
-                # Get blob properties for last_modified
-                properties = blob_client.get_blob_properties()
-                last_modified = properties.last_modified.isoformat().replace('+00:00', 'Z')
                 
-                blob_data = blob_client.download_blob().readall()
-                data = json.loads(blob_data.decode())
+                # Use the latest file mtime as last_modified
+                mtime = max(mens_csv.stat().st_mtime, womens_csv.stat().st_mtime)
+                last_modified = datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat().replace('+00:00', 'Z')
                 
-                # Cache both data and metadata
-                self._teams_cache = (data, last_modified)
-                return data, last_modified
+                self._teams_cache = (teams_list, last_modified)
+                logging.info(f"Loaded {len(teams_list)} teams from CSV")
+                return teams_list, last_modified
             except Exception as e:
-                logging.error(f"Failed to load teams ({blob_name}): {e}")
+                logging.error(f"Failed to load teams from CSV: {e}")
                 raise
     
     # ==================== Models ====================
@@ -576,14 +613,14 @@ class BlobStorageService:
         self.get_feature_schema(is_womens=False)
         stats['manifest_and_schema'] = round(time.time() - t0, 2)
         
-        # 2. Load API data in parallel (team stats, top25, teams)
+        # 2. Load API data in parallel (team stats, top25 from blob; teams from local CSV)
         t0 = time.time()
-        with ThreadPoolExecutor(max_workers=5) as ex:
+        self.get_teams()  # fast local CSV read, no network
+        with ThreadPoolExecutor(max_workers=4) as ex:
             ex.submit(self.get_team_stats, False)
             ex.submit(self.get_team_stats, True)
             ex.submit(self.get_top25, False)
             ex.submit(self.get_top25, True)
-            ex.submit(self.get_teams)
         stats['api_data'] = round(time.time() - t0, 2)
         
         # 3. Load ALL models in parallel (the big one)
@@ -612,7 +649,7 @@ class BlobStorageService:
         Clear cached data.
         
         Args:
-            cache_type: 'models', 'stats', 'top25', 'manifest', 'schema', or None for all
+            cache_type: 'models', 'stats', 'top25', 'teams', 'manifest', 'schema', or None for all
         """
         if cache_type is None or cache_type == 'models':
             self._models_cache = {'ncaam_basketball': {}, 'ncaaw_basketball': {}}
@@ -625,6 +662,10 @@ class BlobStorageService:
         if cache_type is None or cache_type == 'top25':
             self._top25_cache = {'ncaam_basketball': None, 'ncaaw_basketball': None}
             logging.info("Cleared top 25 cache")
+        
+        if cache_type is None or cache_type == 'teams':
+            self._teams_cache = None
+            logging.info("Cleared teams cache")
         
         if cache_type is None or cache_type == 'manifest':
             self._models_manifest_cache = None
@@ -648,7 +689,8 @@ class BlobStorageService:
             'top25': {
                 'ncaam_basketball': self._top25_cache['ncaam_basketball'] is not None,
                 'ncaaw_basketball': self._top25_cache['ncaaw_basketball'] is not None
-            }
+            },
+            'teams': self._teams_cache is not None
         }
 
 
