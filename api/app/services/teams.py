@@ -28,7 +28,7 @@ def get_team_by_id(team_id: str, blob_service: BlobStorageService) -> Optional[T
     if not record:
         return None
 
-    return TeamResponse.from_blob_record(record)
+    return TeamResponse.from_record(record)
 
 
 def list_teams(
@@ -90,7 +90,7 @@ def list_teams(
     has_more = len(cursor_filtered) > limit
 
     # Convert to response models
-    teams = [TeamResponse.from_blob_record(t) for t in paginated]
+    teams = [TeamResponse.from_record(t) for t in paginated]
 
     return TeamsListResponse(
         data=teams,

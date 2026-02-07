@@ -127,20 +127,25 @@ class BatchResponse(BaseModel):
 # Team Models
 # =============================================================================
 
-class TeamResponse(BaseModel):
-    """Response for a single team."""
-    id: str = Field(..., description="Team key (e.g., 'duke')")
-    type: Literal["team"] = Field(default="team", description="Response type")
+class TeamMeta(BaseModel):
+    """Sport-agnostic metadata for a team."""
     school: str = Field(..., description="School short name (e.g., 'Duke')")
     name: str = Field(..., description="Full school name")
     location: str = Field(..., description="City, State")
     ncaa_key: Optional[str] = Field(None, description="NCAA identifier")
     color: Optional[str] = Field(None, description="Primary color hex code")
+
+
+class TeamResponse(BaseModel):
+    """Response for a single team."""
+    id: str = Field(..., description="Team key (e.g., 'duke')")
+    type: Literal["team"] = Field(default="team", description="Response type")
     sports: List[str] = Field(..., description="List of sports this team has programs for")
+    meta: TeamMeta = Field(..., description="Team metadata")
 
     @classmethod
-    def from_blob_record(cls, record: dict) -> "TeamResponse":
-        """Create a TeamResponse from a blob storage record."""
+    def from_record(cls, record: dict) -> "TeamResponse":
+        """Create a TeamResponse from a data record."""
         sports = []
         if record.get("has_mens_program"):
             sports.append("ncaam_basketball")
@@ -149,12 +154,14 @@ class TeamResponse(BaseModel):
 
         return cls(
             id=record["key"],
-            school=record["school"],
-            name=record["name"],
-            location=record["location"],
-            ncaa_key=record.get("ncaa_key"),
-            color=record.get("color"),
             sports=sports,
+            meta=TeamMeta(
+                school=record["school"],
+                name=record["name"],
+                location=record["location"],
+                ncaa_key=record.get("ncaa_key"),
+                color=record.get("color"),
+            ),
         )
 
 
