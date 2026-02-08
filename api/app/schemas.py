@@ -8,38 +8,57 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.constants import VALID_SPORTS, VALID_MODELS, VALID_SPANS, SportType, ModelTypeStr, SpanType
+from app.constants import (
+    VALID_SPORTS,
+    VALID_MODELS,
+    VALID_SPANS,
+    SportType,
+    ModelTypeStr,
+    SpanType,
+)
 
 
 # =============================================================================
 # Common Models
 # =============================================================================
 
+
 class ErrorDetail(BaseModel):
     """Error detail with code and message."""
+
     code: str = Field(..., description="Error code (e.g., 'validation_error')")
     message: str = Field(..., description="Human-readable error message")
 
 
 class ErrorResponse(BaseModel):
     """Standard error response format."""
+
     type: Literal["error"] = Field(default="error", description="Response type")
     error: ErrorDetail
 
 
 class HealthResponse(BaseModel):
     """Health check response."""
-    status: Literal["healthy", "unhealthy"] = Field(default="healthy", description="Service health status")
+
+    status: Literal["healthy", "unhealthy"] = Field(
+        default="healthy", description="Service health status"
+    )
 
 
 # =============================================================================
 # Prediction Models
 # =============================================================================
 
+
 class PredictionRequest(BaseModel):
     """Request body for creating a prediction."""
-    home_team: str = Field(..., min_length=1, description="Home team key (e.g., 'duke')")
-    away_team: str = Field(..., min_length=1, description="Away team key (e.g., 'connecticut')")
+
+    home_team: str = Field(
+        ..., min_length=1, description="Home team key (e.g., 'duke')"
+    )
+    away_team: str = Field(
+        ..., min_length=1, description="Away team key (e.g., 'connecticut')"
+    )
     span: SpanType = Field(default=3, description="Moving average span: 3, 5, or 7")
     neutral: bool = Field(default=False, description="Whether game is at neutral site")
     sport: SportType = Field(default="ncaam_basketball", description="Sport code")
@@ -53,17 +72,26 @@ class PredictionRequest(BaseModel):
 
 class PredictionResponse(BaseModel):
     """Response for a single prediction."""
+
     id: str = Field(..., description="Prediction ID")
-    type: Literal["prediction"] = Field(default="prediction", description="Response type")
+    type: Literal["prediction"] = Field(
+        default="prediction", description="Response type"
+    )
     model: str = Field(..., description="Model used for prediction")
     span: int = Field(..., description="Moving average span used")
     sport: str = Field(..., description="Sport code")
     home_team: str = Field(..., description="Home team key")
     away_team: str = Field(..., description="Away team key")
-    home_last_played: Optional[str] = Field(None, description="Home team's last game date (YYYY-MM-DD)")
-    away_last_played: Optional[str] = Field(None, description="Away team's last game date (YYYY-MM-DD)")
+    home_last_played: Optional[str] = Field(
+        None, description="Home team's last game date (YYYY-MM-DD)"
+    )
+    away_last_played: Optional[str] = Field(
+        None, description="Away team's last game date (YYYY-MM-DD)"
+    )
     neutral: bool = Field(..., description="Whether neutral site")
-    home_win_probability: float = Field(..., ge=0.0, le=1.0, description="Probability home team wins (0-1)")
+    home_win_probability: float = Field(
+        ..., ge=0.0, le=1.0, description="Probability home team wins (0-1)"
+    )
     created_at: Optional[str] = Field(None, description="ISO timestamp when created")
 
     @classmethod
@@ -104,6 +132,7 @@ class PredictionResponse(BaseModel):
 
 class PredictionListResponse(BaseModel):
     """Response for prediction history queries."""
+
     data: List[PredictionResponse] = Field(..., description="List of predictions")
     first_id: Optional[str] = Field(None, description="ID of first item")
     last_id: Optional[str] = Field(None, description="ID of last item")
@@ -112,12 +141,18 @@ class PredictionListResponse(BaseModel):
 
 class BatchRequest(BaseModel):
     """Request body for batch predictions."""
-    input: List[PredictionRequest] = Field(..., min_length=1, description="List of prediction requests")
+
+    input: List[PredictionRequest] = Field(
+        ..., min_length=1, description="List of prediction requests"
+    )
 
 
 class BatchResponse(BaseModel):
     """Response for batch predictions."""
-    type: Literal["prediction_batch"] = Field(default="prediction_batch", description="Response type")
+
+    type: Literal["prediction_batch"] = Field(
+        default="prediction_batch", description="Response type"
+    )
     output: List[Union[PredictionResponse, ErrorResponse]] = Field(
         ..., description="List of prediction results (or errors)"
     )
@@ -127,8 +162,10 @@ class BatchResponse(BaseModel):
 # Team Models
 # =============================================================================
 
+
 class TeamMeta(BaseModel):
     """Sport-agnostic metadata for a team."""
+
     school: str = Field(..., description="School short name (e.g., 'Duke')")
     name: str = Field(..., description="Full school name")
     location: str = Field(..., description="City, State")
@@ -138,9 +175,12 @@ class TeamMeta(BaseModel):
 
 class TeamResponse(BaseModel):
     """Response for a single team."""
+
     id: str = Field(..., description="Team key (e.g., 'duke')")
     type: Literal["team"] = Field(default="team", description="Response type")
-    sports: List[str] = Field(..., description="List of sports this team has programs for")
+    sports: List[str] = Field(
+        ..., description="List of sports this team has programs for"
+    )
     meta: TeamMeta = Field(..., description="Team metadata")
 
     @classmethod
@@ -157,7 +197,7 @@ class TeamResponse(BaseModel):
             sports=sports,
             meta=TeamMeta(
                 school=record["school"],
-                name=record["name"],
+                name=record.get("name") or record["school"],
                 location=record["location"],
                 ncaa_key=record.get("ncaa_key"),
                 color=record.get("color"),
@@ -167,6 +207,7 @@ class TeamResponse(BaseModel):
 
 class TeamsListResponse(BaseModel):
     """Response for teams list endpoint."""
+
     data: List[TeamResponse] = Field(..., description="List of teams")
     first_id: Optional[str] = Field(None, description="ID of first team in response")
     last_id: Optional[str] = Field(None, description="ID of last team in response")
@@ -177,8 +218,10 @@ class TeamsListResponse(BaseModel):
 # Ranking Models
 # =============================================================================
 
+
 class RankingEntry(BaseModel):
     """A single team's ranking entry."""
+
     rank: int = Field(..., ge=1, description="Rank position (1-25)")
     team: str = Field(..., description="Team key")
     rating: float = Field(..., description="Rating score")
@@ -186,6 +229,7 @@ class RankingEntry(BaseModel):
 
 class RankingsResponse(BaseModel):
     """Response for rankings endpoint."""
+
     sport: str = Field(..., description="Sport code")
     updated_at: str = Field(..., description="ISO timestamp of last update")
     rankings: List[RankingEntry] = Field(..., description="Ordered list of rankings")

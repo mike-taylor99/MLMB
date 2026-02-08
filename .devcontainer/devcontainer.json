@@ -6,7 +6,7 @@
   },
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-  "forwardPorts": [8000],
+  "forwardPorts": [8000, 5173],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -15,7 +15,10 @@
         "ms-toolsai.jupyter",
         "charliermarsh.ruff",
         "ms-azuretools.vscode-docker",
-        "ms-azuretools.vscode-azure-github-copilot"
+        "ms-azuretools.vscode-azure-github-copilot",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
@@ -24,16 +27,23 @@
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
           "editor.formatOnSave": true
+        },
+        "[typescript][typescriptreact][javascript][javascriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
         }
       }
     }
   },
-  "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": "pip install -r requirements.txt && cd ui && npm install",
   "remoteEnv": {
     "PYTHONDONTWRITEBYTECODE": "1",
     "PYTHONUNBUFFERED": "1"
   },
   "features": {
-    "ghcr.io/devcontainers/features/azure-cli:1": {}
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
   }
 }

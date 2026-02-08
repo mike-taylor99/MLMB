@@ -1,41 +1,42 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Layout } from "./components/Layout";
-import { Error } from "./components/Error";
-import { Home } from "./components/Home";
-import { TeamList } from "./components/TeamList";
-import { Prediction } from "./components/Prediction";
+import { BrowserRouter, Routes, Route } from 'react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider } from '@/context/theme'
+import { SportProvider } from '@/context/sport'
+import { Layout } from '@/components/layout'
+import { HomePage } from '@/pages/home'
+import { PredictPage } from '@/pages/predict'
+import { TeamsPage } from '@/pages/teams'
+import { TeamDetailPage } from '@/pages/team-detail'
+import { HistoryPage } from '@/pages/history'
+import { NotFoundPage } from '@/pages/not-found'
 
-let router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    errorElement: <Error />,
-    children: [
-      {
-        // errorElement: <Error />,
-        children: [
-          {
-            index: true,
-            element: <Home />,
-          },
-          {
-            path: "predict",
-            element: <Prediction />,
-          },
-          {
-            path: "teams",
-            element: <TeamList />,
-          },
-        ],
-      },
-    ],
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, refetchOnWindowFocus: false },
   },
-]);
+})
 
-export default function App() {
-  return <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />;
+function App() {
+  return (
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <SportProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="predict" element={<PredictPage />} />
+                <Route path="teams" element={<TeamsPage />} />
+                <Route path="teams/:teamId" element={<TeamDetailPage />} />
+                <Route path="history" element={<HistoryPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </SportProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  )
 }
 
-if (import.meta.hot) {
-  import.meta.hot.dispose(() => router.dispose());
-}
+export default App

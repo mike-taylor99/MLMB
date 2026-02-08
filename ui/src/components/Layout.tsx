@@ -1,227 +1,83 @@
-import {
-  CommandBar,
-  IButtonStyles,
-  ICommandBarItemProps,
-  ICommandBarProps,
-  IPanelProps,
-  Icon,
-  Link,
-  Panel,
-  Stack,
-  Text,
-  getTheme,
-} from "@fluentui/react";
-import { useBoolean } from "@fluentui/react-hooks";
-import { Navigation } from "./Navigation";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useState } from "react";
+// ============================================================================
+// Layout — responsive shell with header, nav, and page content
+// ============================================================================
 
-export const Layout: React.FC = () => {
-  const theme = getTheme();
-  const navigate = useNavigate();
-  const [isNavOpen, { setFalse: closeNav, toggle: toggleNav }] =
-    useBoolean(false);
-  const [isPanelOpen, { toggle: togglePanel }] = useBoolean(false);
-  const [panelType, setPanelType] = useState<string>("feedback");
+import { Outlet, Link } from 'react-router'
+import { Trophy, Shield, History, Crosshair } from 'lucide-react'
+import { NavItem } from '@/components/nav-item'
+import { SportSwitcher } from '@/components/sport-switcher'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { TrophyIcon } from '@/components/trophy-icon'
 
-  const commandBarStyles: ICommandBarProps["styles"] = {
-    root: {
-      backgroundColor: theme.palette.orangeLighter,
-      padding: 0,
-    },
-  };
+const navLinks = [
+  { to: '/', label: 'Home', icon: Trophy },
+  { to: '/predict', label: 'Predict', icon: Crosshair },
+  { to: '/teams', label: 'Teams', icon: Shield },
+  { to: '/history', label: 'History', icon: History },
+] as const
 
-  const buttonStyles: IButtonStyles = {
-    root: {
-      backgroundColor: theme.palette.orangeLighter,
-      color: theme.semanticColors.primaryButtonText,
-      paddingLeft: 14,
-      paddingRight: 14,
-    },
-    rootHovered: {
-      backgroundColor: theme.palette.orangeLight,
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    rootExpanded: {
-      backgroundColor: theme.palette.orangeLight,
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    rootExpandedHovered: {
-      backgroundColor: theme.palette.orangeLight,
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    icon: {
-      color: theme.semanticColors.primaryButtonText,
-    },
-    iconHovered: {
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    iconExpanded: {
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    menuIcon: {
-      color: theme.semanticColors.primaryButtonText,
-    },
-    menuIconHovered: {
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    menuIconExpanded: {
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-    menuIconExpandedHovered: {
-      color: theme.semanticColors.primaryButtonTextHovered,
-    },
-  };
-
-  const items: ICommandBarItemProps[] = [
-    {
-      key: "menu",
-      iconProps: { iconName: "CollapseMenu" },
-      iconOnly: true,
-      buttonStyles: {
-        ...buttonStyles,
-        root: {
-          ...(buttonStyles.root as object),
-          backgroundColor: isNavOpen
-            ? theme.palette.orangeLight
-            : theme.palette.orangeLighter,
-          color: isNavOpen
-            ? theme.semanticColors.primaryButtonTextHovered
-            : theme.semanticColors.primaryButtonText,
-        },
-      },
-      onClick: () => {
-        !isNavOpen && toggleNav();
-      },
-    },
-    {
-      key: "home",
-      text: "MLMB",
-      iconProps: { iconName: "CollegeHoops" },
-      buttonStyles: {
-        ...buttonStyles,
-        root: {
-          ...(buttonStyles.root as object),
-          fontSize: "1.15rem",
-          fontWeight: "bold",
-        },
-        icon: {
-          ...(buttonStyles.icon as object),
-          fontSize: "1.2rem",
-        },
-      },
-      onClick: () => navigate("/"),
-    },
-  ];
-
-  const farItems: ICommandBarItemProps[] = [
-    {
-      key: "donate",
-      text: "Donate",
-      ariaLabel: "Donate",
-      iconOnly: true,
-      iconProps: { iconName: "Money" },
-      onClick: () => {
-        setPanelType("donate");
-        togglePanel();
-      },
-      buttonStyles: {
-        ...buttonStyles,
-        root: {
-          ...(buttonStyles.root as object),
-          backgroundColor:
-            isPanelOpen && panelType === "donate"
-              ? theme.palette.orangeLight
-              : theme.palette.orangeLighter,
-          color:
-            isPanelOpen && panelType === "donate"
-              ? theme.semanticColors.primaryButtonTextHovered
-              : theme.semanticColors.primaryButtonText,
-        },
-      },
-    },
-    {
-      key: "feedback",
-      text: "Feedback",
-      ariaLabel: "Feedback",
-      iconOnly: true,
-      iconProps: { iconName: "Feedback" },
-      onClick: () => {
-        setPanelType("feedback");
-        togglePanel();
-      },
-      buttonStyles: {
-        ...buttonStyles,
-        root: {
-          ...(buttonStyles.root as object),
-          backgroundColor:
-            isPanelOpen && panelType === "feedback"
-              ? theme.palette.orangeLight
-              : theme.palette.orangeLighter,
-          color:
-            isPanelOpen && panelType === "feedback"
-              ? theme.semanticColors.primaryButtonTextHovered
-              : theme.semanticColors.primaryButtonText,
-        },
-      },
-    },
-  ];
-
-  const panelProps: { [name: string]: IPanelProps } = {
-    donate: {
-      headerText: "Donate",
-      children: (
-        <Stack>
-          <Text>
-            Behind the scenes, there’s a dedicated team investing time, effort,
-            and resources to keep this tool running smoothly. If you’ve found it
-            valuable and it has aided you in your endeavors, please consider
-            making a donation. Every contribution, no matter how small, helps
-            sustain this service and ensures its continued availability.
-          </Text>
-          <Link href="https://venmo.com/u/Michael-Taylor-254">
-            Venmo <Icon iconName="Link" />
-          </Link>
-        </Stack>
-      ),
-    },
-    feedback: {
-      headerText: "Feedback",
-      children: (
-        <Stack>
-          <Text>
-            For issues or feature requests, use the Github issues link below.
-          </Text>
-          <Link href="https://github.com/mike-taylor99/MLMB/issues">
-            MLMB Github <Icon iconName="Link" />
-          </Link>
-        </Stack>
-      ),
-    },
-  };
-
+export function Layout() {
   return (
-    <>
-      <CommandBar
-        styles={commandBarStyles}
-        items={items}
-        farItems={farItems}
-        overflowButtonProps={{ styles: buttonStyles }}
-      />
-      <Navigation isOpen={isNavOpen} closeNav={closeNav} />
-      <Panel
-        isOpen={isPanelOpen}
-        onDismiss={togglePanel}
-        isLightDismiss
-        styles={{ root: { top: 44 } }}
-        {...panelProps[panelType]}
-      />
-      <div className="content">
-        <Stack grow>
+    <div className="flex min-h-screen flex-col overflow-x-clip">
+      {/* ── Desktop header ───────────────────────────────────── */}
+      <header className="sticky top-0 z-40 border-b bg-background">
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
+            <TrophyIcon className="h-6 w-6 text-primary" />
+            <span>MLMB</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map(({ to, label, icon: Icon }) => (
+              <NavItem key={to} to={to} end={to === '/'}>
+                <Icon className="h-4 w-4" />
+                {label}
+              </NavItem>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <SportSwitcher />
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+
+      {/* ── Page content ─────────────────────────────────────── */}
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-4 py-6">
           <Outlet />
-        </Stack>
-      </div>
-      <div className="footer"></div>
-    </>
-  );
-};
+        </div>
+      </main>
+
+      {/* Footer (hidden on mobile — bottom nav is there instead) */}
+      <footer className="hidden md:block border-t py-6 text-center text-xs text-muted-foreground">
+        <div className="mx-auto max-w-6xl px-4">
+          Machine Learning March Bracketology &middot; Powered by ensemble ML models
+        </div>
+      </footer>
+
+      {/* bottom spacer so content isn't hidden behind mobile nav */}
+      <div className="h-16 md:hidden" aria-hidden />
+
+      {/* ── Mobile bottom nav ────────────────────────────────── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background md:hidden pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around py-1">
+          {navLinks.map(({ to, label, icon: Icon }) => (
+            <NavItem
+              key={to}
+              to={to}
+              end={to === '/'}
+              className="flex-col gap-0.5 px-2 py-1.5 text-[10px]"
+            >
+              <Icon className="h-5 w-5" />
+              {label}
+            </NavItem>
+          ))}
+        </div>
+      </nav>
+    </div>
+  )
+}
