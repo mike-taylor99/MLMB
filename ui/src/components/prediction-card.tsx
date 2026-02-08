@@ -7,6 +7,13 @@ import { Badge } from '@/components/ui/badge'
 import { TeamLogo } from '@/components/team-logo'
 import type { Prediction, Team } from '@/lib/types'
 
+/** Format an ISO date string to a short readable form, e.g. "Feb 4". */
+function fmtDate(iso: string | null): string | null {
+  if (!iso) return null
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
 interface PredictionCardProps {
   prediction: Prediction
   teams: Team[]
@@ -36,6 +43,9 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
                 </p>
                 <p className="text-[10px] text-muted-foreground">
                   {prediction.neutral ? '' : 'Home'}
+                  {fmtDate(prediction.home_last_played) && (
+                    <>{prediction.neutral ? '' : ' · '}thru {fmtDate(prediction.home_last_played)}</>
+                  )}
                 </p>
               </div>
               <TeamLogo
@@ -61,6 +71,9 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
                 </p>
                 <p className="text-[10px] text-muted-foreground">
                   {prediction.neutral ? '' : 'Away'}
+                  {fmtDate(prediction.away_last_played) && (
+                    <>{prediction.neutral ? '' : ' · '}thru {fmtDate(prediction.away_last_played)}</>
+                  )}
                 </p>
               </div>
             </div>
@@ -114,6 +127,9 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
               <p className="text-xs text-muted-foreground h-4 truncate">
                 {homeTeam && homeTeam.meta.name !== homeTeam.meta.school ? homeTeam.meta.name : '\u00A0'}
               </p>
+              {fmtDate(prediction.home_last_played) && (
+                <p className="text-[11px] text-muted-foreground mt-0.5">thru {fmtDate(prediction.home_last_played)}</p>
+              )}
             </div>
             <Badge variant={homeWins ? 'default' : 'secondary'} className="text-lg px-3 py-1">
               {homePct}%
@@ -133,6 +149,9 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
               <p className="text-xs text-muted-foreground h-4 truncate">
                 {awayTeam && awayTeam.meta.name !== awayTeam.meta.school ? awayTeam.meta.name : '\u00A0'}
               </p>
+              {fmtDate(prediction.away_last_played) && (
+                <p className="text-[11px] text-muted-foreground mt-0.5">thru {fmtDate(prediction.away_last_played)}</p>
+              )}
             </div>
             <Badge variant={!homeWins ? 'default' : 'secondary'} className="text-lg px-3 py-1">
               {awayPct}%

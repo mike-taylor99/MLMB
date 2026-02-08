@@ -94,11 +94,6 @@ export function TeamsPage() {
                         {team.meta.name} · {team.meta.location}
                       </p>
                     </div>
-                    {team.sports.length > 1 && (
-                      <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
-                        M+W
-                      </Badge>
-                    )}
                   </CardContent>
                 </Card>
               </Link>
