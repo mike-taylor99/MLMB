@@ -2,7 +2,7 @@
 // Predict page — pick two teams and get a win probability
 // ============================================================================
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 import { useSport } from '@/context/sport'
 import { useTeams, useCreatePrediction } from '@/lib/hooks'
@@ -27,6 +27,17 @@ export function PredictPage() {
   const [span, setSpan] = useState<Span>(3)
   const [neutral, setNeutral] = useState(false)
   const [results, setResults] = useState<Prediction[]>([])
+
+  const newestResultRef = useRef<HTMLDivElement>(null)
+  const prevResultsLen = useRef(results.length)
+
+  // Scroll the newest prediction into view when it appears
+  useEffect(() => {
+    if (results.length > prevResultsLen.current && newestResultRef.current) {
+      newestResultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+    prevResultsLen.current = results.length
+  }, [results.length])
 
   // Pre-fill home team from query param (e.g. /predict?home=duke)
   useEffect(() => {
@@ -163,7 +174,7 @@ export function PredictPage() {
       {results.length > 0 && (
         <div className="space-y-4">
           {results.map((p, i) => (
-            <div key={p.id ?? i} className="relative">
+            <div key={p.id ?? i} ref={i === 0 ? newestResultRef : undefined} className="relative">
               <PredictionCard prediction={p} teams={teams} />
               <Button
                 variant="ghost"
