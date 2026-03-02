@@ -8,6 +8,7 @@ import { NavItem } from '@/components/nav-item'
 import { SportSwitcher } from '@/components/sport-switcher'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { TrophyIcon } from '@/components/trophy-icon'
+import { UserMenu } from '@/components/user-menu'
 
 const navLinks = [
   { to: '/', label: 'Home', icon: Trophy },
@@ -41,6 +42,7 @@ export function Layout() {
           <div className="ml-auto flex items-center gap-2">
             <SportSwitcher />
             <ThemeToggle />
+            <UserMenu />
           </div>
         </div>
       </header>
