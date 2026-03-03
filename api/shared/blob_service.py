@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import joblib
 import pandas as pd
@@ -23,7 +23,9 @@ import sklearn.ensemble
 import sklearn.linear_model
 import sklearn.neighbors
 import sklearn.neural_network
-import sklearn.svm
+import sklearn.svm  # noqa: F401 — pre-import for parallel deserialization
+import xgboost  # noqa: F401 — pre-import for parallel deserialization
+import lightgbm  # noqa: F401 — pre-import for parallel deserialization
 
 # Model name mapping (used for preloading)
 MODEL_NAME_MAP = {
@@ -33,6 +35,9 @@ MODEL_NAME_MAP = {
     "gradient_boosting": "gradient_boosting",
     "mlp": "multilayer_perceptron",
     "svm": "support_vector_machine_model",
+    "xgboost": "xgboost",
+    "lightgbm": "lightgbm",
+    "ensemble": "ensemble",
 }
 
 
@@ -275,9 +280,7 @@ class BlobStorageService:
             return model_info["versions"][version]["blob_path"]
         except KeyError:
             # Fall back to legacy path format
-            logging.warning(f"Model path not in manifest, using legacy format")
-            from predict import MODEL_NAME_MAP
-
+            logging.warning("Model path not in manifest, using legacy format")
             blob_name = MODEL_NAME_MAP.get(model_type, model_type)
             return f"{sport}/{span}span_{blob_name}.pkl"
 
@@ -515,14 +518,54 @@ class BlobStorageService:
                     self._model_locks[lock_key] = Lock()
         return self._model_locks[lock_key]
 
-    def get_model(self, model_name: str, is_womens: bool = False) -> Any:
+    def _resolve_blob_path(self, model_name: str, cache_key: str) -> Optional[str]:
+        """
+        Resolve the blob path for a model from the manifest.
+
+        Parses model_name (e.g. '3span_logistic_regression_model') into span + model_type,
+        then looks up the current version's blob_path in the manifest.
+
+        Returns:
+            The manifest blob_path string, or None if not resolvable.
+        """
+        try:
+            parts = model_name.split("span_", 1)
+            if len(parts) != 2:
+                return None
+            span = int(parts[0])
+            blob_suffix = parts[1]
+
+            # Reverse lookup: blob file name -> model type key
+            model_type = None
+            for mt, bn in MODEL_NAME_MAP.items():
+                if bn == blob_suffix:
+                    model_type = mt
+                    break
+            if model_type is None:
+                return None
+
+            return self.get_model_blob_path(cache_key, span, model_type)
+        except Exception:
+            return None
+
+    def get_model(
+        self, model_name: str, is_womens: bool = False, blob_path: str = None
+    ) -> Any:
         """
         Load a single model from Blob Storage with caching.
         Thread-safe: uses per-model locks to prevent parallel downloads of the same model.
 
+        Blob path resolution order:
+        1. Explicit blob_path parameter (if provided by caller)
+        2. Auto-resolve from manifest using model_name parsing
+        3. Legacy flat path fallback: {sport}/{model_name}.pkl
+
         Args:
             model_name: Name of the model (without .pkl extension)
             is_womens: Whether to load women's model
+            blob_path: Optional manifest-resolved blob path (e.g.
+                'ncaam_basketball/2026-03-02/3span_logistic_regression_model.pkl').
+                When provided, overrides manifest and flat path resolution.
 
         Returns:
             Loaded sklearn model
@@ -539,10 +582,18 @@ class BlobStorageService:
             if model_name in self._models_cache[cache_key]:
                 return self._models_cache[cache_key][model_name]
 
-            # Use sport code as path prefix (ncaam_basketball/ or ncaaw_basketball/)
-            # Try compressed (.pkl.gz) first, fall back to uncompressed (.pkl)
-            blob_path_gz = f"{cache_key}/{model_name}.pkl.gz"
-            blob_path_raw = f"{cache_key}/{model_name}.pkl"
+            # Resolve blob path: explicit > manifest > flat legacy
+            if blob_path is None:
+                blob_path = self._resolve_blob_path(model_name, cache_key)
+
+            if blob_path:
+                # Versioned path (from manifest or caller)
+                blob_path_gz = blob_path.replace(".pkl", ".pkl.gz")
+                blob_path_raw = blob_path
+            else:
+                # Legacy flat path: {sport}/{model_name}.pkl
+                blob_path_gz = f"{cache_key}/{model_name}.pkl.gz"
+                blob_path_raw = f"{cache_key}/{model_name}.pkl"
 
             try:
                 try:
@@ -660,17 +711,19 @@ class BlobStorageService:
             ex.submit(self.get_top25, True)
         stats["api_data"] = round(time.time() - t0, 2)
 
-        # 3. Load ALL models in parallel (the big one)
+        # 3. Load ensemble models only (fast cold start)
         t0 = time.time()
-        all_model_names = []
-        for span in [3, 5, 7]:
-            for blob_name in MODEL_NAME_MAP.values():
-                all_model_names.append(f"{span}span_{blob_name}")
+        ensemble_blob = MODEL_NAME_MAP["ensemble"]
+        ensemble_model_names = [f"{span}span_{ensemble_blob}" for span in [3, 5, 7]]
 
         # Load both sports in parallel
         with ThreadPoolExecutor(max_workers=2) as ex:
-            men_future = ex.submit(self.get_models_parallel, all_model_names, False)
-            women_future = ex.submit(self.get_models_parallel, all_model_names, True)
+            men_future = ex.submit(
+                self.get_models_parallel, ensemble_model_names, False
+            )
+            women_future = ex.submit(
+                self.get_models_parallel, ensemble_model_names, True
+            )
             men_future.result()
             women_future.result()
         stats["models"] = round(time.time() - t0, 2)

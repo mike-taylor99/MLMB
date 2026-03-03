@@ -1,11 +1,11 @@
 {
-  "version": "1.0.0",
-  "updated_at": "2026-01-30T00:00:00Z",
+  "version": "2.0.0",
+  "updated_at": "2026-03-03T00:00:00Z",
   "feature_schema_version": "v1",
   "ncaam_basketball": {
     "3span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_logistic_regression_model.pkl",
@@ -13,11 +13,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_knn_model.pkl",
@@ -25,11 +32,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_random_forest.pkl",
@@ -37,11 +51,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_gradient_boosting.pkl",
@@ -49,11 +70,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_multilayer_perceptron.pkl",
@@ -61,11 +89,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/3span_support_vector_machine_model.pkl",
@@ -73,13 +108,70 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/3span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/3span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/3span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
     },
     "5span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_logistic_regression_model.pkl",
@@ -87,11 +179,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_knn_model.pkl",
@@ -99,11 +198,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_random_forest.pkl",
@@ -111,11 +217,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_gradient_boosting.pkl",
@@ -123,11 +236,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_multilayer_perceptron.pkl",
@@ -135,11 +255,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/5span_support_vector_machine_model.pkl",
@@ -147,13 +274,70 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/5span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/5span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/5span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
     },
     "7span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_logistic_regression_model.pkl",
@@ -161,11 +345,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_knn_model.pkl",
@@ -173,11 +364,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_random_forest.pkl",
@@ -185,11 +383,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_gradient_boosting.pkl",
@@ -197,11 +402,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_multilayer_perceptron.pkl",
@@ -209,11 +421,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaam_basketball/7span_support_vector_machine_model.pkl",
@@ -221,6 +440,63 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/7span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaam_basketball/7span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaam_basketball/2026-03-02/7span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
@@ -229,7 +505,7 @@
   "ncaaw_basketball": {
     "3span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_logistic_regression_model.pkl",
@@ -237,11 +513,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_knn_model.pkl",
@@ -249,11 +532,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_random_forest.pkl",
@@ -261,11 +551,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_gradient_boosting.pkl",
@@ -273,11 +570,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_multilayer_perceptron.pkl",
@@ -285,11 +589,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/3span_support_vector_machine_model.pkl",
@@ -297,13 +608,70 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/3span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/3span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/3span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
     },
     "5span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_logistic_regression_model.pkl",
@@ -311,11 +679,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_knn_model.pkl",
@@ -323,11 +698,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_random_forest.pkl",
@@ -335,11 +717,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_gradient_boosting.pkl",
@@ -347,11 +736,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_multilayer_perceptron.pkl",
@@ -359,11 +755,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/5span_support_vector_machine_model.pkl",
@@ -371,13 +774,70 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/5span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/5span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/5span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
     },
     "7span": {
       "logistic_regression": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_logistic_regression_model.pkl",
@@ -385,11 +845,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_logistic_regression_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "knn": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_knn_model.pkl",
@@ -397,11 +864,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_knn_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "random_forest": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_random_forest.pkl",
@@ -409,11 +883,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_random_forest.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "gradient_boosting": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_gradient_boosting.pkl",
@@ -421,11 +902,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_gradient_boosting.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "mlp": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_multilayer_perceptron.pkl",
@@ -433,11 +921,18 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_multilayer_perceptron.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
           }
         }
       },
       "svm": {
-        "current": "v1",
+        "current": "2026-03-02",
         "versions": {
           "v1": {
             "blob_path": "ncaaw_basketball/7span_support_vector_machine_model.pkl",
@@ -445,10 +940,66 @@
             "training_data_hash": null,
             "accuracy": null,
             "notes": "Initial model"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_support_vector_machine_model.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "xgboost": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/7span_xgboost.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial XGBoost model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_xgboost.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "lightgbm": {
+        "current": "2026-03-02",
+        "versions": {
+          "v1": {
+            "blob_path": "ncaaw_basketball/7span_lightgbm.pkl",
+            "trained_at": "2026-02-23T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Initial LightGBM model with defensive stats"
+          },
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_lightgbm.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "Retrained with 356 features (defensive stats). All models: LogReg, SVM, KNN, RF, GBM, MLP, XGBoost, LightGBM."
+          }
+        }
+      },
+      "ensemble": {
+        "current": "2026-03-02",
+        "versions": {
+          "2026-03-02": {
+            "blob_path": "ncaaw_basketball/2026-03-02/7span_ensemble.pkl",
+            "trained_at": "2026-03-02T00:00:00Z",
+            "training_data_hash": null,
+            "accuracy": null,
+            "notes": "VotingClassifier (7 models, no KNN, equal weights, soft voting)"
           }
         }
       }
     }
   }
 }
-
