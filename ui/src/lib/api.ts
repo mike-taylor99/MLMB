@@ -15,7 +15,7 @@ import type {
   TeamsListResponse,
 } from './types'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -56,7 +56,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 // ---------------------------------------------------------------------------
 
 export function fetchHealth(): Promise<HealthResponse> {
-  return request('/health')
+  return request('/api/health')
 }
 
 // ---------------------------------------------------------------------------
@@ -77,11 +77,11 @@ export function fetchTeams(params: ListTeamsParams = {}): Promise<TeamsListRespo
   if (params.after_id) qs.set('after_id', params.after_id)
   if (params.before_id) qs.set('before_id', params.before_id)
   const q = qs.toString()
-  return request(`/teams${q ? `?${q}` : ''}`)
+  return request(`/api/teams${q ? `?${q}` : ''}`)
 }
 
 export function fetchTeam(teamId: string): Promise<Team> {
-  return request(`/teams/${encodeURIComponent(teamId)}`)
+  return request(`/api/teams/${encodeURIComponent(teamId)}`)
 }
 
 // ---------------------------------------------------------------------------
@@ -89,14 +89,14 @@ export function fetchTeam(teamId: string): Promise<Team> {
 // ---------------------------------------------------------------------------
 
 export function createPrediction(body: PredictionRequest): Promise<Prediction> {
-  return request('/predictions', {
+  return request('/api/predictions', {
     method: 'POST',
     body: JSON.stringify(body),
   })
 }
 
 export function createBatchPredictions(body: BatchRequest): Promise<BatchResponse> {
-  return request('/predictions/batch', {
+  return request('/api/predictions/batch', {
     method: 'POST',
     body: JSON.stringify(body),
   })
@@ -114,11 +114,11 @@ export function fetchPredictions(params: ListPredictionsParams): Promise<Predict
   if (params.limit) qs.set('limit', String(params.limit))
   if (params.after_id) qs.set('after_id', params.after_id)
   if (params.before_id) qs.set('before_id', params.before_id)
-  return request(`/predictions?${qs}`)
+  return request(`/api/predictions?${qs}`)
 }
 
 export function fetchPrediction(id: string, sport: Sport): Promise<Prediction> {
-  return request(`/predictions/${encodeURIComponent(id)}?sport=${sport}`)
+  return request(`/api/predictions/${encodeURIComponent(id)}?sport=${sport}`)
 }
 
 // ---------------------------------------------------------------------------
@@ -126,7 +126,7 @@ export function fetchPrediction(id: string, sport: Sport): Promise<Prediction> {
 // ---------------------------------------------------------------------------
 
 export function fetchRankings(sport: Sport): Promise<RankingsResponse> {
-  return request(`/rankings/${sport}`)
+  return request(`/api/rankings/${sport}`)
 }
 
 export { ApiError }

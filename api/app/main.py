@@ -7,7 +7,7 @@ exception handlers, and routers.
 
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError as PydanticValidationError
@@ -16,6 +16,9 @@ from app.exceptions import APIError
 from app.middleware import RequestIDMiddleware, RequestIDLogFilter, get_request_id
 from app.routers import predictions, rankings, teams
 from app.schemas import HealthResponse, ErrorResponse, ErrorDetail
+
+# The "/api" prefix is defined in ONE place — see create_app().
+API_PREFIX = "/api"
 
 
 def _configure_logging() -> None:
@@ -93,16 +96,19 @@ def create_app() -> FastAPI:
     # Exception handlers
     _register_exception_handlers(app)
 
-    # Routers
-    app.include_router(predictions.router, tags=["Predictions"])
-    app.include_router(rankings.router, tags=["Rankings"])
-    app.include_router(teams.router, tags=["Teams"])
+    # Routers — all nested under a single parent router (/api prefix)
+    api_router = APIRouter(prefix=API_PREFIX)
+    api_router.include_router(predictions.router, tags=["Predictions"])
+    api_router.include_router(rankings.router, tags=["Rankings"])
+    api_router.include_router(teams.router, tags=["Teams"])
 
     # Health check
-    @app.get("/health", tags=["Health"], response_model=HealthResponse)
+    @api_router.get("/health", tags=["Health"], response_model=HealthResponse)
     async def health_check() -> HealthResponse:
         """Health check endpoint."""
         return HealthResponse()
+
+    app.include_router(api_router)
 
     return app
 

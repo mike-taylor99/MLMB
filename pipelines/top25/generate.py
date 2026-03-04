@@ -63,7 +63,7 @@ def _warmup_api(session: requests.Session, api_base_url: str) -> None:
     """Send a health check to wake the API if it's scaled to zero."""
     logger.info("Warming up API...")
     try:
-        resp = session.get(f"{api_base_url}/health", timeout=180)
+        resp = session.get(f"{api_base_url}/api/health", timeout=180)
         if resp.status_code == 200:
             logger.info("API is ready.")
             return
@@ -119,7 +119,7 @@ def generate_top25(
     for i in tqdm(range(0, total, BATCH_SIZE), desc="Batches"):
         chunk = batch_requests[i : i + BATCH_SIZE]
         try:
-            resp = session.post(f"{api_base_url}/predictions/batch", json={"input": chunk}, timeout=300)
+            resp = session.post(f"{api_base_url}/api/predictions/batch", json={"input": chunk}, timeout=300)
         except requests.exceptions.ConnectionError:
             logger.error(f"Batch {i // BATCH_SIZE + 1} failed after retries")
             continue
