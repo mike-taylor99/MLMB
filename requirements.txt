@@ -27,6 +27,7 @@ tqdm==4.66.1
 # --- Azure services ---
 azure-storage-blob==12.19.0
 azure-cosmos==4.5.1
+azure-identity==1.16.0
 
 # --- Config ---
 python-dotenv==1.0.0

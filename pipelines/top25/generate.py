@@ -32,6 +32,7 @@ from shared.season import current_season_year, is_in_season
 from shared.scraper import get_ap_top_25
 from shared.blob import upload_blob
 from shared.constants import DEFAULT_SPANS
+from shared.restart import restart_api
 
 logging.basicConfig(
     level=logging.INFO,
@@ -224,6 +225,9 @@ def main() -> None:
 
     success = generate_and_upload_top25(api_base_url, season, connection_string, api_key)
     logger.info("Top 25 pipeline complete.")
+
+    if success and connection_string:
+        restart_api()
 
     if not success:
         logger.error("One or more sports failed to generate rankings.")

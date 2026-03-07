@@ -20,6 +20,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from shared.season import current_season_year, is_in_season
 from shared.stats import generate_and_upload_team_stats
+from shared.restart import restart_api
 
 logging.basicConfig(
     level=logging.INFO,
@@ -43,6 +44,9 @@ def main() -> None:
     logger.info(f"Starting team stats pipeline for season {season}")
     success = generate_and_upload_team_stats(season, connection_string=connection_string)
     logger.info("Team stats pipeline complete.")
+
+    if success and connection_string:
+        restart_api()
 
     if not success:
         logger.error("One or more sports failed to generate stats.")
