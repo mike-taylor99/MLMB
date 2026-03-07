@@ -14,7 +14,7 @@ from typing import Optional
 from fastapi import APIRouter, BackgroundTasks, Query
 
 from app.constants import VALID_SPORTS
-from app.dependencies import BlobServiceDep, PredictionsStoreDep, SettingsDep
+from app.dependencies import BlobServiceDep, PredictionsStoreDep, RequireAuthDep, SettingsDep
 from app.exceptions import (
     InvalidSportError,
     PredictionNotFoundError,
@@ -45,6 +45,7 @@ async def create_prediction_endpoint(
     background_tasks: BackgroundTasks,
     blob_service: BlobServiceDep,
     predictions_store: PredictionsStoreDep,
+    _auth: RequireAuthDep,
 ) -> PredictionResponse:
     """
     Create a new prediction for a matchup.
@@ -77,6 +78,7 @@ async def create_prediction_endpoint(
 async def get_prediction_endpoint(
     prediction_id: str,
     predictions_store: PredictionsStoreDep,
+    _auth: RequireAuthDep,
     sport: str = Query(..., description="Sport code (required)"),
 ) -> PredictionResponse:
     """Retrieve a prediction by ID."""
@@ -98,6 +100,7 @@ async def get_prediction_endpoint(
 async def list_predictions_endpoint(
     predictions_store: PredictionsStoreDep,
     settings: SettingsDep,
+    _auth: RequireAuthDep,
     sport: str = Query(..., description="Sport code (required)"),
     home_team: Optional[str] = Query(None),
     away_team: Optional[str] = Query(None),
@@ -140,6 +143,7 @@ async def batch_predictions_endpoint(
     blob_service: BlobServiceDep,
     predictions_store: PredictionsStoreDep,
     settings: SettingsDep,
+    _auth: RequireAuthDep,
 ) -> BatchResponse:
     """
     Process multiple predictions in a single request.

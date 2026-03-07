@@ -10,6 +10,7 @@ Usage:
 Environment variables:
     AZURE_STORAGE_CONNECTION_STRING  — Required for blob upload.
     API_BASE_URL                     — MLMB API URL (default: production FQDN).
+    API_KEY                          — API key for server-to-server auth.
 """
 
 import json
@@ -41,10 +42,11 @@ logger = logging.getLogger(__name__)
 # Max predictions per API batch call
 BATCH_SIZE = 500
 
-# Default API URL (Container Apps internal or public FQDN)
-DEFAULT_API_URL = "https://mlmb-api.purplesand-9a1718e2.eastus.azurecontainerapps.io"
+# Default API URL — use internal FQDN for container-to-container traffic
+# (bypasses EasyAuth, stays within the Container Apps environment)
+DEFAULT_API_URL = "https://mlmb-api.internal.purplesand-9a1718e2.eastus.azurecontainerapps.io"
 
-def _create_retry_session() -> requests.Session:
+def _create_retry_session(api_key: str = "") -> requests.Session:
     """Create a requests session with retry + exponential backoff for cold-start tolerance."""
     retry = Retry(
         total=5,
@@ -56,6 +58,8 @@ def _create_retry_session() -> requests.Session:
     session = requests.Session()
     session.mount("https://", HTTPAdapter(max_retries=retry))
     session.mount("http://", HTTPAdapter(max_retries=retry))
+    if api_key:
+        session.headers["X-API-Key"] = api_key
     return session
 
 
@@ -161,12 +165,13 @@ def generate_and_upload_top25(
     api_base_url: str,
     season: int,
     connection_string: str | None = None,
+    api_key: str = "",
 ) -> bool:
     """Generate top 25 for both genders and upload to blob storage.
 
     Returns True if all sports generated successfully, False otherwise.
     """
-    session = _create_retry_session()
+    session = _create_retry_session(api_key)
     _warmup_api(session, api_base_url)
     failures = []
     for sport in ["ncaam_basketball", "ncaaw_basketball"]:
@@ -205,15 +210,19 @@ def main() -> None:
 
     season = current_season_year()
     api_base_url = os.environ.get("API_BASE_URL", DEFAULT_API_URL)
+    api_key = os.environ.get("API_KEY", "")
     connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 
     if not connection_string:
         logger.warning("AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally.")
 
+    if not api_key:
+        logger.warning("API_KEY not set — predictions endpoints may reject requests.")
+
     logger.info(f"Starting top 25 pipeline for season {season}")
     logger.info(f"API base URL: {api_base_url}")
 
-    success = generate_and_upload_top25(api_base_url, season, connection_string)
+    success = generate_and_upload_top25(api_base_url, season, connection_string, api_key)
     logger.info("Top 25 pipeline complete.")
 
     if not success:

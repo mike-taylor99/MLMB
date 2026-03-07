@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     max_page_limit: int = 100
     teams_default_limit: int = 100
     teams_max_limit: int = 500
+
+    # Auth — server-to-server API key (used by jobs/pipelines)
+    api_key: str = ""
     
     model_config = SettingsConfigDict(
         env_file=".env",

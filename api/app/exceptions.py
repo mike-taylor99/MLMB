@@ -17,6 +17,13 @@ class APIError(Exception):
         super().__init__(message)
 
 
+class AuthenticationError(APIError):
+    """Request is not authenticated."""
+
+    def __init__(self, message: str = "Authentication required"):
+        super().__init__("authentication_required", message, 401)
+
+
 class ValidationError(APIError):
     """Input validation failed."""
 
