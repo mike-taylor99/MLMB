@@ -201,8 +201,11 @@ class BlobStorageService:
 
     def get_models_manifest(self) -> Dict:
         """
-        Load the models manifest from Blob Storage with caching.
-        The manifest tracks model versions, paths, and metadata.
+        Load the models manifest with caching.
+
+        The manifest is baked into the container image at build time
+        (shared/models_manifest.json), so we read it from disk — no
+        network round-trip needed on cold start.
 
         Returns:
             Dict containing manifest data
@@ -214,21 +217,10 @@ class BlobStorageService:
             if self._models_manifest_cache is not None:
                 return self._models_manifest_cache
 
-            # Try loading from blob storage first, fall back to local file
-            try:
-                blob_client = self.client.get_blob_client(
-                    container=self.MODELS_CONTAINER, blob="models_manifest.json"
-                )
-                blob_data = blob_client.download_blob().readall()
-                self._models_manifest_cache = json.loads(blob_data.decode())
-                logging.info("Loaded models manifest from blob storage")
-            except Exception as e:
-                logging.warning(f"Failed to load manifest from blob, using local: {e}")
-                # Fall back to local file
-                local_path = Path(__file__).parent / "models_manifest.json"
-                with open(local_path, "r") as f:
-                    self._models_manifest_cache = json.load(f)
-                logging.info("Loaded models manifest from local file")
+            local_path = Path(__file__).parent / "models_manifest.json"
+            with open(local_path, "r") as f:
+                self._models_manifest_cache = json.load(f)
+            logging.info("Loaded models manifest from local file")
 
             return self._models_manifest_cache
 
