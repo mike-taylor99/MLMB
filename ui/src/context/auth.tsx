@@ -13,6 +13,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import Clarity from '@microsoft/clarity'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -55,7 +56,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const res = await fetch('/.auth/me')
         if (res.ok) {
           const data = await res.json()
-          setUser(data.clientPrincipal ?? null)
+          const principal: ClientPrincipal | null =
+            data.clientPrincipal ?? null
+          setUser(principal)
+
+          if (principal) {
+            Clarity.identify(principal.userId, undefined, undefined, principal.userDetails)
+          }
         }
       } catch {
         // Network error — almost certainly local dev; leave user null.
