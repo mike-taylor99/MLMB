@@ -6,10 +6,11 @@ import gzip
 import io
 import json
 import logging
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
-from threading import Lock
+from threading import Lock, Thread
 from typing import Any, Dict, List, Optional
 
 import joblib
@@ -674,55 +675,64 @@ class BlobStorageService:
 
     # ==================== Eager Loading ====================
 
-    def preload_all(self) -> Dict:
+    def start_preload(self) -> None:
         """
-        Eagerly load ALL data from Blob Storage at startup.
-        Downloads everything in parallel for fastest cold start.
+        Kick off background preloading of all blob data.
 
-        Returns:
-            Dict with timing and size statistics
+        Returns immediately after loading local data (manifest, teams CSV).
+        Blob downloads (team stats, top25, models) run in background threads.
+        Endpoints that need data still loading will block on their per-resource
+        lock until that specific resource is ready — not all resources.
         """
-        import time
-
-        stats = {}
-        overall_start = time.time()
-
-        # 1. Load manifest + feature schema (small, needed by everything)
-        t0 = time.time()
+        # ── Local data (instant, no network) ──
         self.get_models_manifest()
-        self.get_feature_schema(is_womens=False)
-        stats["manifest_and_schema"] = round(time.time() - t0, 2)
+        self.get_teams()
+        logging.info("Local data ready (manifest + teams CSV) — accepting requests")
 
-        # 2. Load API data in parallel (team stats, top25 from blob; teams from local CSV)
-        t0 = time.time()
-        self.get_teams()  # fast local CSV read, no network
-        with ThreadPoolExecutor(max_workers=4) as ex:
-            ex.submit(self.get_team_stats, False)
-            ex.submit(self.get_team_stats, True)
-            ex.submit(self.get_top25, False)
-            ex.submit(self.get_top25, True)
-        stats["api_data"] = round(time.time() - t0, 2)
+        # ── Blob data in background threads ──
+        start = time.time()
 
-        # 3. Load ensemble models only (fast cold start)
-        t0 = time.time()
+        def _task(label: str, fn, *args):
+            t0 = time.time()
+            try:
+                fn(*args)
+                logging.info(f"Preloaded {label} in {time.time() - t0:.2f}s")
+            except Exception as e:
+                logging.error(f"Preload failed for {label}: {e}")
+
+        pool = ThreadPoolExecutor(max_workers=10, thread_name_prefix="preload")
+
+        futures = []
+
+        # API data from blob storage
+        futures.append(pool.submit(_task, "team_stats[men]", self.get_team_stats, False))
+        futures.append(pool.submit(_task, "team_stats[women]", self.get_team_stats, True))
+        futures.append(pool.submit(_task, "top25[men]", self.get_top25, False))
+        futures.append(pool.submit(_task, "top25[women]", self.get_top25, True))
+        futures.append(pool.submit(_task, "feature_schema", self.get_feature_schema, False))
+
+        # Ensemble models (2 sports × 3 spans = 6 downloads)
         ensemble_blob = MODEL_NAME_MAP["ensemble"]
-        ensemble_model_names = [f"{span}span_{ensemble_blob}" for span in [3, 5, 7]]
+        for span in [3, 5, 7]:
+            name = f"{span}span_{ensemble_blob}"
+            futures.append(pool.submit(_task, f"model[men/{name}]", self.get_model, name, False))
+            futures.append(pool.submit(_task, f"model[women/{name}]", self.get_model, name, True))
 
-        # Load both sports in parallel
-        with ThreadPoolExecutor(max_workers=2) as ex:
-            men_future = ex.submit(
-                self.get_models_parallel, ensemble_model_names, False
-            )
-            women_future = ex.submit(
-                self.get_models_parallel, ensemble_model_names, True
-            )
-            men_future.result()
-            women_future.result()
-        stats["models"] = round(time.time() - t0, 2)
+        pool.shutdown(wait=False)
 
-        stats["total"] = round(time.time() - overall_start, 2)
-        stats["cache"] = self.get_cache_stats()
-        return stats
+        # Track overall completion in a daemon thread
+        def _on_complete():
+            for f in futures:
+                try:
+                    f.result()
+                except Exception:
+                    pass
+            logging.info(
+                f"Background preload complete in {time.time() - start:.2f}s "
+                f"— cache: {self.get_cache_stats()}"
+            )
+
+        Thread(target=_on_complete, daemon=True, name="preload-done").start()
 
     # ==================== Cache Management ====================
 

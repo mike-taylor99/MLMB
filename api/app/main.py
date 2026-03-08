@@ -41,7 +41,7 @@ def _configure_logging() -> None:
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI):
-    """Startup/shutdown lifespan handler — eagerly loads all blob data."""
+    """Startup/shutdown lifespan handler — kicks off background data loading."""
     from app.config import get_settings
 
     settings = get_settings()
@@ -51,14 +51,7 @@ async def _lifespan(app: FastAPI):
 
         blob_service = get_blob_service()
         try:
-            logging.info("Preloading all data from Blob Storage...")
-            stats = blob_service.preload_all()
-            logging.info(
-                f"Preload complete in {stats['total']}s "
-                f"(manifest: {stats['manifest_and_schema']}s, "
-                f"api_data: {stats['api_data']}s, "
-                f"models: {stats['models']}s)"
-            )
+            blob_service.start_preload()
         except Exception as e:
             logging.error(f"Preload failed (app will lazy-load on demand): {e}")
     else:
