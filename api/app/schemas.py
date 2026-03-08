@@ -233,3 +233,115 @@ class RankingsResponse(BaseModel):
     sport: str = Field(..., description="Sport code")
     updated_at: str = Field(..., description="ISO timestamp of last update")
     rankings: List[RankingEntry] = Field(..., description="Ordered list of rankings")
+
+
+# =============================================================================
+# Tournament Models
+# =============================================================================
+
+
+class PlayInGame(BaseModel):
+    """A play-in game in the tournament."""
+
+    slot: str = Field(..., description="Slot ID (e.g., 'pi_1')")
+    region: str = Field(..., description="Region this play-in feeds into")
+    seed: int = Field(..., description="Seed position (11 or 16)")
+    teams: List[str] = Field(..., description="Two team keys (empty if TBD)")
+    result: Optional[str] = Field(None, description="Winning team key or null")
+
+
+class RegionDef(BaseModel):
+    """A region's seed assignments."""
+
+    name: str = Field(..., description="Display name (e.g., 'South')")
+    seeds: dict = Field(..., description="Seed number → team key or pi_* ref")
+
+
+class FinalFourDef(BaseModel):
+    """Final Four matchup configuration."""
+
+    semifinal_1: List[str] = Field(..., description="Two region keys")
+    semifinal_2: List[str] = Field(..., description="Two region keys")
+
+
+class TournamentSummary(BaseModel):
+    """Summary info for tournament listing."""
+
+    id: str = Field(..., description="Tournament ID")
+    name: str = Field(..., description="Display name")
+    year: int = Field(..., description="Tournament year")
+    sport: str = Field(..., description="Sport code")
+    lock_date: str = Field(..., description="ISO timestamp after which picks are locked")
+    is_locked: bool = Field(..., description="Whether bracket edits are locked")
+
+
+class TournamentListResponse(BaseModel):
+    """Response for tournament listing."""
+
+    data: List[TournamentSummary] = Field(..., description="Available tournaments")
+
+
+class TournamentResponse(BaseModel):
+    """Full tournament definition with structure and results."""
+
+    id: str = Field(..., description="Tournament ID")
+    type: Literal["tournament"] = Field(default="tournament")
+    name: str = Field(..., description="Display name")
+    year: int = Field(..., description="Tournament year")
+    sport: str = Field(..., description="Sport code")
+    lock_date: str = Field(..., description="ISO lock timestamp")
+    is_locked: bool = Field(..., description="Whether picks are locked")
+    play_in: List[PlayInGame] = Field(..., description="Play-in games")
+    regions: dict = Field(..., description="Region definitions")
+    final_four: FinalFourDef = Field(..., description="Final Four config")
+    results: dict = Field(default_factory=dict, description="Slot → winning team")
+
+
+# =============================================================================
+# Bracket Models
+# =============================================================================
+
+
+class CreateBracketRequest(BaseModel):
+    """Request body for creating a bracket."""
+
+    tournament_id: str = Field(..., min_length=1, description="Tournament ID")
+    name: str = Field(..., min_length=1, max_length=50, description="Bracket name")
+    picks: dict = Field(default_factory=dict, description="Slot → team key picks")
+
+
+class UpdateBracketRequest(BaseModel):
+    """Request body for updating a bracket."""
+
+    name: Optional[str] = Field(None, min_length=1, max_length=50)
+    picks: Optional[dict] = None
+
+
+class BracketResponse(BaseModel):
+    """Response for a single bracket."""
+
+    id: str = Field(..., description="Bracket ID")
+    type: Literal["bracket"] = Field(default="bracket")
+    tournament_id: str = Field(..., description="Tournament ID")
+    name: str = Field(..., description="User-chosen bracket name")
+    picks: dict = Field(..., description="Slot → team key picks")
+    created_at: str = Field(..., description="ISO creation timestamp")
+    updated_at: str = Field(..., description="ISO last-update timestamp")
+
+    @classmethod
+    def from_cosmos_record(cls, record: dict) -> "BracketResponse":
+        """Create a BracketResponse from a Cosmos DB record."""
+        return cls(
+            id=record["id"],
+            tournament_id=record["tournament_id"],
+            name=record["name"],
+            picks=record.get("picks", {}),
+            created_at=record["created_at"],
+            updated_at=record["updated_at"],
+        )
+
+
+class BracketListResponse(BaseModel):
+    """Response for bracket listing."""
+
+    data: List[BracketResponse] = Field(..., description="User's brackets")

@@ -72,3 +72,39 @@ class PredictionNotFoundError(NotFoundError):
 
     def __init__(self, prediction_id: str):
         super().__init__("Prediction", prediction_id)
+
+
+class TournamentNotFoundError(NotFoundError):
+    """Tournament not found."""
+
+    def __init__(self, tournament_id: str):
+        super().__init__("Tournament", tournament_id)
+
+
+class BracketNotFoundError(NotFoundError):
+    """Bracket not found."""
+
+    def __init__(self, bracket_id: str):
+        super().__init__("Bracket", bracket_id)
+
+
+class BracketLockedError(APIError):
+    """Tournament brackets are locked."""
+
+    def __init__(self):
+        super().__init__(
+            "bracket_locked",
+            "Tournament brackets are locked — picks can no longer be changed",
+            403,
+        )
+
+
+class BracketLimitError(APIError):
+    """User has too many brackets for this tournament."""
+
+    def __init__(self, limit: int):
+        super().__init__(
+            "bracket_limit",
+            f"Maximum of {limit} brackets per tournament",
+            400,
+        )

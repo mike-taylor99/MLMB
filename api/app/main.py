@@ -14,7 +14,7 @@ from pydantic import ValidationError as PydanticValidationError
 
 from app.exceptions import APIError
 from app.middleware import RequestIDMiddleware, RequestIDLogFilter, get_request_id
-from app.routers import predictions, rankings, teams
+from app.routers import predictions, rankings, teams, tournaments, brackets
 from app.schemas import HealthResponse, ErrorResponse, ErrorDetail
 
 # The "/api" prefix is defined in ONE place — see create_app().
@@ -94,6 +94,8 @@ def create_app() -> FastAPI:
     api_router.include_router(predictions.router, tags=["Predictions"])
     api_router.include_router(rankings.router, tags=["Rankings"])
     api_router.include_router(teams.router, tags=["Teams"])
+    api_router.include_router(tournaments.router, tags=["Tournaments"])
+    api_router.include_router(brackets.router, tags=["Brackets"])
 
     # Health check
     @api_router.get("/health", tags=["Health"], response_model=HealthResponse)

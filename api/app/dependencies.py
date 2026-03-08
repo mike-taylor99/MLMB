@@ -20,6 +20,14 @@ from shared.predictions_store import (
     PredictionsStore,
     get_predictions_store as _get_predictions_store,
 )
+from shared.tournament_store import (
+    TournamentStore,
+    get_tournament_store as _get_tournament_store,
+)
+from shared.bracket_store import (
+    BracketStore,
+    get_bracket_store as _get_bracket_store,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -37,9 +45,21 @@ def get_predictions_store() -> PredictionsStore:
     return _get_predictions_store()
 
 
+def get_tournament_store() -> TournamentStore:
+    """Get the tournament store singleton."""
+    return _get_tournament_store()
+
+
+def get_bracket_store() -> BracketStore:
+    """Get the bracket store singleton."""
+    return _get_bracket_store()
+
+
 # Type aliases for dependency injection
 BlobServiceDep = Annotated[BlobStorageService, Depends(get_blob_service)]
 PredictionsStoreDep = Annotated[PredictionsStore, Depends(get_predictions_store)]
+TournamentStoreDep = Annotated[TournamentStore, Depends(get_tournament_store)]
+BracketStoreDep = Annotated[BracketStore, Depends(get_bracket_store)]
 
 
 # ---------------------------------------------------------------------------
@@ -95,10 +115,12 @@ def get_user_id(principal: dict) -> Optional[str]:
     """Extract a stable user_id from the auth principal.
 
     SWA provides a userId field that is a stable, opaque hash unique per
-    identity-provider + user combination.  Returns ``None`` for identities
-    that should not have tracked prediction history (API-key jobs, local dev).
+    identity-provider + user combination.  Returns ``None`` for API-key
+    service accounts and a fixed ``"local-dev-user"`` for local dev.
     """
     auth_type = principal.get("auth_type")
-    if auth_type in ("api_key", "local"):
+    if auth_type == "api_key":
         return None
+    if auth_type == "local":
+        return "local-dev-user"
     return principal.get("userId") or None

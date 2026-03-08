@@ -1,0 +1,55 @@
+{
+  "id": "2026_ncaaw",
+  "year": 2026,
+  "sport": "ncaaw_basketball",
+  "name": "2026 NCAA Women's Tournament",
+  "lock_date": "2026-03-21T12:00:00Z",
+
+  "play_in": [],
+
+  "regions": {
+    "albany": {
+      "name": "Albany",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    },
+    "portland": {
+      "name": "Portland",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    },
+    "dallas": {
+      "name": "Dallas",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    },
+    "tampa": {
+      "name": "Tampa",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    }
+  },
+
+  "final_four": {
+    "semifinal_1": ["albany", "portland"],
+    "semifinal_2": ["dallas", "tampa"]
+  },
+
+  "results": {}
+}

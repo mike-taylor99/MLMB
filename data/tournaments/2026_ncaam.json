@@ -1,0 +1,60 @@
+{
+  "id": "2026_ncaam",
+  "year": 2026,
+  "sport": "ncaam_basketball",
+  "name": "2026 NCAA Men's Tournament",
+  "lock_date": "2026-03-19T12:00:00Z",
+
+  "play_in": [
+    { "slot": "pi_1", "region": "south", "seed": 16, "teams": [], "result": null },
+    { "slot": "pi_2", "region": "east",  "seed": 16, "teams": [], "result": null },
+    { "slot": "pi_3", "region": "midwest", "seed": 11, "teams": [], "result": null },
+    { "slot": "pi_4", "region": "west",  "seed": 11, "teams": [], "result": null }
+  ],
+
+  "regions": {
+    "south": {
+      "name": "South",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": "pi_1"
+      }
+    },
+    "east": {
+      "name": "East",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": null, "12": null,
+        "13": null, "14": null, "15": null, "16": "pi_2"
+      }
+    },
+    "midwest": {
+      "name": "Midwest",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": "pi_3", "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    },
+    "west": {
+      "name": "West",
+      "seeds": {
+        "1": null, "2": null, "3": null, "4": null,
+        "5": null, "6": null, "7": null, "8": null,
+        "9": null, "10": null, "11": "pi_4", "12": null,
+        "13": null, "14": null, "15": null, "16": null
+      }
+    }
+  },
+
+  "final_four": {
+    "semifinal_1": ["south", "east"],
+    "semifinal_2": ["midwest", "west"]
+  },
+
+  "results": {}
+}

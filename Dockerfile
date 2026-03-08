@@ -20,6 +20,7 @@ COPY api/ /app/api/
 COPY pipelines/ /app/pipelines/
 COPY data/mens_teams.csv /app/data/mens_teams.csv
 COPY data/womens_teams.csv /app/data/womens_teams.csv
+COPY data/tournaments/ /app/data/tournaments/
 
 # Default: run the API
 # Pipeline jobs override this command at the Container Apps Job level
