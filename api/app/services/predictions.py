@@ -170,14 +170,18 @@ def create_batch_predictions(
         stats_keys.add((req.home_team, req.span, item["is_womens"]))
         stats_keys.add((req.away_team, req.span, item["is_womens"]))
 
-    logging.info(f"Loading {len(model_keys)} model groups, {len(stats_keys)} team stats")
+    logging.info(
+        f"Loading {len(model_keys)} model groups, {len(stats_keys)} team stats"
+    )
 
     models_cache = preload_models(blob_service, model_keys)
     model_versions_cache = preload_model_versions(blob_service, model_keys)
     stats_cache = preload_stats(blob_service, stats_keys)
 
     # Run predictions
-    results: list[Union[PredictionResponse, ErrorResponse]] = [None] * len(indexed_requests)  # type: ignore
+    results: list[Union[PredictionResponse, ErrorResponse]] = [None] * len(
+        indexed_requests
+    )  # type: ignore
     cosmos_records: list[dict] = []
 
     for item in indexed_requests:
@@ -211,43 +215,46 @@ def list_predictions(
     predictions_store: PredictionsStore,
     sport: str,
     limit: int,
-    home_team: Optional[str] = None,
-    away_team: Optional[str] = None,
-    start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
+    user_id: Optional[str] = None,
     before_id: Optional[str] = None,
     after_id: Optional[str] = None,
 ) -> PredictionListResponse:
     """
-    Query prediction history with pagination.
+    Query prediction history.
+
+    When *user_id* is provided the results are scoped to that user's
+    linked predictions.  When ``None`` (local dev / anonymous) the
+    unscoped predictions container is queried directly.
 
     Args:
         predictions_store: Cosmos DB store
         sport: Sport code (required)
         limit: Maximum results to return
-        home_team: Optional filter
-        away_team: Optional filter
-        start_date: Optional filter (YYYY-MM-DD)
-        end_date: Optional filter (YYYY-MM-DD)
+        user_id: User ID for scoped history (None = unscoped)
         before_id: Cursor for backward pagination
         after_id: Cursor for forward pagination
 
     Returns:
         PredictionListResponse with paginated results
     """
-    logging.info(f"Querying predictions (sport={sport}, limit={limit})")
+    logging.info(f"Querying predictions (user={user_id}, sport={sport}, limit={limit})")
 
     # Query one extra to determine has_more
-    records = predictions_store.query_predictions(
-        sport=sport,
-        home_team=home_team,
-        away_team=away_team,
-        start_date=start_date,
-        end_date=end_date,
-        limit=limit + 1,
-        before_id=before_id,
-        after_id=after_id,
-    )
+    if user_id:
+        records = predictions_store.query_user_predictions(
+            user_id=user_id,
+            sport=sport,
+            limit=limit + 1,
+            before_id=before_id,
+            after_id=after_id,
+        )
+    else:
+        records = predictions_store.query_predictions(
+            sport=sport,
+            limit=limit + 1,
+            before_id=before_id,
+            after_id=after_id,
+        )
 
     has_more = len(records) > limit
     if has_more:

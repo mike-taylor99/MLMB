@@ -45,13 +45,16 @@ BATCH_SIZE = 500
 
 # Default API URL — use internal FQDN for container-to-container traffic
 # (bypasses EasyAuth, stays within the Container Apps environment)
-DEFAULT_API_URL = "https://mlmb-api.internal.purplesand-9a1718e2.eastus.azurecontainerapps.io"
+DEFAULT_API_URL = (
+    "https://mlmb-api.internal.purplesand-9a1718e2.eastus.azurecontainerapps.io"
+)
+
 
 def _create_retry_session(api_key: str = "") -> requests.Session:
     """Create a requests session with retry + exponential backoff for cold-start tolerance."""
     retry = Retry(
         total=5,
-        backoff_factor=5,                      # 5s, 10s, 20s, 40s, 80s
+        backoff_factor=5,  # 5s, 10s, 20s, 40s, 80s
         status_forcelist=[503, 507],
         allowed_methods=["GET", "POST"],
         raise_on_status=False,
@@ -106,16 +109,20 @@ def generate_top25(
     for team1, team2 in matchups:
         for span in spans:
             for neutral in [True, False]:
-                batch_requests.append({
-                    "home_team": team1,
-                    "away_team": team2,
-                    "sport": sport,
-                    "span": span,
-                    "neutral": neutral,
-                })
+                batch_requests.append(
+                    {
+                        "home_team": team1,
+                        "away_team": team2,
+                        "sport": sport,
+                        "span": span,
+                        "neutral": neutral,
+                    }
+                )
 
     total = len(batch_requests)
-    logger.info(f"Sending {total} predictions in {(total + BATCH_SIZE - 1) // BATCH_SIZE} batches")
+    logger.info(
+        f"Sending {total} predictions in {(total + BATCH_SIZE - 1) // BATCH_SIZE} batches"
+    )
 
     # Send batch requests
     all_predictions = []
@@ -124,13 +131,19 @@ def generate_top25(
     for i in tqdm(range(0, total, BATCH_SIZE), desc="Batches"):
         chunk = batch_requests[i : i + BATCH_SIZE]
         try:
-            resp = session.post(f"{api_base_url}/api/predictions/batch", json={"input": chunk}, timeout=300)
+            resp = session.post(
+                f"{api_base_url}/api/predictions/batch",
+                json={"input": chunk},
+                timeout=300,
+            )
         except requests.exceptions.ConnectionError:
             logger.error(f"Batch {i // BATCH_SIZE + 1} failed after retries")
             continue
 
         if resp.status_code != 200:
-            logger.error(f"Batch {i // BATCH_SIZE + 1} failed: {resp.status_code} — {resp.text}")
+            logger.error(
+                f"Batch {i // BATCH_SIZE + 1} failed: {resp.status_code} — {resp.text}"
+            )
             continue
 
         result = resp.json()
@@ -215,7 +228,9 @@ def main() -> None:
     connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 
     if not connection_string:
-        logger.warning("AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally.")
+        logger.warning(
+            "AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally."
+        )
 
     if not api_key:
         logger.warning("API_KEY not set — predictions endpoints may reject requests.")
@@ -223,7 +238,9 @@ def main() -> None:
     logger.info(f"Starting top 25 pipeline for season {season}")
     logger.info(f"API base URL: {api_base_url}")
 
-    success = generate_and_upload_top25(api_base_url, season, connection_string, api_key)
+    success = generate_and_upload_top25(
+        api_base_url, season, connection_string, api_key
+    )
     logger.info("Top 25 pipeline complete.")
 
     if success and connection_string:

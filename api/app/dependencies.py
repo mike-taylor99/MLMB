@@ -12,8 +12,14 @@ from fastapi import Depends, Request
 
 from app.config import Settings, get_settings
 from app.exceptions import AuthenticationError
-from shared.blob_service import BlobStorageService, get_blob_service as _get_blob_service
-from shared.predictions_store import PredictionsStore, get_predictions_store as _get_predictions_store
+from shared.blob_service import (
+    BlobStorageService,
+    get_blob_service as _get_blob_service,
+)
+from shared.predictions_store import (
+    PredictionsStore,
+    get_predictions_store as _get_predictions_store,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +45,7 @@ PredictionsStoreDep = Annotated[PredictionsStore, Depends(get_predictions_store)
 # ---------------------------------------------------------------------------
 # Auth — require either SWA user identity OR a valid API key
 # ---------------------------------------------------------------------------
+
 
 def _parse_client_principal(header_value: str) -> Optional[dict]:
     """Decode the base64-encoded x-ms-client-principal header from SWA."""
@@ -74,7 +81,24 @@ def require_auth(
     if api_key and settings.api_key and api_key == settings.api_key:
         return {"auth_type": "api_key", "userDetails": "service-account"}
 
+    # 3. Local dev bypass (requires LOCAL_DEV=true)
+    if settings.local_dev:
+        return {"auth_type": "local", "userId": "local-dev", "userDetails": "Local Dev"}
+
     raise AuthenticationError()
 
 
 RequireAuthDep = Annotated[dict, Depends(require_auth)]
+
+
+def get_user_id(principal: dict) -> Optional[str]:
+    """Extract a stable user_id from the auth principal.
+
+    SWA provides a userId field that is a stable, opaque hash unique per
+    identity-provider + user combination.  Returns ``None`` for identities
+    that should not have tracked prediction history (API-key jobs, local dev).
+    """
+    auth_type = principal.get("auth_type")
+    if auth_type in ("api_key", "local"):
+        return None
+    return principal.get("userId") or None

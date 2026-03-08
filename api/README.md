@@ -22,6 +22,18 @@ Currently supported sports:
 - `ncaam_basketball` - NCAA Men's Basketball
 - `ncaaw_basketball` - NCAA Women's Basketball
 
+## Authentication
+
+All prediction endpoints require authentication. The API accepts three methods (checked in order):
+
+| Method | Header | Use Case |
+| --- | --- | --- |
+| SWA user identity | `x-ms-client-principal` | Browser users via Static Web App proxy |
+| API key | `X-API-Key` | Server-to-server calls (pipeline jobs) |
+| Local dev bypass | — | Development only (`LOCAL_DEV=true`) |
+
+SWA provides a stable `userId` (opaque hash per identity-provider + user) that is used to scope prediction history to the authenticated user. API-key callers are identified as `service-account` and do not accumulate personal history.
+
 ## Local Development
 
 ### Prerequisites
@@ -34,8 +46,8 @@ Currently supported sports:
 ```bash
 cd api
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1  # Windows
-# source .venv/bin/activate   # Mac/Linux
+./.venv/bin/activate   # Mac/Linux
+# .\.venv\Scripts\Activate.ps1  # Windows
 
 pip install -r requirements.txt
 ```
@@ -44,16 +56,14 @@ pip install -r requirements.txt
 
 ```bash
 cd api
-.\.venv\Scripts\Activate.ps1
 uvicorn app.main:create_app --factory --reload --port 8000
 ```
 
 Or with Docker:
 
 ```bash
-cd api
 docker build -t mlmb-api .
-docker run -p 8000:8000 --env-file .env mlmb-api
+docker run -p 8000:8000 --env-file api/.env mlmb-api
 ```
 
 ### Environment Variables
@@ -63,7 +73,15 @@ Create a `.env` file in the `api/` directory:
 ```
 AZURE_STORAGE_CONNECTION_STRING=<your-connection-string>
 COSMOS_CONNECTION_STRING=<your-cosmos-connection-string>
+LOCAL_DEV=true
 ```
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `AZURE_STORAGE_CONNECTION_STRING` | Yes | Azure Blob Storage connection string |
+| `COSMOS_CONNECTION_STRING` | Yes | Azure Cosmos DB connection string |
+| `API_KEY` | No | Shared key for server-to-server auth |
+| `LOCAL_DEV` | No | Set to `true` to bypass auth in development |
 
 ## API Usage
 
@@ -124,22 +142,20 @@ GET /predictions/pred_a3f2b8c1d4e5f6a7b8c9d0e1f2a3b4c5?sport=ncaam_basketball
 
 **Query Prediction History:**
 
+Returns predictions scoped to the authenticated user, ordered by most recent first.
+
 ```bash
-GET /predictions?sport=ncaam_basketball&home_team=duke&limit=20
+GET /predictions?sport=ncaam_basketball&limit=20
 ```
 
 **Query Parameters:**
 
-| Parameter    | Type   | Required | Description                       |
-| ------------ | ------ | -------- | --------------------------------- |
-| `sport`      | string | Yes      | Sport code (partition key)        |
-| `home_team`  | string | No       | Filter by home team               |
-| `away_team`  | string | No       | Filter by away team               |
-| `start_date` | string | No       | Filter after date (ISO format)    |
-| `end_date`   | string | No       | Filter before date (ISO format)   |
-| `limit`      | int    | No       | Max results (default 20, max 100) |
-| `before_id`  | string | No       | Cursor: get items before this ID  |
-| `after_id`   | string | No       | Cursor: get items after this ID   |
+| Parameter   | Type   | Required | Description                       |
+| ----------- | ------ | -------- | --------------------------------- |
+| `sport`     | string | Yes      | Sport code (partition key)        |
+| `limit`     | int    | No       | Max results (default 20, max 100) |
+| `before_id` | string | No       | Cursor: get items before this ID  |
+| `after_id`  | string | No       | Cursor: get items after this ID   |
 
 **History Response:**
 
@@ -383,6 +399,17 @@ Predictions use content-hash based IDs:
 - `pred_{SHA256(inputs + model_version + stats_version)}`
 - Identical requests = identical IDs = automatic deduplication
 - Cache lookup is O(1) via Cosmos DB point read (~10ms)
+
+### User-Scoped Prediction History
+
+Predictions are linked to users via a `user_predictions` Cosmos container:
+
+- **Partition key:** `/user_id` (SWA stable hash)
+- **Document ID:** `{userId}_{predictionId}` — composite key ensures idempotency
+- **Composite index:** `(sport ASC, created_at DESC)` for efficient history queries
+- User-prediction links are written asynchronously via background tasks
+- Listing predictions hydrates links with point reads from the `predictions` container
+- API-key callers (`service-account`) do not create user-prediction links
 
 ### Feature Schema
 

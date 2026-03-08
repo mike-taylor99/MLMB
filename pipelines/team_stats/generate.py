@@ -39,10 +39,14 @@ def main() -> None:
     connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 
     if not connection_string:
-        logger.warning("AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally.")
+        logger.warning(
+            "AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally."
+        )
 
     logger.info(f"Starting team stats pipeline for season {season}")
-    success = generate_and_upload_team_stats(season, connection_string=connection_string)
+    success = generate_and_upload_team_stats(
+        season, connection_string=connection_string
+    )
     logger.info("Team stats pipeline complete.")
 
     if success and connection_string:

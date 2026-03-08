@@ -21,10 +21,38 @@ def write_prediction(predictions_store: PredictionsStore, record: dict) -> None:
         logging.error(f"Background write failed for {record['id']}: {e}")
 
 
-def write_predictions_bulk(predictions_store: PredictionsStore, records: list[dict]) -> None:
+def write_predictions_bulk(
+    predictions_store: PredictionsStore, records: list[dict]
+) -> None:
     """Write multiple predictions to Cosmos DB."""
     try:
         created, skipped = predictions_store.create_predictions_bulk(records)
         logging.info(f"Background bulk write: {created} created, {skipped} skipped")
     except Exception as e:
         logging.error(f"Background bulk write failed: {e}")
+
+
+def link_user_prediction(
+    predictions_store: PredictionsStore,
+    user_id: str,
+    prediction_id: str,
+    sport: str,
+) -> None:
+    """Link a single prediction to a user for scoped history."""
+    try:
+        predictions_store.link_user_prediction(user_id, prediction_id, sport)
+    except Exception as e:
+        logging.error(f"Background user link failed for {prediction_id}: {e}")
+
+
+def link_user_predictions_bulk(
+    predictions_store: PredictionsStore,
+    user_id: str,
+    prediction_ids: list[str],
+    sport: str,
+) -> None:
+    """Link multiple predictions to a user for scoped history."""
+    try:
+        predictions_store.link_user_predictions_bulk(user_id, prediction_ids, sport)
+    except Exception as e:
+        logging.error(f"Background bulk user link failed: {e}")
