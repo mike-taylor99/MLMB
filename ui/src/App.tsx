@@ -32,10 +32,10 @@ function App() {
                   <Route index element={<HomePage />} />
                   <Route element={<RequireAuth />}>
                     <Route path="predict" element={<PredictPage />} />
+                    <Route path="history" element={<HistoryPage />} />
                   </Route>
                   <Route path="teams" element={<TeamsPage />} />
                   <Route path="teams/:teamId" element={<TeamDetailPage />} />
-                  <Route path="history" element={<HistoryPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>
