@@ -12,6 +12,10 @@ import { TeamDetailPage } from '@/pages/team-detail'
 import { HistoryPage } from '@/pages/history'
 import { NotFoundPage } from '@/pages/not-found'
 import { LoginPage } from '@/pages/login'
+import { BracketsPage } from '@/pages/brackets'
+import { BracketDetailPage } from '@/pages/bracket-detail'
+import { BracketEditorPage } from '@/pages/bracket-editor'
+import { BracketViewPage } from '@/pages/bracket-view'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,6 +40,13 @@ function App() {
                   </Route>
                   <Route path="teams" element={<TeamsPage />} />
                   <Route path="teams/:teamId" element={<TeamDetailPage />} />
+                  <Route path="brackets" element={<BracketsPage />} />
+                  <Route path="brackets/:tournamentId" element={<BracketDetailPage />} />
+                  <Route path="brackets/:tournamentId/view/:bracketId" element={<BracketViewPage />} />
+                  <Route element={<RequireAuth />}>
+                    <Route path="brackets/:tournamentId/edit" element={<BracketEditorPage />} />
+                    <Route path="brackets/:tournamentId/edit/:bracketId" element={<BracketEditorPage />} />
+                  </Route>
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>

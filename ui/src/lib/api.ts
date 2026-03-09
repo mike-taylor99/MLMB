@@ -5,6 +5,9 @@
 import type {
   BatchRequest,
   BatchResponse,
+  Bracket,
+  BracketListResponse,
+  CreateBracketRequest,
   HealthResponse,
   Prediction,
   PredictionListResponse,
@@ -13,6 +16,9 @@ import type {
   Sport,
   Team,
   TeamsListResponse,
+  Tournament,
+  TournamentListResponse,
+  UpdateBracketRequest,
 } from './types'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
@@ -48,6 +54,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     )
   }
 
+  // 204 No Content — nothing to parse
+  if (res.status === 204) return undefined as T
+
   return res.json() as Promise<T>
 }
 
@@ -68,6 +77,7 @@ export interface ListTeamsParams {
   limit?: number
   after_id?: string
   before_id?: string
+  enabled?: boolean
 }
 
 export function fetchTeams(params: ListTeamsParams = {}): Promise<TeamsListResponse> {
@@ -127,6 +137,57 @@ export function fetchPrediction(id: string, sport: Sport): Promise<Prediction> {
 
 export function fetchRankings(sport: Sport): Promise<RankingsResponse> {
   return request(`/api/rankings/${sport}`)
+}
+
+// ---------------------------------------------------------------------------
+// Tournaments
+// ---------------------------------------------------------------------------
+
+export function fetchTournaments(): Promise<TournamentListResponse> {
+  return request('/api/tournaments')
+}
+
+export function fetchTournament(id: string): Promise<Tournament> {
+  return request(`/api/tournaments/${encodeURIComponent(id)}`)
+}
+
+// ---------------------------------------------------------------------------
+// Brackets
+// ---------------------------------------------------------------------------
+
+export function fetchBrackets(tournamentId?: string): Promise<BracketListResponse> {
+  const qs = tournamentId ? `?tournament_id=${encodeURIComponent(tournamentId)}` : ''
+  return request(`/api/brackets${qs}`)
+}
+
+export function fetchBracket(bracketId: string): Promise<Bracket> {
+  return request(`/api/brackets/${encodeURIComponent(bracketId)}`)
+}
+
+export function fetchPublicBracket(tournamentId: string, bracketId: string): Promise<Bracket> {
+  return request(
+    `/api/tournaments/${encodeURIComponent(tournamentId)}/brackets/${encodeURIComponent(bracketId)}`,
+  )
+}
+
+export function createBracket(body: CreateBracketRequest): Promise<Bracket> {
+  return request('/api/brackets', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function updateBracket(bracketId: string, body: UpdateBracketRequest): Promise<Bracket> {
+  return request(`/api/brackets/${encodeURIComponent(bracketId)}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  })
+}
+
+export function deleteBracket(bracketId: string): Promise<void> {
+  return request(`/api/brackets/${encodeURIComponent(bracketId)}`, {
+    method: 'DELETE',
+  })
 }
 
 export { ApiError }

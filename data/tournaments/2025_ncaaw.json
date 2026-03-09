@@ -1,0 +1,200 @@
+{
+  "id": "2025_ncaaw",
+  "year": 2025,
+  "sport": "ncaaw_basketball",
+  "name": "2025 NCAA Women's Tournament",
+  "lock_date": "2025-03-21T12:00:00Z",
+
+  "play_in": [
+    {
+      "slot": "pi_1",
+      "region": "Birmingham 3",
+      "seed": 16,
+      "teams": ["high-point", "william-mary"],
+      "result": "william-mary"
+    },
+    {
+      "slot": "pi_2",
+      "region": "Spokane 1",
+      "seed": 16,
+      "teams": ["california-san-diego", "southern"],
+      "result": "southern"
+    },
+    {
+      "slot": "pi_3",
+      "region": "Birmingham 2",
+      "seed": 11,
+      "teams": ["columbia", "washington"],
+      "result": "columbia"
+    },
+    {
+      "slot": "pi_4",
+      "region": "Birmingham 3",
+      "seed": 11,
+      "teams": ["iowa-state", "princeton"],
+      "result": "iowa-state"
+    }
+  ],
+
+  "regions": {
+    "spokane_1": {
+      "name": "Spokane 1",
+      "seeds": {
+        "1": "ucla",
+        "2": "north-carolina-state",
+        "3": "louisiana-state",
+        "4": "baylor",
+        "5": "mississippi",
+        "6": "florida-state",
+        "7": "michigan-state",
+        "8": "richmond",
+        "9": "georgia-tech",
+        "10": "harvard",
+        "11": "george-mason",
+        "12": "ball-state",
+        "13": "grand-canyon",
+        "14": "san-diego-state",
+        "15": "vermont",
+        "16": "pi_2"
+      }
+    },
+    "birmingham_2": {
+      "name": "Birmingham 2",
+      "seeds": {
+        "1": "south-carolina",
+        "2": "duke",
+        "3": "north-carolina",
+        "4": "maryland",
+        "5": "alabama",
+        "6": "west-virginia",
+        "7": "vanderbilt",
+        "8": "utah",
+        "9": "indiana",
+        "10": "oregon",
+        "11": "pi_3",
+        "12": "green-bay",
+        "13": "norfolk-state",
+        "14": "oregon-state",
+        "15": "lehigh",
+        "16": "tennessee-tech"
+      }
+    },
+    "spokane_4": {
+      "name": "Spokane 4",
+      "seeds": {
+        "1": "southern-california",
+        "2": "connecticut",
+        "3": "oklahoma",
+        "4": "kentucky",
+        "5": "kansas-state",
+        "6": "iowa",
+        "7": "oklahoma-state",
+        "8": "california",
+        "9": "mississippi-state",
+        "10": "south-dakota-state",
+        "11": "murray-state",
+        "12": "fairfield",
+        "13": "liberty",
+        "14": "florida-gulf-coast",
+        "15": "arkansas-state",
+        "16": "north-carolina-greensboro"
+      }
+    },
+    "birmingham_3": {
+      "name": "Birmingham 3",
+      "seeds": {
+        "1": "texas",
+        "2": "texas-christian",
+        "3": "notre-dame",
+        "4": "ohio-state",
+        "5": "tennessee",
+        "6": "michigan",
+        "7": "louisville",
+        "8": "illinois",
+        "9": "creighton",
+        "10": "nebraska",
+        "11": "pi_4",
+        "12": "south-florida",
+        "13": "montana-state",
+        "14": "stephen-f-austin",
+        "15": "fairleigh-dickinson",
+        "16": "pi_1"
+      }
+    }
+  },
+
+  "final_four": {
+    "semifinal_1": ["spokane_1", "spokane_4"],
+    "semifinal_2": ["birmingham_2", "birmingham_3"]
+  },
+
+  "results": {
+    "spokane_1_R64_G1": "ucla",
+    "spokane_1_R64_G2": "richmond",
+    "spokane_1_R64_G3": "mississippi",
+    "spokane_1_R64_G4": "baylor",
+    "spokane_1_R64_G5": "florida-state",
+    "spokane_1_R64_G6": "louisiana-state",
+    "spokane_1_R64_G7": "michigan-state",
+    "spokane_1_R64_G8": "north-carolina-state",
+    "spokane_1_R32_G1": "ucla",
+    "spokane_1_R32_G2": "mississippi",
+    "spokane_1_R32_G3": "louisiana-state",
+    "spokane_1_R32_G4": "north-carolina-state",
+    "spokane_1_S16_G1": "ucla",
+    "spokane_1_S16_G2": "louisiana-state",
+    "spokane_1_E8": "ucla",
+
+    "birmingham_2_R64_G1": "south-carolina",
+    "birmingham_2_R64_G2": "indiana",
+    "birmingham_2_R64_G3": "alabama",
+    "birmingham_2_R64_G4": "maryland",
+    "birmingham_2_R64_G5": "west-virginia",
+    "birmingham_2_R64_G6": "north-carolina",
+    "birmingham_2_R64_G7": "oregon",
+    "birmingham_2_R64_G8": "duke",
+    "birmingham_2_R32_G1": "south-carolina",
+    "birmingham_2_R32_G2": "maryland",
+    "birmingham_2_R32_G3": "north-carolina",
+    "birmingham_2_R32_G4": "duke",
+    "birmingham_2_S16_G1": "south-carolina",
+    "birmingham_2_S16_G2": "duke",
+    "birmingham_2_E8": "south-carolina",
+
+    "spokane_4_R64_G1": "southern-california",
+    "spokane_4_R64_G2": "mississippi-state",
+    "spokane_4_R64_G3": "kansas-state",
+    "spokane_4_R64_G4": "kentucky",
+    "spokane_4_R64_G5": "iowa",
+    "spokane_4_R64_G6": "oklahoma",
+    "spokane_4_R64_G7": "south-dakota-state",
+    "spokane_4_R64_G8": "connecticut",
+    "spokane_4_R32_G1": "southern-california",
+    "spokane_4_R32_G2": "kansas-state",
+    "spokane_4_R32_G3": "oklahoma",
+    "spokane_4_R32_G4": "connecticut",
+    "spokane_4_S16_G1": "southern-california",
+    "spokane_4_S16_G2": "connecticut",
+    "spokane_4_E8": "connecticut",
+
+    "birmingham_3_R64_G1": "texas",
+    "birmingham_3_R64_G2": "illinois",
+    "birmingham_3_R64_G3": "tennessee",
+    "birmingham_3_R64_G4": "ohio-state",
+    "birmingham_3_R64_G5": "michigan",
+    "birmingham_3_R64_G6": "notre-dame",
+    "birmingham_3_R64_G7": "louisville",
+    "birmingham_3_R64_G8": "texas-christian",
+    "birmingham_3_R32_G1": "texas",
+    "birmingham_3_R32_G2": "tennessee",
+    "birmingham_3_R32_G3": "notre-dame",
+    "birmingham_3_R32_G4": "texas-christian",
+    "birmingham_3_S16_G1": "texas",
+    "birmingham_3_S16_G2": "texas-christian",
+    "birmingham_3_E8": "texas",
+
+    "FF_G1": "connecticut",
+    "FF_G2": "south-carolina",
+    "NCG": "connecticut"
+  }
+}

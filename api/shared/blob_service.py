@@ -705,18 +705,28 @@ class BlobStorageService:
         futures = []
 
         # API data from blob storage
-        futures.append(pool.submit(_task, "team_stats[men]", self.get_team_stats, False))
-        futures.append(pool.submit(_task, "team_stats[women]", self.get_team_stats, True))
+        futures.append(
+            pool.submit(_task, "team_stats[men]", self.get_team_stats, False)
+        )
+        futures.append(
+            pool.submit(_task, "team_stats[women]", self.get_team_stats, True)
+        )
         futures.append(pool.submit(_task, "top25[men]", self.get_top25, False))
         futures.append(pool.submit(_task, "top25[women]", self.get_top25, True))
-        futures.append(pool.submit(_task, "feature_schema", self.get_feature_schema, False))
+        futures.append(
+            pool.submit(_task, "feature_schema", self.get_feature_schema, False)
+        )
 
         # Ensemble models (2 sports × 3 spans = 6 downloads)
         ensemble_blob = MODEL_NAME_MAP["ensemble"]
         for span in [3, 5, 7]:
             name = f"{span}span_{ensemble_blob}"
-            futures.append(pool.submit(_task, f"model[men/{name}]", self.get_model, name, False))
-            futures.append(pool.submit(_task, f"model[women/{name}]", self.get_model, name, True))
+            futures.append(
+                pool.submit(_task, f"model[men/{name}]", self.get_model, name, False)
+            )
+            futures.append(
+                pool.submit(_task, f"model[women/{name}]", self.get_model, name, True)
+            )
 
         pool.shutdown(wait=False)
 

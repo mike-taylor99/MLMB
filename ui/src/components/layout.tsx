@@ -3,7 +3,7 @@
 // ============================================================================
 
 import { Outlet, Link } from 'react-router'
-import { Trophy, Shield, History, Crosshair } from 'lucide-react'
+import { Trophy, Shield, History, Crosshair, Brackets } from 'lucide-react'
 import { NavItem } from '@/components/nav-item'
 import { SportSwitcher } from '@/components/sport-switcher'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -13,6 +13,7 @@ import { UserMenu } from '@/components/user-menu'
 const navLinks = [
   { to: '/', label: 'Home', icon: Trophy },
   { to: '/predict', label: 'Predict', icon: Crosshair },
+  { to: '/brackets', label: 'Brackets', icon: Brackets },
   { to: '/teams', label: 'Teams', icon: Shield },
   { to: '/history', label: 'History', icon: History },
 ] as const

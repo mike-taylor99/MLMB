@@ -105,6 +105,84 @@ export interface RankingsResponse {
 }
 
 // ---------------------------------------------------------------------------
+// Tournaments
+// ---------------------------------------------------------------------------
+
+export interface PlayInGame {
+  slot: string
+  region: string
+  seed: number
+  teams: string[]
+  result: string | null
+}
+
+export interface RegionDef {
+  name: string
+  seeds: Record<string, string | null>
+}
+
+export interface FinalFourDef {
+  semifinal_1: [string, string]
+  semifinal_2: [string, string]
+}
+
+export interface TournamentSummary {
+  id: string
+  name: string
+  year: number
+  sport: string
+  lock_date: string
+  is_locked: boolean
+}
+
+export interface TournamentListResponse {
+  data: TournamentSummary[]
+}
+
+export interface Tournament {
+  id: string
+  type: 'tournament'
+  name: string
+  year: number
+  sport: string
+  lock_date: string
+  is_locked: boolean
+  play_in: PlayInGame[]
+  regions: Record<string, RegionDef>
+  final_four: FinalFourDef
+  results: Record<string, string>
+}
+
+// ---------------------------------------------------------------------------
+// Brackets
+// ---------------------------------------------------------------------------
+
+export interface CreateBracketRequest {
+  tournament_id: string
+  name: string
+  picks: Record<string, string>
+}
+
+export interface UpdateBracketRequest {
+  name?: string
+  picks?: Record<string, string>
+}
+
+export interface Bracket {
+  id: string
+  type: 'bracket'
+  tournament_id: string
+  name: string
+  picks: Record<string, string>
+  created_at: string
+  updated_at: string
+}
+
+export interface BracketListResponse {
+  data: Bracket[]
+}
+
+// ---------------------------------------------------------------------------
 // Errors / Health
 // ---------------------------------------------------------------------------
 

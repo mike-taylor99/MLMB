@@ -271,7 +271,9 @@ class TournamentSummary(BaseModel):
     name: str = Field(..., description="Display name")
     year: int = Field(..., description="Tournament year")
     sport: str = Field(..., description="Sport code")
-    lock_date: str = Field(..., description="ISO timestamp after which picks are locked")
+    lock_date: str = Field(
+        ..., description="ISO timestamp after which picks are locked"
+    )
     is_locked: bool = Field(..., description="Whether bracket edits are locked")
 
 

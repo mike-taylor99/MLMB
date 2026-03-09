@@ -14,7 +14,9 @@ from typing import Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 # data/tournaments/ — works in Docker /app/data and local /workspace/data
-_TOURNAMENTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "tournaments"
+_TOURNAMENTS_DIR = (
+    Path(__file__).resolve().parent.parent.parent / "data" / "tournaments"
+)
 
 
 class TournamentStore:
