@@ -9,8 +9,9 @@ import {
   buildRegionBracketFromPicks,
   buildFinalFourFromPicks,
   scoreBracket,
+  getEliminatedTeams,
 } from '@/lib/bracket'
-import { Matchup, RegionBracketView, FinalFourView } from '@/components/bracket'
+import { Matchup, RegionBracketView, FinalFourView, BracketFullLayout } from '@/components/bracket'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -96,11 +97,17 @@ export function BracketViewPage() {
     return buildFinalFourFromPicks(tournament, picks)
   }, [tournament, picks])
 
+  // Compute eliminated teams for busted-pick detection
+  const eliminated = useMemo(() => {
+    if (!tournament) return new Set<string>()
+    return getEliminatedTeams(tournament)
+  }, [tournament])
+
   // Score the bracket
   const score = useMemo(() => {
     if (!tournament) return null
-    return scoreBracket(picks, tournament.results)
-  }, [tournament, picks])
+    return scoreBracket(picks, tournament.results, eliminated)
+  }, [tournament, picks, eliminated])
 
   const hasResults = tournament ? Object.keys(tournament.results).length > 0 : false
 
@@ -146,94 +153,78 @@ export function BracketViewPage() {
               </Badge>
             </div>
           </div>
-          <ShareButton title={bracket.name} text={`Check out my bracket for ${tournament.name}`} />
+          <div className="flex items-center gap-2">
+            <ShareButton title={bracket.name} text={`Check out my bracket for ${tournament.name}`} />
+          </div>
         </div>
       </div>
 
-      {/* Score summary */}
+      {/* Score summary — compact pills inline with header */}
       {score && hasResults && (
-        <Card>
-          <CardContent className="flex items-center justify-center gap-8 py-5 flex-wrap">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-green-500/15">
-                <Check className="h-4 w-4 text-green-500" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{score.correct}</div>
-                <div className="text-xs text-muted-foreground">Correct</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-destructive/15">
-                <X className="h-4 w-4 text-destructive" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{score.wrong}</div>
-                <div className="text-xs text-muted-foreground">Wrong</div>
-              </div>
-            </div>
-            {score.pending > 0 && (
-              <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-muted">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold">{score.pending}</div>
-                  <div className="text-xs text-muted-foreground">Pending</div>
-                </div>
-              </div>
-            )}
-            <div className="h-8 border-l" />
-            <div>
-              <div className="text-2xl font-bold">
-                {score.total > 0
-                  ? `${Math.round((score.correct / (score.correct + score.wrong || 1)) * 100)}%`
-                  : '—'}
-              </div>
-              <div className="text-xs text-muted-foreground">Accuracy</div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Play-in games (show user picks for unresolved play-ins) */}
-      {tournament.play_in.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xl font-semibold">First Four</h2>
-          <div className="flex flex-wrap gap-4">
-            {tournament.play_in.map((pi) => (
-              <div key={pi.slot} className="space-y-1">
-                <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
-                  {pi.region} · Seed {pi.seed}
-                </div>
-                <Matchup
-                  topTeam={pi.teams[0] ?? null}
-                  bottomTeam={pi.teams[1] ?? null}
-                  topSeed={pi.seed}
-                  bottomSeed={pi.seed}
-                  winner={pi.result}
-                  teamMap={teamMap}
-                  pick={picks[pi.slot]}
-                />
-              </div>
-            ))}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-green-500/15 px-3 py-1">
+            <Check className="h-3.5 w-3.5 text-green-600" />
+            <span className="text-sm font-semibold text-green-600">{score.correct}</span>
           </div>
-        </section>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-destructive/15 px-3 py-1">
+            <X className="h-3.5 w-3.5 text-destructive" />
+            <span className="text-sm font-semibold text-destructive">{score.wrong}</span>
+          </div>
+          {score.pending > 0 && (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
+              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+              <span className="text-sm font-semibold text-muted-foreground">{score.pending}</span>
+            </div>
+          )}
+          <div className="inline-flex items-center rounded-full bg-muted px-3 py-1">
+            <span className="text-sm font-semibold">
+              {score.total > 0
+                ? `${Math.round((score.correct / (score.correct + score.wrong || 1)) * 100)}%`
+                : '—'}
+            </span>
+          </div>
+        </div>
       )}
 
-      {/* Regional brackets — built from picks, scored against results */}
-      {regionBrackets.map((rb) => (
-        <section key={rb.regionKey}>
-          <RegionBracketView bracket={rb} teamMap={teamMap} picks={picks} />
-        </section>
-      ))}
-
-      {/* Final Four */}
-      {finalFour && (
-        <section>
-          <FinalFourView bracket={finalFour} teamMap={teamMap} picks={picks} />
-        </section>
-      )}
+      {/* Full bracket — 4 regions + Final Four center */}
+      {tournament && finalFour && (() => {
+        const [sf1r1, sf1r2] = tournament.final_four.semifinal_1
+        const [sf2r1, sf2r2] = tournament.final_four.semifinal_2
+        const rm = new Map(regionBrackets.map(rb => [rb.regionKey, rb]))
+        return (
+          <BracketFullLayout
+            topLeft={rm.get(sf1r1) && <RegionBracketView bracket={rm.get(sf1r1)!} teamMap={teamMap} picks={picks} eliminated={eliminated} />}
+            bottomLeft={rm.get(sf1r2) && <RegionBracketView bracket={rm.get(sf1r2)!} teamMap={teamMap} picks={picks} eliminated={eliminated} />}
+            topRight={rm.get(sf2r1) && <RegionBracketView bracket={rm.get(sf2r1)!} teamMap={teamMap} picks={picks} eliminated={eliminated} mirrored />}
+            bottomRight={rm.get(sf2r2) && <RegionBracketView bracket={rm.get(sf2r2)!} teamMap={teamMap} picks={picks} eliminated={eliminated} mirrored />}
+            center={<FinalFourView bracket={finalFour} teamMap={teamMap} picks={picks} eliminated={eliminated} />}
+            header={tournament.play_in.length > 0 ? (
+              <section className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">First Four</h3>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {tournament.play_in.map((pi) => (
+                    <div key={pi.slot} className="space-y-1">
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
+                        {pi.region} · Seed {pi.seed}
+                      </div>
+                      <Matchup
+                        topTeam={pi.teams[0] ?? null}
+                        bottomTeam={pi.teams[1] ?? null}
+                        topSeed={pi.seed}
+                        bottomSeed={pi.seed}
+                        winner={pi.result}
+                        teamMap={teamMap}
+                        pick={picks[pi.slot]}
+                        eliminated={eliminated}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : undefined}
+          />
+        )
+      })()}
     </div>
   )
 }

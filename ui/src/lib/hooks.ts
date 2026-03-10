@@ -198,7 +198,8 @@ export function useCreateBracket() {
   const qc = useQueryClient()
   return useMutation<Bracket, Error, CreateBracketRequest>({
     mutationFn: createBracket,
-    onSuccess: (_data, vars) => {
+    onSuccess: (data, vars) => {
+      qc.setQueryData(['public-bracket', vars.tournament_id, data.id], data)
       qc.invalidateQueries({ queryKey: queryKeys.brackets(vars.tournament_id) })
     },
   })
@@ -210,6 +211,7 @@ export function useUpdateBracket() {
     mutationFn: ({ bracketId, body }) => updateBracket(bracketId, body),
     onSuccess: (data) => {
       qc.setQueryData(queryKeys.bracket(data.id), data)
+      qc.setQueryData(['public-bracket', data.tournament_id, data.id], data)
       qc.invalidateQueries({ queryKey: queryKeys.brackets(data.tournament_id) })
     },
   })

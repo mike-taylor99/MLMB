@@ -7,12 +7,14 @@ import { useParams, Link } from 'react-router'
 import { useAuth } from '@/context/auth'
 import { useTournament, useTeams, useBrackets, useDeleteBracket } from '@/lib/hooks'
 import { buildRegionBracket, buildFinalFour } from '@/lib/bracket'
-import { Matchup, RegionBracketView, FinalFourView } from '@/components/bracket'
+import { Matchup, RegionBracketView, FinalFourView, BracketFullLayout } from '@/components/bracket'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft, Lock, Unlock, Plus, Pencil, Trash2 } from 'lucide-react'
+import { TeamLogo } from '@/components/team-logo'
+import { TrophyIcon } from '@/components/trophy-icon'
 import type { Team } from '@/lib/types'
 
 export function BracketDetailPage() {
@@ -147,13 +149,30 @@ export function BracketDetailPage() {
                 <Link key={b.id} to={`/brackets/${tournamentId}/view/${b.id}`} className="block">
                   <Card className="transition-colors hover:border-primary/40">
                     <CardContent className="flex items-center justify-between p-4">
-                      <div className="min-w-0">
-                        <div className="font-medium truncate">{b.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {Object.keys(b.picks).length} picks ·{' '}
-                          {tournament.is_locked
-                            ? 'Locked'
-                            : new Date(b.updated_at).toLocaleDateString()}
+                      <div className="flex items-center gap-3 min-w-0">
+                        {(() => {
+                          const champ = b.picks['NCG'] ?? null
+                          const champTeam = champ ? teamMap.get(champ) : null
+                          return champTeam ? (
+                            <TeamLogo
+                              ncaaKey={champTeam.meta.ncaa_key}
+                              color={champTeam.meta.color}
+                              school={champTeam.meta.school}
+                              size={36}
+                              className="shrink-0"
+                            />
+                          ) : (
+                            <TrophyIcon size={36} className="text-muted-foreground shrink-0" />
+                          )
+                        })()}
+                        <div className="min-w-0">
+                          <div className="font-medium truncate">{b.name}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {Object.keys(b.picks).length} picks ·{' '}
+                            {tournament.is_locked
+                              ? 'Locked'
+                              : new Date(b.updated_at).toLocaleDateString()}
+                          </div>
                         </div>
                       </div>
                       {!tournament.is_locked && seedsFilled && (
@@ -191,43 +210,43 @@ export function BracketDetailPage() {
         </section>
       )}
 
-      {/* Play-in games */}
-      {tournament.play_in.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xl font-semibold">First Four</h2>
-          <div className="flex flex-wrap gap-4">
-            {tournament.play_in.map((pi) => (
-              <div key={pi.slot} className="space-y-1">
-                <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
-                  {pi.region} · Seed {pi.seed}
+      {/* Full bracket — 4 regions + Final Four center */}
+      {finalFour && (() => {
+        const [sf1r1, sf1r2] = tournament.final_four.semifinal_1
+        const [sf2r1, sf2r2] = tournament.final_four.semifinal_2
+        const rm = new Map(regionBrackets.map(rb => [rb.regionKey, rb]))
+        return (
+          <BracketFullLayout
+            topLeft={rm.get(sf1r1) && <RegionBracketView bracket={rm.get(sf1r1)!} teamMap={teamMap} />}
+            bottomLeft={rm.get(sf1r2) && <RegionBracketView bracket={rm.get(sf1r2)!} teamMap={teamMap} />}
+            topRight={rm.get(sf2r1) && <RegionBracketView bracket={rm.get(sf2r1)!} teamMap={teamMap} mirrored />}
+            bottomRight={rm.get(sf2r2) && <RegionBracketView bracket={rm.get(sf2r2)!} teamMap={teamMap} mirrored />}
+            center={<FinalFourView bracket={finalFour} teamMap={teamMap} />}
+            header={tournament.play_in.length > 0 ? (
+              <section className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">First Four</h3>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {tournament.play_in.map((pi) => (
+                    <div key={pi.slot} className="space-y-1">
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
+                        {pi.region} · Seed {pi.seed}
+                      </div>
+                      <Matchup
+                        topTeam={pi.teams[0] ?? null}
+                        bottomTeam={pi.teams[1] ?? null}
+                        topSeed={pi.seed}
+                        bottomSeed={pi.seed}
+                        winner={pi.result}
+                        teamMap={teamMap}
+                      />
+                    </div>
+                  ))}
                 </div>
-                <Matchup
-                  topTeam={pi.teams[0] ?? null}
-                  bottomTeam={pi.teams[1] ?? null}
-                  topSeed={pi.seed}
-                  bottomSeed={pi.seed}
-                  winner={pi.result}
-                  teamMap={teamMap}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Regional brackets */}
-      {regionBrackets.map((rb) => (
-        <section key={rb.regionKey}>
-          <RegionBracketView bracket={rb} teamMap={teamMap} />
-        </section>
-      ))}
-
-      {/* Final Four */}
-      {finalFour && (
-        <section>
-          <FinalFourView bracket={finalFour} teamMap={teamMap} />
-        </section>
-      )}
+              </section>
+            ) : undefined}
+          />
+        )
+      })()}
     </div>
   )
 }

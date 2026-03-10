@@ -203,11 +203,59 @@ export const ROUND_LABELS: Record<string, string> = {
 }
 
 // ---------------------------------------------------------------------------
+// Eliminated teams — teams knocked out by official results
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute the set of team keys that have been eliminated by official results.
+ * A team is eliminated if it appeared in a resolved game and was NOT the winner.
+ */
+export function getEliminatedTeams(tournament: Tournament): Set<string> {
+  const eliminated = new Set<string>()
+  const { regions, play_in } = tournament
+
+  // Play-in eliminations
+  for (const pi of play_in) {
+    if (pi.result) {
+      for (const team of pi.teams) {
+        if (team !== pi.result) eliminated.add(team)
+      }
+    }
+  }
+
+  // Region round eliminations — build each official bracket and check
+  for (const [regionKey, region] of Object.entries(regions)) {
+    const bracket = buildRegionBracket(regionKey, region, tournament)
+    for (const round of bracket.rounds) {
+      for (const game of round) {
+        if (game.winner) {
+          if (game.topTeam && game.topTeam !== game.winner) eliminated.add(game.topTeam)
+          if (game.bottomTeam && game.bottomTeam !== game.winner) eliminated.add(game.bottomTeam)
+        }
+      }
+    }
+  }
+
+  // Final Four + Championship
+  const ff = buildFinalFour(tournament)
+  for (const game of [ff.semifinal1, ff.semifinal2, ff.championship]) {
+    if (game.winner) {
+      if (game.topTeam && game.topTeam !== game.winner) eliminated.add(game.topTeam)
+      if (game.bottomTeam && game.bottomTeam !== game.winner) eliminated.add(game.bottomTeam)
+    }
+  }
+
+  return eliminated
+}
+
+// ---------------------------------------------------------------------------
 // Pick-based bracket builders — for the "view my bracket" page
 // ---------------------------------------------------------------------------
 
 /**
- * Resolve a seed using play-in results *or* user picks (for unresolved play-ins).
+ * Resolve a seed using the user's play-in pick first, then the official
+ * play-in result as fallback. This ensures the bracket-view page shows
+ * the user's chosen path through the bracket.
  */
 function resolvePickSeed(
   seedValue: string | null,
@@ -217,7 +265,8 @@ function resolvePickSeed(
   if (!seedValue) return null
   if (seedValue.startsWith('pi_')) {
     const pi = playIns.find((p) => p.slot === seedValue)
-    return pi?.result ?? picks[seedValue] ?? null
+    // User's play-in pick takes priority (so we can show their wrong pick)
+    return picks[seedValue] ?? pi?.result ?? null
   }
   return seedValue
 }
@@ -350,10 +399,14 @@ export interface BracketScore {
 /**
  * Score a bracket's picks against official results.
  * Only counts games where the user made a pick.
+ *
+ * If `eliminated` is provided, picks for teams that have been knocked out
+ * in earlier rounds are counted as wrong even before that game has a result.
  */
 export function scoreBracket(
   picks: Record<string, string>,
   results: Record<string, string>,
+  eliminated?: Set<string>,
 ): BracketScore {
   let correct = 0
   let wrong = 0
@@ -363,12 +416,14 @@ export function scoreBracket(
     // skip play-in picks from the count
     if (key.startsWith('pi_')) continue
     const result = results[key]
-    if (!result) {
-      pending++
-    } else if (pick === result) {
-      correct++
-    } else {
+    if (result) {
+      if (pick === result) correct++
+      else wrong++
+    } else if (eliminated?.has(pick)) {
+      // Team was knocked out in an earlier round — pick is busted
       wrong++
+    } else {
+      pending++
     }
   }
 

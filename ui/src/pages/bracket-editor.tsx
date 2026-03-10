@@ -8,8 +8,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router'
 import { useTournament, useTeams, useBracket, useCreateBracket, useUpdateBracket } from '@/lib/hooks'
-import { Matchup } from '@/components/bracket'
-import { PickMatchup } from '@/components/bracket/pick-matchup'
+import { Matchup, PickMatchup, BracketTree, BracketFullLayout } from '@/components/bracket'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -152,8 +151,6 @@ const TOTAL_GAMES = 63
 // Component
 // ---------------------------------------------------------------------------
 
-const ROUND_HEADERS = ['Round of 64', 'Round of 32', 'Sweet 16', 'Elite 8']
-
 export function BracketEditorPage() {
   const { tournamentId, bracketId } = useParams<{
     tournamentId: string
@@ -230,19 +227,22 @@ export function BracketEditorPage() {
   const handleSave = async () => {
     if (!tournamentId || !name.trim()) return
     try {
+      let savedId: string
       if (isEditing && bracketId) {
-        await updateMut.mutateAsync({
+        const saved = await updateMut.mutateAsync({
           bracketId,
           body: { name: name.trim(), picks },
         })
+        savedId = saved.id
       } else {
-        await createMut.mutateAsync({
+        const saved = await createMut.mutateAsync({
           tournament_id: tournamentId,
           name: name.trim(),
           picks,
         })
+        savedId = saved.id
       }
-      navigate(`/brackets/${tournamentId}`)
+      navigate(`/brackets/${tournamentId}/view/${savedId}`)
     } catch {
       // Error is shown via mutation state
     }
@@ -272,9 +272,6 @@ export function BracketEditorPage() {
   const unresolvedPlayIns = tournament.play_in.filter((pi) => pi.result === null).length
   const resultsCount = Object.keys(tournament.results).length
   const remainingPicks = TOTAL_GAMES + unresolvedPlayIns - resultsCount
-
-  // Build region brackets
-  const regionEntries = Object.entries(tournament.regions)
 
   // Final four teams
   const ff = tournament.final_four
@@ -338,164 +335,164 @@ export function BracketEditorPage() {
         )}
       </div>
 
-      {/* Play-in games */}
-      {tournament.play_in.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">First Four</h2>
-          <div className="flex flex-wrap gap-4">
-            {tournament.play_in.map((pi) => {
-              const hasResult = pi.result !== null
-              return (
-                <div key={pi.slot} className="space-y-1">
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
-                    {pi.region} · Seed {pi.seed}
-                  </div>
-                  {hasResult ? (
-                    <Matchup
-                      topTeam={pi.teams[0] ?? null}
-                      bottomTeam={pi.teams[1] ?? null}
-                      topSeed={pi.seed}
-                      bottomSeed={pi.seed}
-                      winner={pi.result}
-                      teamMap={teamMap}
-                    />
-                  ) : (
-                    <PickMatchup
-                      gameKey={pi.slot}
-                      topTeam={pi.teams[0] ?? null}
-                      bottomTeam={pi.teams[1] ?? null}
-                      topSeed={pi.seed}
-                      bottomSeed={pi.seed}
-                      pick={picks[pi.slot] ?? null}
-                      teamMap={teamMap}
-                      onPick={handlePick}
-                    />
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
+      {/* Full bracket layout — 4 regions in corners, FF center */}
+      {(() => {
+        const [sf1r1, sf1r2] = tournament.final_four.semifinal_1
+        const [sf2r1, sf2r2] = tournament.final_four.semifinal_2
 
-      {/* Regional brackets */}
-      {regionEntries.map(([regionKey, region]) => {
-        const rounds = buildInteractiveBracket(regionKey, region, tournament, mergedPicks)
-        return (
-          <section key={regionKey} className="space-y-3">
-            <h3 className="text-lg font-semibold">{region.name} Region</h3>
-            <div className="flex gap-3 items-stretch overflow-x-auto pb-2">
-              {rounds.map((round, roundIdx) => (
-                <div key={roundIdx} className="flex flex-col shrink-0">
-                  <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mb-2 px-1">
-                    {ROUND_HEADERS[roundIdx]}
-                  </div>
-                  <div
-                    className="flex flex-col justify-around flex-1"
-                    style={{ gap: roundIdx === 0 ? '4px' : undefined }}
-                  >
-                    {round.map((game) => (
+        const buildRegion = (regionKey: string, mirrored: boolean) => {
+          const region = tournament.regions[regionKey]
+          if (!region) return null
+          const rounds = buildInteractiveBracket(regionKey, region, tournament, mergedPicks)
+          const pick = (game: GameSlot) => (
+            <PickMatchup
+              key={game.key}
+              gameKey={game.key}
+              topTeam={game.topTeam}
+              bottomTeam={game.bottomTeam}
+              topSeed={game.topSeed}
+              bottomSeed={game.bottomSeed}
+              pick={mergedPicks[game.key] ?? null}
+              teamMap={teamMap}
+              onPick={handlePick}
+              disabled={game.locked}
+              compact
+            />
+          )
+          return (
+            <div className="space-y-2">
+              <h3 className={cn('text-sm font-semibold text-muted-foreground uppercase tracking-wide', mirrored && 'text-right')}>
+                {region.name}
+              </h3>
+              <BracketTree
+                r64={rounds[0].map(pick)}
+                r32={rounds[1].map(pick)}
+                s16={rounds[2].map(pick)}
+                e8={pick(rounds[3][0])}
+                mirrored={mirrored}
+              />
+            </div>
+          )
+        }
+
+        const firstFourHeader = tournament.play_in.length > 0 ? (
+          <section className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">First Four</h3>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {tournament.play_in.map((pi) => {
+                const hasResult = pi.result !== null
+                return (
+                  <div key={pi.slot} className="space-y-1">
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
+                      {pi.region} · Seed {pi.seed}
+                    </div>
+                    {hasResult ? (
+                      <Matchup
+                        topTeam={pi.teams[0] ?? null}
+                        bottomTeam={pi.teams[1] ?? null}
+                        topSeed={pi.seed}
+                        bottomSeed={pi.seed}
+                        winner={pi.result}
+                        teamMap={teamMap}
+                      />
+                    ) : (
                       <PickMatchup
-                        key={game.key}
-                        gameKey={game.key}
-                        topTeam={game.topTeam}
-                        bottomTeam={game.bottomTeam}
-                        topSeed={game.topSeed}
-                        bottomSeed={game.bottomSeed}
-                        pick={mergedPicks[game.key] ?? null}
+                        gameKey={pi.slot}
+                        topTeam={pi.teams[0] ?? null}
+                        bottomTeam={pi.teams[1] ?? null}
+                        topSeed={pi.seed}
+                        bottomSeed={pi.seed}
+                        pick={picks[pi.slot] ?? null}
                         teamMap={teamMap}
                         onPick={handlePick}
-                        disabled={game.locked}
-                        compact
                       />
-                    ))}
+                    )}
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
-        )
-      })}
+        ) : undefined
 
-      {/* Final Four */}
-      <section className="space-y-4">
-        <h3 className="text-lg font-semibold">Final Four &amp; Championship</h3>
-        <div className="flex items-center gap-6 flex-wrap">
-          <div className="space-y-1">
-            <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide px-1">
-              Semifinal 1
-            </div>
-            <PickMatchup
-              gameKey="FF_G1"
-              topTeam={ffG1Top}
-              bottomTeam={ffG1Bottom}
-              topSeed={null}
-              bottomSeed={null}
-              pick={mergedPicks['FF_G1'] ?? null}
-              teamMap={teamMap}
-              onPick={handlePick}
-              disabled={ffG1Locked}
-            />
-          </div>
+        return (
+          <BracketFullLayout
+            topLeft={buildRegion(sf1r1, false)}
+            bottomLeft={buildRegion(sf1r2, false)}
+            topRight={buildRegion(sf2r1, true)}
+            bottomRight={buildRegion(sf2r2, true)}
+            header={firstFourHeader}
+            center={
+              <div className="flex flex-col items-center gap-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">
+                  Final Four
+                </h3>
+                <div className="flex items-center gap-3">
+                  {/* SF1 — left side, feeds from left regions */}
+                  <PickMatchup
+                    gameKey="FF_G1"
+                    topTeam={ffG1Top}
+                    bottomTeam={ffG1Bottom}
+                    topSeed={null}
+                    bottomSeed={null}
+                    pick={mergedPicks['FF_G1'] ?? null}
+                    teamMap={teamMap}
+                    onPick={handlePick}
+                    disabled={ffG1Locked}
+                  />
 
-          <div className="space-y-1">
-            <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide px-1">
-              Championship
-            </div>
-            <PickMatchup
-              gameKey="NCG"
-              topTeam={ncgTop}
-              bottomTeam={ncgBottom}
-              topSeed={null}
-              bottomSeed={null}
-              pick={mergedPicks['NCG'] ?? null}
-              teamMap={teamMap}
-              onPick={handlePick}
-              disabled={ncgLocked}
-            />
-          </div>
+                  {/* Championship — center */}
+                  <PickMatchup
+                    gameKey="NCG"
+                    topTeam={ncgTop}
+                    bottomTeam={ncgBottom}
+                    topSeed={null}
+                    bottomSeed={null}
+                    pick={mergedPicks['NCG'] ?? null}
+                    teamMap={teamMap}
+                    onPick={handlePick}
+                    disabled={ncgLocked}
+                  />
 
-          <div className="space-y-1">
-            <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide px-1">
-              Semifinal 2
-            </div>
-            <PickMatchup
-              gameKey="FF_G2"
-              topTeam={ffG2Top}
-              bottomTeam={ffG2Bottom}
-              topSeed={null}
-              bottomSeed={null}
-              pick={mergedPicks['FF_G2'] ?? null}
-              teamMap={teamMap}
-              onPick={handlePick}
-              disabled={ffG2Locked}
-            />
-          </div>
-        </div>
-
-        {/* Champion callout */}
-        {champion && (
-          <div className="flex items-center gap-3 rounded-lg border bg-primary/5 px-4 py-3">
-            <Trophy className="h-6 w-6 text-primary shrink-0" />
-            {championTeam ? (
-              <>
-                <TeamLogo
-                  ncaaKey={championTeam.meta.ncaa_key}
-                  color={championTeam.meta.color}
-                  school={championTeam.meta.school}
-                  size={32}
-                />
-                <div>
-                  <div className="font-bold">{championTeam.meta.school}</div>
-                  <div className="text-sm text-muted-foreground">Your Champion Pick</div>
+                  {/* SF2 — right side, feeds from right regions */}
+                  <PickMatchup
+                    gameKey="FF_G2"
+                    topTeam={ffG2Top}
+                    bottomTeam={ffG2Bottom}
+                    topSeed={null}
+                    bottomSeed={null}
+                    pick={mergedPicks['FF_G2'] ?? null}
+                    teamMap={teamMap}
+                    onPick={handlePick}
+                    disabled={ffG2Locked}
+                  />
                 </div>
-              </>
-            ) : (
-              <div className="font-bold">{champion}</div>
-            )}
-          </div>
-        )}
-      </section>
+                {/* Champion callout */}
+                {champion && (
+                  <div className="flex items-center gap-2 rounded-lg border bg-primary/5 px-3 py-2">
+                    <Trophy className="h-5 w-5 text-primary shrink-0" />
+                    {championTeam ? (
+                      <>
+                        <TeamLogo
+                          ncaaKey={championTeam.meta.ncaa_key}
+                          color={championTeam.meta.color}
+                          school={championTeam.meta.school}
+                          size={24}
+                        />
+                        <div>
+                          <div className="text-sm font-bold">{championTeam.meta.school}</div>
+                          <div className="text-[10px] text-muted-foreground">Your Champion Pick</div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-sm font-bold">{champion}</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            }
+          />
+        )
+      })()}
 
       {/* Bottom save bar */}
       <div className="sticky bottom-16 md:bottom-0 flex items-center justify-between rounded-lg border bg-background/95 backdrop-blur px-4 py-3">
@@ -518,24 +515,38 @@ export function BracketEditorPage() {
 
 // ---------------------------------------------------------------------------
 // Downstream clearing — when a pick changes, clear any picks that depended
-// on the old winner advancing.
+// on the old winner advancing, but only in rounds AFTER the current game.
 // ---------------------------------------------------------------------------
+
+/** Order of rounds — higher index = later round */
+const ROUND_ORDER = ['pi', 'R64', 'R32', 'S16', 'E8', 'FF', 'NCG'] as const
+
+function getRoundIndex(gameKey: string): number {
+  if (gameKey.startsWith('pi_')) return 0
+  if (gameKey === 'NCG') return 6
+  if (gameKey.startsWith('FF_')) return 5
+  // Region keys like "south_R64_G1" — extract round part
+  const parts = gameKey.split('_')
+  const round = parts[1] // R64, R32, S16, E8
+  return ROUND_ORDER.indexOf(round as typeof ROUND_ORDER[number])
+}
 
 function clearDownstream(
   picks: Record<string, string>,
-  _gameKey: string,
+  gameKey: string,
   oldWinner: string,
   tournament: Tournament | undefined,
 ) {
   if (!tournament) return
-  // Simple approach: scan all picks and remove any that reference the old winner
-  // as a team in a later round. Since the old winner can't advance anymore,
-  // any game they were picked to win is now invalid.
+  const currentRoundIdx = getRoundIndex(gameKey)
+
+  // Only clear picks that are in later rounds AND had the old winner as their value
   let changed = true
   while (changed) {
     changed = false
     for (const [key, value] of Object.entries(picks)) {
       if (key in tournament.results) continue // don't clear tournament results
+      if (getRoundIndex(key) <= currentRoundIdx) continue // don't clear same or earlier rounds
       if (value === oldWinner) {
         delete picks[key]
         changed = true
