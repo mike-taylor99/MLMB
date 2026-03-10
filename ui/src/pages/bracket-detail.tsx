@@ -122,8 +122,8 @@ export function BracketDetailPage() {
         </div>
       </div>
 
-      {/* My Brackets */}
-      {isAuthenticated && (bracketsData?.data.length || !tournament.is_locked) && (
+      {/* My Brackets + New Bracket CTA */}
+      {(isAuthenticated && bracketsData?.data.length) ? (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">My Brackets</h2>
@@ -136,15 +136,7 @@ export function BracketDetailPage() {
               </Button>
             )}
           </div>
-          {!seedsFilled && !tournament.is_locked && (
-            <Card>
-              <CardContent className="py-6 text-center text-muted-foreground">
-                Seeds haven't been announced yet. Check back once the field is set!
-              </CardContent>
-            </Card>
-          )}
-          {bracketsData && bracketsData.data.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
               {bracketsData.data.map((b) => (
                 <Link key={b.id} to={`/brackets/${tournamentId}/view/${b.id}`} className="block">
                   <Card className="transition-colors hover:border-primary/40">
@@ -199,16 +191,18 @@ export function BracketDetailPage() {
                   </Card>
                 </Link>
               ))}
-            </div>
-          ) : !tournament.is_locked && seedsFilled ? (
-            <Card>
-              <CardContent className="py-6 text-center text-muted-foreground">
-                You haven't created any brackets yet.
-              </CardContent>
-            </Card>
-          ) : null}
+          </div>
         </section>
-      )}
+      ) : !tournament.is_locked && seedsFilled ? (
+        <div>
+          <Button asChild>
+            <Link to={`/brackets/${tournamentId}/edit`}>
+              <Plus className="h-4 w-4 mr-1" />
+              Create a Bracket
+            </Link>
+          </Button>
+        </div>
+      ) : null}
 
       {/* Full bracket — 4 regions + Final Four center */}
       {finalFour && (() => {

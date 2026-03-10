@@ -6,47 +6,95 @@
   "lock_date": "2026-03-19T12:00:00Z",
 
   "play_in": [
-    { "slot": "pi_1", "region": "south", "seed": 16, "teams": [], "result": null },
-    { "slot": "pi_2", "region": "east",  "seed": 16, "teams": [], "result": null },
-    { "slot": "pi_3", "region": "midwest", "seed": 11, "teams": [], "result": null },
-    { "slot": "pi_4", "region": "west",  "seed": 11, "teams": [], "result": null }
+    { "slot": "pi_1", "region": "south", "seed": 16, "teams": ["alabama-state", "saint-francis-pa"], "result": "alabama-state" },
+    { "slot": "pi_2", "region": "east",  "seed": 16, "teams": ["mount-st-marys", "american"], "result": "mount-st-marys" },
+    { "slot": "pi_3", "region": "midwest", "seed": 11, "teams": ["xavier", "texas"], "result": "xavier" },
+    { "slot": "pi_4", "region": "west",  "seed": 11, "teams": ["drake", "north-carolina"], "result": "drake" }
   ],
 
   "regions": {
     "south": {
       "name": "South",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": "pi_1"
+        "1": "auburn",
+        "2": "michigan-state",
+        "3": "iowa-state",
+        "4": "texas-am",
+        "5": "michigan",
+        "6": "mississippi",
+        "7": "marquette",
+        "8": "louisville",
+        "9": "creighton",
+        "10": "new-mexico",
+        "11": "north-carolina",
+        "12": "california-san-diego",
+        "13": "yale",
+        "14": "lipscomb",
+        "15": "bryant",
+        "16": "pi_1"
       }
     },
     "east": {
       "name": "East",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": "pi_2"
+        "1": "duke",
+        "2": "alabama",
+        "3": "wisconsin",
+        "4": "arizona",
+        "5": "oregon",
+        "6": "brigham-young",
+        "7": "saint-marys-ca",
+        "8": "mississippi-state",
+        "9": "baylor",
+        "10": "vanderbilt",
+        "11": "virginia-commonwealth",
+        "12": "liberty",
+        "13": "akron",
+        "14": "montana",
+        "15": "robert-morris",
+        "16": "pi_2"
       }
     },
     "midwest": {
       "name": "Midwest",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": "pi_3", "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "houston",
+        "2": "tennessee",
+        "3": "kentucky",
+        "4": "purdue",
+        "5": "clemson",
+        "6": "illinois",
+        "7": "ucla",
+        "8": "gonzaga",
+        "9": "georgia",
+        "10": "utah-state",
+        "11": "pi_3",
+        "12": "mcneese-state",
+        "13": "high-point",
+        "14": "troy",
+        "15": "wofford",
+        "16": "southern-illinois-edwardsville"
       }
     },
     "west": {
       "name": "West",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": "pi_4", "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "florida",
+        "2": "st-johns-ny",
+        "3": "texas-tech",
+        "4": "maryland",
+        "5": "memphis",
+        "6": "missouri",
+        "7": "kansas",
+        "8": "connecticut",
+        "9": "oklahoma",
+        "10": "arkansas",
+        "11": "pi_4",
+        "12": "colorado-state",
+        "13": "grand-canyon",
+        "14": "north-carolina-wilmington",
+        "15": "nebraska-omaha",
+        "16": "norfolk-state"
       }
     }
   },
@@ -56,5 +104,41 @@
     "semifinal_2": ["midwest", "west"]
   },
 
-  "results": {}
+  "results": {
+    "south_R64_G1": "auburn",
+    "south_R64_G2": "creighton",
+    "south_R64_G3": "michigan",
+    "south_R64_G4": "texas-am",
+    "south_R64_G5": "mississippi",
+    "south_R64_G6": "iowa-state",
+    "south_R64_G7": "new-mexico",
+    "south_R64_G8": "michigan-state",
+
+    "east_R64_G1": "duke",
+    "east_R64_G2": "baylor",
+    "east_R64_G3": "oregon",
+    "east_R64_G4": "arizona",
+    "east_R64_G5": "brigham-young",
+    "east_R64_G6": "wisconsin",
+    "east_R64_G7": "saint-marys-ca",
+    "east_R64_G8": "alabama",
+
+    "midwest_R64_G1": "houston",
+    "midwest_R64_G2": "gonzaga",
+    "midwest_R64_G3": "mcneese-state",
+    "midwest_R64_G4": "purdue",
+    "midwest_R64_G5": "illinois",
+    "midwest_R64_G6": "kentucky",
+    "midwest_R64_G7": "ucla",
+    "midwest_R64_G8": "tennessee",
+
+    "west_R64_G1": "florida",
+    "west_R64_G2": "connecticut",
+    "west_R64_G3": "colorado-state",
+    "west_R64_G4": "maryland",
+    "west_R64_G5": "drake",
+    "west_R64_G6": "texas-tech",
+    "west_R64_G7": "arkansas",
+    "west_R64_G8": "st-johns-ny"
+  }
 }
