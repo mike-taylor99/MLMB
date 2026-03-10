@@ -111,7 +111,7 @@ export function BracketDetailPage() {
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
-            <TournamentLogo tournamentId={tournamentId!} size={64} className="shrink-0 hidden sm:block" />
+            <TournamentLogo tournamentId={tournamentId!} size={48} className="shrink-0 sm:size-16" />
             <div>
               <h1 className="text-3xl font-bold tracking-tight">{tournament.name}</h1>
               <div className="flex items-center gap-2 mt-1">
