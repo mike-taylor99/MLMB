@@ -12,10 +12,30 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, Lock, Unlock, Plus, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash2, Lock, Unlock, Clock, Trophy, CircleDashed } from 'lucide-react'
 import { TeamLogo } from '@/components/team-logo'
 import { TrophyIcon } from '@/components/trophy-icon'
-import type { Team } from '@/lib/types'
+import { TournamentLogo } from '@/components/tournament-logo'
+import type { Team, Tournament } from '@/lib/types'
+
+type TournamentStatus = 'not_started' | 'open' | 'in_progress' | 'complete'
+
+function getTournamentStatus(t: Tournament): TournamentStatus {
+  if (t.results['NCG']) return 'complete'
+  const seedsFilled = Object.values(t.regions).every((r) =>
+    Object.values(r.seeds).every((v) => v != null),
+  )
+  if (!seedsFilled) return 'not_started'
+  if (t.is_locked) return 'in_progress'
+  return 'open'
+}
+
+const statusConfig: Record<TournamentStatus, { label: string; icon: typeof Lock; variant: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
+  not_started: { label: 'Not Started', icon: CircleDashed, variant: 'outline' },
+  open:        { label: 'Open', icon: Unlock, variant: 'default' },
+  in_progress: { label: 'In Progress', icon: Clock, variant: 'secondary' },
+  complete:    { label: 'Complete', icon: Trophy, variant: 'secondary' },
+}
 
 export function BracketDetailPage() {
   const { tournamentId } = useParams<{ tournamentId: string }>()
@@ -72,12 +92,10 @@ export function BracketDetailPage() {
 
   const hasResults = Object.keys(tournament.results).length > 0
   const totalGames = Object.keys(tournament.results).length
-  const isComplete = tournament.results['NCG'] !== undefined
+  const status = getTournamentStatus(tournament)
 
   // Check if all seeds are filled (bracket is ready for picks)
-  const seedsFilled = Object.values(tournament.regions).every((region) =>
-    Object.values(region.seeds).every((v) => v != null),
-  )
+  const seedsFilled = status !== 'not_started'
 
   return (
     <div className="space-y-8">
@@ -92,31 +110,30 @@ export function BracketDetailPage() {
         </Link>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">{tournament.name}</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline" className="text-xs">
-                {tournament.sport === 'ncaam_basketball' ? "Men's" : "Women's"}
-              </Badge>
-              <Badge
-                variant={tournament.is_locked ? 'secondary' : 'default'}
-                className="text-xs"
-              >
-                {tournament.is_locked ? (
-                  <span className="flex items-center gap-1">
-                    <Lock className="h-3 w-3" /> Locked
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1">
-                    <Unlock className="h-3 w-3" /> Open
+          <div className="flex items-start gap-4">
+            <TournamentLogo tournamentId={tournamentId!} size={64} className="shrink-0 hidden sm:block" />
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">{tournament.name}</h1>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge variant="outline" className="text-xs">
+                  {tournament.sport === 'ncaam_basketball' ? "Men's" : "Women's"}
+                </Badge>
+                {(() => {
+                  const cfg = statusConfig[status]
+                  const Icon = cfg.icon
+                  return (
+                    <Badge variant={cfg.variant} className="text-xs">
+                      <Icon className="h-3 w-3 mr-1" />
+                      {cfg.label}
+                    </Badge>
+                  )
+                })()}
+                {hasResults && (
+                  <span className="text-sm text-muted-foreground">
+                    {totalGames} games played
                   </span>
                 )}
-              </Badge>
-              {hasResults && (
-                <span className="text-sm text-muted-foreground">
-                  {isComplete ? '✓ Complete' : `${totalGames} games played`}
-                </span>
-              )}
+              </div>
             </div>
           </div>
         </div>

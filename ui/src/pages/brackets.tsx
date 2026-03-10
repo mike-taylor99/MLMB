@@ -8,8 +8,7 @@ import { useSport } from '@/context/sport'
 import { useTournaments } from '@/lib/hooks'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TrophyIcon } from '@/components/trophy-icon'
-import { Lock, Unlock } from 'lucide-react'
+import { TournamentLogo } from '@/components/tournament-logo'
 
 export function BracketsPage() {
   const { sport, label } = useSport()
@@ -58,31 +57,9 @@ export function BracketsPage() {
           {tournaments.map((t) => (
             <Link key={t.id} to={`/brackets/${t.id}`}>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer h-full">
-                <CardContent className="flex items-start gap-4 p-5">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                    <TrophyIcon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold truncate">{t.name}</h3>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        {t.is_locked ? (
-                          <>
-                            <Lock className="h-3 w-3" />
-                            Locked
-                          </>
-                        ) : (
-                          <>
-                            <Unlock className="h-3 w-3" />
-                            Open
-                          </>
-                        )}
-                      </span>
-                      <span className="text-xs">{t.year}</span>
-                    </div>
-                  </div>
+                <CardContent className="flex items-center gap-3 p-4">
+                  <TournamentLogo tournamentId={t.id} size={40} className="shrink-0" />
+                  <h3 className="font-semibold truncate">{t.name}</h3>
                 </CardContent>
               </Card>
             </Link>
