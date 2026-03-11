@@ -48,7 +48,10 @@ def create_basic_gamelog(school_key: str, season: int, is_womens: bool = False) 
     idx = df.columns.to_list().index("Opp")
     df.columns.values[idx] = "Opp name"
     opp_keys = get_opposing_school_keys(school_key, season, False, is_womens)
-    assert df.shape[0] == len(opp_keys)
+    assert df.shape[0] == len(opp_keys), (
+        f"Basic gamelog row count mismatch for {school_key}: "
+        f"{df.shape[0]} rows vs {len(opp_keys)} opponent keys"
+    )
     df["Opp name"] = opp_keys
     df = df.rename(columns={"Opp name": "Opp key"})
 
@@ -102,7 +105,10 @@ def create_advanced_gamelog(
     idx = df.columns.to_list().index("Opp")
     df.columns.values[idx] = "Opp name"
     opp_keys = get_opposing_school_keys(school_key, season, True, is_womens)
-    assert df.shape[0] == len(opp_keys)
+    assert df.shape[0] == len(opp_keys), (
+        f"Advanced gamelog row count mismatch for {school_key}: "
+        f"{df.shape[0]} rows vs {len(opp_keys)} opponent keys"
+    )
     df["Opp name"] = opp_keys
     df = df.rename(columns={"Opp name": "Opp key"})
 
