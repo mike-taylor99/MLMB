@@ -9,6 +9,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router'
 import { useTournament, useTeams, useBracket, useCreateBracket, useUpdateBracket } from '@/lib/hooks'
 import { Matchup, PickMatchup, BracketTree, BracketFullLayout } from '@/components/bracket'
+import type { MatchupPredictions, PredictionScenario } from '@/components/bracket/pick-matchup'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,7 +17,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft, Save, Loader2, Trophy } from 'lucide-react'
 import { TeamLogo } from '@/components/team-logo'
 import { cn } from '@/lib/utils'
-import type { Team, Tournament } from '@/lib/types'
+import { createPrediction } from '@/lib/api'
+import type { Team, Tournament, Span, Sport } from '@/lib/types'
 
 // ---------------------------------------------------------------------------
 // Seed matchup pairings (same as bracket.ts)
@@ -175,6 +177,10 @@ export function BracketEditorPage() {
   const [picks, setPicks] = useState<Record<string, string>>({})
   const [initialized, setInitialized] = useState(false)
 
+  // ML prediction state
+  const [predictions, setPredictions] = useState<Record<string, MatchupPredictions>>({})
+  const [loadingPredictions, setLoadingPredictions] = useState<Set<string>>(new Set())
+
   // Initialize from existing bracket
   useEffect(() => {
     if (isEditing && existingBracket && !initialized) {
@@ -214,12 +220,72 @@ export function BracketEditorPage() {
         if (oldWinner && oldWinner !== winner) {
           // Clear downstream games that had the old winner
           clearDownstream(next, gameKey, oldWinner, tournament)
+          // Also clear stale predictions for downstream games whose teams changed
+          setPredictions((prevP) => {
+            const nextP = { ...prevP }
+            for (const key of Object.keys(nextP)) {
+              if (key === gameKey) continue
+              if (getRoundIndex(key) > getRoundIndex(gameKey)) {
+                delete nextP[key]
+              }
+            }
+            return nextP
+          })
         }
 
         return next
       })
     },
     [tournament],
+  )
+
+  // Request ML predictions — fires 6 requests (3 spans × 2 home/away)
+  const handleRequestPredictions = useCallback(
+    async (gameKey: string, topTeam: string, bottomTeam: string) => {
+      if (!sport) return
+
+      setLoadingPredictions((prev) => new Set(prev).add(gameKey))
+
+      const spans: Span[] = [3, 5, 7]
+      const requests = spans.flatMap((span) => [
+        // topTeam as home
+        { span, topIsHome: true as const, req: { home_team: topTeam, away_team: bottomTeam, span, neutral: true, sport: sport as Sport, model: 'ensemble' as const } },
+        // bottomTeam as home
+        { span, topIsHome: false as const, req: { home_team: bottomTeam, away_team: topTeam, span, neutral: true, sport: sport as Sport, model: 'ensemble' as const } },
+      ])
+
+      try {
+        const results = await Promise.allSettled(
+          requests.map((r) => createPrediction(r.req)),
+        )
+
+        const scenarios: PredictionScenario[] = []
+        results.forEach((result, i) => {
+          if (result.status === 'fulfilled') {
+            const { span, topIsHome } = requests[i]
+            const pred = result.value
+            scenarios.push({
+              span,
+              topIsHome,
+              // When topTeam is home, home_win_probability IS topWinProb.
+              // When bottomTeam is home, topWinProb = 1 - home_win_probability.
+              topWinProb: topIsHome ? pred.home_win_probability : 1 - pred.home_win_probability,
+            })
+          }
+        })
+
+        if (scenarios.length > 0) {
+          setPredictions((prev) => ({ ...prev, [gameKey]: { scenarios } }))
+        }
+      } finally {
+        setLoadingPredictions((prev) => {
+          const next = new Set(prev)
+          next.delete(gameKey)
+          return next
+        })
+      }
+    },
+    [sport],
   )
 
   // Save
@@ -357,6 +423,9 @@ export function BracketEditorPage() {
               onPick={handlePick}
               disabled={game.locked}
               compact
+              predictions={predictions[game.key]}
+              onRequestPredictions={handleRequestPredictions}
+              predictionsLoading={loadingPredictions.has(game.key)}
             />
           )
           return (
@@ -405,6 +474,9 @@ export function BracketEditorPage() {
                         pick={picks[pi.slot] ?? null}
                         teamMap={teamMap}
                         onPick={handlePick}
+                        predictions={predictions[pi.slot]}
+                        onRequestPredictions={handleRequestPredictions}
+                        predictionsLoading={loadingPredictions.has(pi.slot)}
                       />
                     )}
                   </div>
@@ -438,6 +510,9 @@ export function BracketEditorPage() {
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ffG1Locked}
+                    predictions={predictions['FF_G1']}
+                    onRequestPredictions={handleRequestPredictions}
+                    predictionsLoading={loadingPredictions.has('FF_G1')}
                   />
 
                   {/* Championship — center */}
@@ -451,6 +526,9 @@ export function BracketEditorPage() {
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ncgLocked}
+                    predictions={predictions['NCG']}
+                    onRequestPredictions={handleRequestPredictions}
+                    predictionsLoading={loadingPredictions.has('NCG')}
                   />
 
                   {/* SF2 — right side, feeds from right regions */}
@@ -464,6 +542,9 @@ export function BracketEditorPage() {
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ffG2Locked}
+                    predictions={predictions['FF_G2']}
+                    onRequestPredictions={handleRequestPredictions}
+                    predictionsLoading={loadingPredictions.has('FF_G2')}
                   />
                 </div>
                 {/* Champion callout */}
