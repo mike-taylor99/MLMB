@@ -6,7 +6,7 @@ from app.services.predictions import (
     get_prediction_by_id,
     list_predictions,
 )
-from app.services.teams import get_team_by_id, list_teams
+from app.services.teams import get_team_by_id, get_team_detail, list_teams
 from app.services.rankings import get_rankings
 from app.services.tournaments import list_tournaments, get_tournament
 from app.services.brackets import (
@@ -24,6 +24,7 @@ __all__ = [
     "get_prediction_by_id",
     "list_predictions",
     "get_team_by_id",
+    "get_team_detail",
     "list_teams",
     "get_rankings",
     "list_tournaments",

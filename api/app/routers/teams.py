@@ -14,17 +14,17 @@ from fastapi import APIRouter, Query
 from app.constants import VALID_SPORTS
 from app.dependencies import BlobServiceDep, SettingsDep
 from app.exceptions import InvalidSportError, TeamNotFoundError
-from app.schemas import TeamResponse, TeamsListResponse
-from app.services import get_team_by_id, list_teams as list_teams_service
+from app.schemas import TeamDetailResponse, TeamsListResponse
+from app.services import get_team_detail, list_teams as list_teams_service
 
 
 router = APIRouter(prefix="/teams")
 
 
-@router.get("/{team_id}", response_model=TeamResponse)
+@router.get("/{team_id}", response_model=TeamDetailResponse)
 async def get_team(team_id: str, blob_service: BlobServiceDep):
-    """Get a single team by ID."""
-    team = get_team_by_id(team_id, blob_service)
+    """Get a single team by ID with latest stats."""
+    team = get_team_detail(team_id, blob_service)
     if not team:
         raise TeamNotFoundError(team_id)
 

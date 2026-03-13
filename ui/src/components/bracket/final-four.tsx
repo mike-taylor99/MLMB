@@ -8,29 +8,39 @@
 // The championship sits at the true center.
 // ============================================================================
 
-import type { FinalFourBracket } from '@/lib/bracket'
-import type { Team } from '@/lib/types'
-import { Matchup } from './matchup'
-import { TeamLogo } from '@/components/team-logo'
-import { Trophy } from 'lucide-react'
+import type { FinalFourBracket } from "@/lib/bracket";
+import type { Team } from "@/lib/types";
+import { Matchup } from "./matchup";
+import { TeamLogo } from "@/components/team-logo";
+import { TournamentLogo } from "@/components/tournament-logo";
+import { Trophy } from "lucide-react";
 
 interface FinalFourViewProps {
-  bracket: FinalFourBracket
-  teamMap: Map<string, Team>
+  bracket: FinalFourBracket;
+  teamMap: Map<string, Team>;
+  /** Optional tournament ID — renders the event logo above the heading */
+  tournamentId?: string;
   /** Optional user picks — enables scored mode on each matchup */
-  picks?: Record<string, string>
+  picks?: Record<string, string>;
   /** Optional set of eliminated teams — marks busted picks */
-  eliminated?: Set<string>
+  eliminated?: Set<string>;
 }
 
-export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFourViewProps) {
-  const champion = bracket.championship.winner
-  const championTeam = champion ? teamMap.get(champion) : null
-  const championPick = picks?.['NCG'] ?? null
-  const championPickTeam = championPick ? teamMap.get(championPick) : null
+export function FinalFourView({
+  bracket,
+  teamMap,
+  tournamentId,
+  picks,
+  eliminated,
+}: FinalFourViewProps) {
+  const champion = bracket.championship.winner;
+  const championTeam = champion ? teamMap.get(champion) : null;
+  const championPick = picks?.["NCG"] ?? null;
+  const championPickTeam = championPick ? teamMap.get(championPick) : null;
 
   return (
     <div className="flex flex-col items-center gap-3">
+      {tournamentId && <TournamentLogo tournamentId={tournamentId} size={96} />}
       <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">
         Final Four
       </h3>
@@ -40,11 +50,11 @@ export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFour
         <Matchup
           topTeam={bracket.semifinal1.topTeam}
           bottomTeam={bracket.semifinal1.bottomTeam}
-          topSeed={null}
-          bottomSeed={null}
+          topSeed={bracket.semifinal1.topSeed}
+          bottomSeed={bracket.semifinal1.bottomSeed}
           winner={bracket.semifinal1.winner}
           teamMap={teamMap}
-          pick={picks?.['FF_G1']}
+          pick={picks?.["FF_G1"]}
           eliminated={eliminated}
         />
 
@@ -52,11 +62,11 @@ export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFour
         <Matchup
           topTeam={bracket.championship.topTeam}
           bottomTeam={bracket.championship.bottomTeam}
-          topSeed={null}
-          bottomSeed={null}
+          topSeed={bracket.championship.topSeed}
+          bottomSeed={bracket.championship.bottomSeed}
           winner={bracket.championship.winner}
           teamMap={teamMap}
-          pick={picks?.['NCG']}
+          pick={picks?.["NCG"]}
           eliminated={eliminated}
         />
 
@@ -64,11 +74,11 @@ export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFour
         <Matchup
           topTeam={bracket.semifinal2.topTeam}
           bottomTeam={bracket.semifinal2.bottomTeam}
-          topSeed={null}
-          bottomSeed={null}
+          topSeed={bracket.semifinal2.topSeed}
+          bottomSeed={bracket.semifinal2.bottomSeed}
           winner={bracket.semifinal2.winner}
           teamMap={teamMap}
-          pick={picks?.['FF_G2']}
+          pick={picks?.["FF_G2"]}
           eliminated={eliminated}
         />
       </div>
@@ -87,8 +97,12 @@ export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFour
                   size={24}
                 />
                 <div>
-                  <div className="text-sm font-bold">{championTeam.meta.school}</div>
-                  <div className="text-[10px] text-muted-foreground">Champion</div>
+                  <div className="text-sm font-bold">
+                    {championTeam.meta.school}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">
+                    Champion
+                  </div>
                 </div>
               </>
             ) : (
@@ -103,15 +117,21 @@ export function FinalFourView({ bracket, teamMap, picks, eliminated }: FinalFour
                 size={24}
               />
               <div>
-                <div className="text-sm font-bold">{championPickTeam.meta.school}</div>
-                <div className="text-[10px] text-muted-foreground">Champion Pick</div>
+                <div className="text-sm font-bold">
+                  {championPickTeam.meta.school}
+                </div>
+                <div className="text-[10px] text-muted-foreground">
+                  Champion Pick
+                </div>
               </div>
             </>
           ) : (
-            <div className="text-sm font-bold text-muted-foreground">{championPick}</div>
+            <div className="text-sm font-bold text-muted-foreground">
+              {championPick}
+            </div>
           )}
         </div>
       )}
     </div>
-  )
+  );
 }

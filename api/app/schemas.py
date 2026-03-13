@@ -4,7 +4,7 @@ All models use strict typing with Literal types for enum-like fields.
 """
 
 from datetime import datetime
-from typing import List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -203,6 +203,24 @@ class TeamResponse(BaseModel):
                 color=record.get("color"),
             ),
         )
+
+
+class TeamLatestStats(BaseModel):
+    """Latest moving-average stats for a team in one sport."""
+
+    sport: str = Field(..., description="Sport code")
+    last_played: str = Field(..., description="Date of last game (YYYY-MM-DD)")
+    stats: Dict[str, float] = Field(
+        ..., description="Curated stat key to value mapping"
+    )
+
+
+class TeamDetailResponse(TeamResponse):
+    """Extended team response with optional latest stats (detail endpoint only)."""
+
+    latest: Optional[List[TeamLatestStats]] = Field(
+        None, description="Latest stats per sport (null if unavailable)"
+    )
 
 
 class TeamsListResponse(BaseModel):

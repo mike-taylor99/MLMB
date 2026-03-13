@@ -5,28 +5,50 @@
 //        /brackets/:tournamentId/edit/:bracketId  (edit existing)
 // ============================================================================
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router'
-import { useTournament, useTeams, useBracket, useCreateBracket, useUpdateBracket } from '@/lib/hooks'
-import { Matchup, PickMatchup, BracketTree, BracketFullLayout } from '@/components/bracket'
-import type { MatchupPredictions, PredictionScenario } from '@/components/bracket/pick-matchup'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, Save, Loader2, Trophy } from 'lucide-react'
-import { TeamLogo } from '@/components/team-logo'
-import { cn } from '@/lib/utils'
-import { createPrediction } from '@/lib/api'
-import type { Team, Tournament, Span, Sport } from '@/lib/types'
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router";
+import {
+  useTournament,
+  useTeams,
+  useBracket,
+  useCreateBracket,
+  useUpdateBracket,
+} from "@/lib/hooks";
+import {
+  Matchup,
+  PickMatchup,
+  BracketTree,
+  BracketFullLayout,
+} from "@/components/bracket";
+import type {
+  MatchupPredictions,
+  PredictionScenario,
+} from "@/components/bracket/pick-matchup";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, Save, Loader2, Trophy } from "lucide-react";
+import { TeamLogo } from "@/components/team-logo";
+import { TournamentLogo } from "@/components/tournament-logo";
+import { cn } from "@/lib/utils";
+import { createPrediction } from "@/lib/api";
+import type { Team, Tournament, Span, Sport } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Seed matchup pairings (same as bracket.ts)
 // ---------------------------------------------------------------------------
 
 const SEED_MATCHUPS: [number, number][] = [
-  [1, 16], [8, 9], [5, 12], [4, 13], [6, 11], [3, 14], [7, 10], [2, 15],
-]
+  [1, 16],
+  [8, 9],
+  [5, 12],
+  [4, 13],
+  [6, 11],
+  [3, 14],
+  [7, 10],
+  [2, 15],
+];
 
 // ---------------------------------------------------------------------------
 // Helper: resolve the team feeding into a game based on picks
@@ -38,7 +60,7 @@ function resolvePickTeam(
   results: Record<string, string>,
 ): string | null {
   // Use tournament result if available, otherwise user pick
-  return results[feederKey] ?? picks[feederKey] ?? null
+  return results[feederKey] ?? picks[feederKey] ?? null;
 }
 
 // ---------------------------------------------------------------------------
@@ -46,14 +68,14 @@ function resolvePickTeam(
 // ---------------------------------------------------------------------------
 
 interface GameSlot {
-  key: string
-  round: string
-  topSeed: number | null
-  bottomSeed: number | null
-  topTeam: string | null
-  bottomTeam: string | null
+  key: string;
+  round: string;
+  topSeed: number | null;
+  bottomSeed: number | null;
+  topTeam: string | null;
+  bottomTeam: string | null;
   /** Is this game decided by tournament results (not pickable)? */
-  locked: boolean
+  locked: boolean;
 }
 
 function buildInteractiveBracket(
@@ -62,80 +84,96 @@ function buildInteractiveBracket(
   tournament: Tournament,
   picks: Record<string, string>,
 ): GameSlot[][] {
-  const { play_in, results } = tournament
+  const { play_in, results } = tournament;
 
   // Resolve a seed value — check play-in results first, then user picks
   function resolvePickSeed(seedValue: string | null): string | null {
-    if (!seedValue) return null
-    if (seedValue.startsWith('pi_')) {
-      const pi = play_in.find((p) => p.slot === seedValue)
+    if (!seedValue) return null;
+    if (seedValue.startsWith("pi_")) {
+      const pi = play_in.find((p) => p.slot === seedValue);
       // Official result takes priority, then user pick
-      return pi?.result ?? picks[seedValue] ?? null
+      return pi?.result ?? picks[seedValue] ?? null;
     }
-    return seedValue
+    return seedValue;
+  }
+
+  // Build team→seed reverse map for propagating seeds to later rounds
+  const seedMap = new Map<string, number>();
+  for (const [seedStr, rawValue] of Object.entries(region.seeds)) {
+    if (!rawValue) continue;
+    const teamKey = resolvePickSeed(rawValue);
+    if (teamKey) seedMap.set(teamKey, Number(seedStr));
   }
 
   // R64
   const r64: GameSlot[] = SEED_MATCHUPS.map(([topSeed, bottomSeed], i) => {
-    const key = `${regionKey}_R64_G${i + 1}`
-    const topRaw = region.seeds[String(topSeed)] ?? null
-    const bottomRaw = region.seeds[String(bottomSeed)] ?? null
+    const key = `${regionKey}_R64_G${i + 1}`;
+    const topRaw = region.seeds[String(topSeed)] ?? null;
+    const bottomRaw = region.seeds[String(bottomSeed)] ?? null;
     return {
       key,
-      round: 'R64',
+      round: "R64",
       topSeed,
       bottomSeed,
       topTeam: resolvePickSeed(topRaw),
       bottomTeam: resolvePickSeed(bottomRaw),
       locked: key in results,
-    }
-  })
+    };
+  });
 
   // R32
   const r32: GameSlot[] = Array.from({ length: 4 }, (_, i) => {
-    const key = `${regionKey}_R32_G${i + 1}`
-    const g1Key = r64[i * 2].key
-    const g2Key = r64[i * 2 + 1].key
+    const key = `${regionKey}_R32_G${i + 1}`;
+    const g1Key = r64[i * 2].key;
+    const g2Key = r64[i * 2 + 1].key;
+    const topTeam = resolvePickTeam(g1Key, picks, results);
+    const bottomTeam = resolvePickTeam(g2Key, picks, results);
     return {
       key,
-      round: 'R32',
-      topSeed: null,
-      bottomSeed: null,
-      topTeam: resolvePickTeam(g1Key, picks, results),
-      bottomTeam: resolvePickTeam(g2Key, picks, results),
+      round: "R32",
+      topSeed: topTeam ? (seedMap.get(topTeam) ?? null) : null,
+      bottomSeed: bottomTeam ? (seedMap.get(bottomTeam) ?? null) : null,
+      topTeam,
+      bottomTeam,
       locked: key in results,
-    }
-  })
+    };
+  });
 
   // S16
   const s16: GameSlot[] = Array.from({ length: 2 }, (_, i) => {
-    const key = `${regionKey}_S16_G${i + 1}`
-    const g1Key = r32[i * 2].key
-    const g2Key = r32[i * 2 + 1].key
+    const key = `${regionKey}_S16_G${i + 1}`;
+    const g1Key = r32[i * 2].key;
+    const g2Key = r32[i * 2 + 1].key;
+    const topTeam = resolvePickTeam(g1Key, picks, results);
+    const bottomTeam = resolvePickTeam(g2Key, picks, results);
     return {
       key,
-      round: 'S16',
-      topSeed: null,
-      bottomSeed: null,
-      topTeam: resolvePickTeam(g1Key, picks, results),
-      bottomTeam: resolvePickTeam(g2Key, picks, results),
+      round: "S16",
+      topSeed: topTeam ? (seedMap.get(topTeam) ?? null) : null,
+      bottomSeed: bottomTeam ? (seedMap.get(bottomTeam) ?? null) : null,
+      topTeam,
+      bottomTeam,
       locked: key in results,
-    }
-  })
+    };
+  });
 
   // E8
-  const e8Key = `${regionKey}_E8`
-  const e8: GameSlot[] = [{
-    key: e8Key,
-    round: 'E8',
-    topSeed: null,
-    bottomSeed: null,
-    topTeam: resolvePickTeam(s16[0].key, picks, results),
-    bottomTeam: resolvePickTeam(s16[1].key, picks, results),
-    locked: e8Key in results,
-  }]
+  const e8Key = `${regionKey}_E8`;
+  const e8Top = resolvePickTeam(s16[0].key, picks, results);
+  const e8Bottom = resolvePickTeam(s16[1].key, picks, results);
+  const e8: GameSlot[] = [
+    {
+      key: e8Key,
+      round: "E8",
+      topSeed: e8Top ? (seedMap.get(e8Top) ?? null) : null,
+      bottomSeed: e8Bottom ? (seedMap.get(e8Bottom) ?? null) : null,
+      topTeam: e8Top,
+      bottomTeam: e8Bottom,
+      locked: e8Key in results,
+    },
+  ];
 
-  return [r64, r32, s16, e8]
+  return [r64, r32, s16, e8];
 }
 
 // ---------------------------------------------------------------------------
@@ -143,11 +181,11 @@ function buildInteractiveBracket(
 // ---------------------------------------------------------------------------
 
 function countPicks(picks: Record<string, string>): number {
-  return Object.values(picks).filter(Boolean).length
+  return Object.values(picks).filter(Boolean).length;
 }
 
 // Max picks for a full bracket: 4 regions × 15 + 3 (FF + NCG) = 63
-const TOTAL_GAMES = 63
+const TOTAL_GAMES = 63;
 
 // ---------------------------------------------------------------------------
 // Component
@@ -155,164 +193,217 @@ const TOTAL_GAMES = 63
 
 export function BracketEditorPage() {
   const { tournamentId, bracketId } = useParams<{
-    tournamentId: string
-    bracketId?: string
-  }>()
-  const navigate = useNavigate()
+    tournamentId: string;
+    bracketId?: string;
+  }>();
+  const navigate = useNavigate();
 
-  const isEditing = !!bracketId
+  const isEditing = !!bracketId;
 
   // Data fetching
-  const { data: tournament, isLoading: loadingT } = useTournament(tournamentId ?? '')
-  const sport = tournament?.sport as 'ncaam_basketball' | 'ncaaw_basketball' | undefined
-  const { data: teamsData } = useTeams({ sport, limit: 500, enabled: !!sport })
-  const { data: existingBracket, isLoading: loadingB } = useBracket(bracketId ?? '')
+  const { data: tournament, isLoading: loadingT } = useTournament(
+    tournamentId ?? "",
+  );
+  const sport = tournament?.sport as
+    | "ncaam_basketball"
+    | "ncaaw_basketball"
+    | undefined;
+  const { data: teamsData } = useTeams({ sport, limit: 500, enabled: !!sport });
+  const { data: existingBracket, isLoading: loadingB } = useBracket(
+    bracketId ?? "",
+  );
 
   // Mutations
-  const createMut = useCreateBracket()
-  const updateMut = useUpdateBracket()
+  const createMut = useCreateBracket();
+  const updateMut = useUpdateBracket();
 
   // State
-  const [name, setName] = useState('')
-  const [picks, setPicks] = useState<Record<string, string>>({})
-  const [initialized, setInitialized] = useState(false)
+  const [name, setName] = useState("");
+  const [picks, setPicks] = useState<Record<string, string>>({});
+  const [initialized, setInitialized] = useState(false);
 
   // ML prediction state
-  const [predictions, setPredictions] = useState<Record<string, MatchupPredictions>>({})
-  const [loadingPredictions, setLoadingPredictions] = useState<Set<string>>(new Set())
+  const [predictions, setPredictions] = useState<
+    Record<string, MatchupPredictions>
+  >({});
+  const [loadingPredictions, setLoadingPredictions] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Initialize from existing bracket
   useEffect(() => {
     if (isEditing && existingBracket && !initialized) {
-      setName(existingBracket.name)
-      setPicks(existingBracket.picks)
-      setInitialized(true)
+      setName(existingBracket.name);
+      setPicks(existingBracket.picks);
+      setInitialized(true);
     }
-  }, [isEditing, existingBracket, initialized])
+  }, [isEditing, existingBracket, initialized]);
 
   // Team map
   const teamMap = useMemo(() => {
-    const map = new Map<string, Team>()
-    for (const t of teamsData?.data ?? []) map.set(t.id, t)
-    return map
-  }, [teamsData])
+    const map = new Map<string, Team>();
+    for (const t of teamsData?.data ?? []) map.set(t.id, t);
+    return map;
+  }, [teamsData]);
 
   // Merge results + picks for resolving downstream teams
   const mergedPicks = useMemo(() => {
-    if (!tournament) return picks
+    if (!tournament) return picks;
     // Tournament results always take precedence
-    return { ...picks, ...tournament.results }
-  }, [picks, tournament])
+    return { ...picks, ...tournament.results };
+  }, [picks, tournament]);
+
+  // Build combined team→seed map from all regions for FF/NCG seed display
+  const allSeeds = useMemo(() => {
+    if (!tournament) return new Map<string, number>();
+    const map = new Map<string, number>();
+    for (const region of Object.values(tournament.regions)) {
+      for (const [seedStr, rawValue] of Object.entries(region.seeds)) {
+        if (!rawValue) continue;
+        let teamKey: string | null = rawValue;
+        if (rawValue.startsWith("pi_")) {
+          const pi = tournament.play_in.find((p) => p.slot === rawValue);
+          teamKey = pi?.result ?? mergedPicks[rawValue] ?? null;
+        }
+        if (teamKey) map.set(teamKey, Number(seedStr));
+      }
+    }
+    return map;
+  }, [tournament, mergedPicks]);
 
   // Handle a pick
   const handlePick = useCallback(
     (gameKey: string, winner: string) => {
       setPicks((prev) => {
-        const next = { ...prev }
+        const next = { ...prev };
 
         // Set the pick
-        next[gameKey] = winner
+        next[gameKey] = winner;
 
         // If changing a pick, cascade: clear all downstream picks that depended on
         // the old winner. We do this by finding any game whose teams come from this
         // game's winner and resetting them if the previous winner was different.
-        const oldWinner = prev[gameKey]
+        const oldWinner = prev[gameKey];
         if (oldWinner && oldWinner !== winner) {
           // Clear downstream games that had the old winner
-          clearDownstream(next, gameKey, oldWinner, tournament)
+          clearDownstream(next, gameKey, oldWinner, tournament);
           // Also clear stale predictions for downstream games whose teams changed
           setPredictions((prevP) => {
-            const nextP = { ...prevP }
+            const nextP = { ...prevP };
             for (const key of Object.keys(nextP)) {
-              if (key === gameKey) continue
+              if (key === gameKey) continue;
               if (getRoundIndex(key) > getRoundIndex(gameKey)) {
-                delete nextP[key]
+                delete nextP[key];
               }
             }
-            return nextP
-          })
+            return nextP;
+          });
         }
 
-        return next
-      })
+        return next;
+      });
     },
     [tournament],
-  )
+  );
 
   // Request ML predictions — fires 6 requests (3 spans × 2 home/away)
   const handleRequestPredictions = useCallback(
     async (gameKey: string, topTeam: string, bottomTeam: string) => {
-      if (!sport) return
+      if (!sport) return;
 
-      setLoadingPredictions((prev) => new Set(prev).add(gameKey))
+      setLoadingPredictions((prev) => new Set(prev).add(gameKey));
 
-      const spans: Span[] = [3, 5, 7]
+      const spans: Span[] = [3, 5, 7];
       const requests = spans.flatMap((span) => [
         // topTeam as home
-        { span, topIsHome: true as const, req: { home_team: topTeam, away_team: bottomTeam, span, neutral: true, sport: sport as Sport, model: 'ensemble' as const } },
+        {
+          span,
+          topIsHome: true as const,
+          req: {
+            home_team: topTeam,
+            away_team: bottomTeam,
+            span,
+            neutral: true,
+            sport: sport as Sport,
+            model: "ensemble" as const,
+          },
+        },
         // bottomTeam as home
-        { span, topIsHome: false as const, req: { home_team: bottomTeam, away_team: topTeam, span, neutral: true, sport: sport as Sport, model: 'ensemble' as const } },
-      ])
+        {
+          span,
+          topIsHome: false as const,
+          req: {
+            home_team: bottomTeam,
+            away_team: topTeam,
+            span,
+            neutral: true,
+            sport: sport as Sport,
+            model: "ensemble" as const,
+          },
+        },
+      ]);
 
       try {
         const results = await Promise.allSettled(
           requests.map((r) => createPrediction(r.req)),
-        )
+        );
 
-        const scenarios: PredictionScenario[] = []
+        const scenarios: PredictionScenario[] = [];
         results.forEach((result, i) => {
-          if (result.status === 'fulfilled') {
-            const { span, topIsHome } = requests[i]
-            const pred = result.value
+          if (result.status === "fulfilled") {
+            const { span, topIsHome } = requests[i];
+            const pred = result.value;
             scenarios.push({
               span,
               topIsHome,
               // When topTeam is home, home_win_probability IS topWinProb.
               // When bottomTeam is home, topWinProb = 1 - home_win_probability.
-              topWinProb: topIsHome ? pred.home_win_probability : 1 - pred.home_win_probability,
-            })
+              topWinProb: topIsHome
+                ? pred.home_win_probability
+                : 1 - pred.home_win_probability,
+            });
           }
-        })
+        });
 
         if (scenarios.length > 0) {
-          setPredictions((prev) => ({ ...prev, [gameKey]: { scenarios } }))
+          setPredictions((prev) => ({ ...prev, [gameKey]: { scenarios } }));
         }
       } finally {
         setLoadingPredictions((prev) => {
-          const next = new Set(prev)
-          next.delete(gameKey)
-          return next
-        })
+          const next = new Set(prev);
+          next.delete(gameKey);
+          return next;
+        });
       }
     },
     [sport],
-  )
+  );
 
   // Save
-  const isSaving = createMut.isPending || updateMut.isPending
+  const isSaving = createMut.isPending || updateMut.isPending;
   const handleSave = async () => {
-    if (!tournamentId || !name.trim()) return
+    if (!tournamentId || !name.trim()) return;
     try {
-      let savedId: string
+      let savedId: string;
       if (isEditing && bracketId) {
         const saved = await updateMut.mutateAsync({
           bracketId,
           body: { name: name.trim(), picks },
-        })
-        savedId = saved.id
+        });
+        savedId = saved.id;
       } else {
         const saved = await createMut.mutateAsync({
           tournament_id: tournamentId,
           name: name.trim(),
           picks,
-        })
-        savedId = saved.id
+        });
+        savedId = saved.id;
       }
-      navigate(`/brackets/${tournamentId}/view/${savedId}`)
+      navigate(`/brackets/${tournamentId}/view/${savedId}`);
     } catch {
       // Error is shown via mutation state
     }
-  }
+  };
 
   // Loading states
   if (loadingT || (isEditing && loadingB)) {
@@ -321,7 +412,7 @@ export function BracketEditorPage() {
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-[400px] w-full" />
       </div>
-    )
+    );
   }
 
   if (!tournament) {
@@ -331,32 +422,50 @@ export function BracketEditorPage() {
           Tournament not found.
         </CardContent>
       </Card>
-    )
+    );
   }
 
-  const filledPicks = countPicks(picks)
-  const unresolvedPlayIns = tournament.play_in.filter((pi) => pi.result === null).length
-  const resultsCount = Object.keys(tournament.results).length
-  const remainingPicks = TOTAL_GAMES + unresolvedPlayIns - resultsCount
+  const filledPicks = countPicks(picks);
+  const unresolvedPlayIns = tournament.play_in.filter(
+    (pi) => pi.result === null,
+  ).length;
+  const resultsCount = Object.keys(tournament.results).length;
+  const remainingPicks = TOTAL_GAMES + unresolvedPlayIns - resultsCount;
 
   // Final four teams
-  const ff = tournament.final_four
-  const [sf1r1, sf1r2] = ff.semifinal_1
-  const [sf2r1, sf2r2] = ff.semifinal_2
+  const ff = tournament.final_four;
+  const [sf1r1, sf1r2] = ff.semifinal_1;
+  const [sf2r1, sf2r2] = ff.semifinal_2;
 
-  const ffG1Top = resolvePickTeam(`${sf1r1}_E8`, mergedPicks, tournament.results)
-  const ffG1Bottom = resolvePickTeam(`${sf1r2}_E8`, mergedPicks, tournament.results)
-  const ffG2Top = resolvePickTeam(`${sf2r1}_E8`, mergedPicks, tournament.results)
-  const ffG2Bottom = resolvePickTeam(`${sf2r2}_E8`, mergedPicks, tournament.results)
-  const ncgTop = resolvePickTeam('FF_G1', mergedPicks, tournament.results)
-  const ncgBottom = resolvePickTeam('FF_G2', mergedPicks, tournament.results)
+  const ffG1Top = resolvePickTeam(
+    `${sf1r1}_E8`,
+    mergedPicks,
+    tournament.results,
+  );
+  const ffG1Bottom = resolvePickTeam(
+    `${sf1r2}_E8`,
+    mergedPicks,
+    tournament.results,
+  );
+  const ffG2Top = resolvePickTeam(
+    `${sf2r1}_E8`,
+    mergedPicks,
+    tournament.results,
+  );
+  const ffG2Bottom = resolvePickTeam(
+    `${sf2r2}_E8`,
+    mergedPicks,
+    tournament.results,
+  );
+  const ncgTop = resolvePickTeam("FF_G1", mergedPicks, tournament.results);
+  const ncgBottom = resolvePickTeam("FF_G2", mergedPicks, tournament.results);
 
-  const ffG1Locked = 'FF_G1' in tournament.results
-  const ffG2Locked = 'FF_G2' in tournament.results
-  const ncgLocked = 'NCG' in tournament.results
+  const ffG1Locked = "FF_G1" in tournament.results;
+  const ffG2Locked = "FF_G2" in tournament.results;
+  const ncgLocked = "NCG" in tournament.results;
 
-  const champion = mergedPicks['NCG'] ?? null
-  const championTeam = champion ? teamMap.get(champion) : null
+  const champion = mergedPicks["NCG"] ?? null;
+  const championTeam = champion ? teamMap.get(champion) : null;
 
   return (
     <div className="space-y-8">
@@ -373,7 +482,7 @@ export function BracketEditorPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-2">
             <h1 className="text-2xl font-bold tracking-tight">
-              {isEditing ? 'Edit Bracket' : 'New Bracket'}
+              {isEditing ? "Edit Bracket" : "New Bracket"}
             </h1>
             <p className="text-sm text-muted-foreground">{tournament.name}</p>
           </div>
@@ -388,7 +497,14 @@ export function BracketEditorPage() {
             maxLength={50}
           />
           <div className="flex justify-end">
-            <span className={cn('text-xs', name.length >= 50 ? 'text-destructive' : 'text-muted-foreground')}>
+            <span
+              className={cn(
+                "text-xs",
+                name.length >= 50
+                  ? "text-destructive"
+                  : "text-muted-foreground",
+              )}
+            >
               {name.length}/50
             </span>
           </div>
@@ -403,13 +519,18 @@ export function BracketEditorPage() {
 
       {/* Full bracket layout — 4 regions in corners, FF center */}
       {(() => {
-        const [sf1r1, sf1r2] = tournament.final_four.semifinal_1
-        const [sf2r1, sf2r2] = tournament.final_four.semifinal_2
+        const [sf1r1, sf1r2] = tournament.final_four.semifinal_1;
+        const [sf2r1, sf2r2] = tournament.final_four.semifinal_2;
 
         const buildRegion = (regionKey: string, mirrored: boolean) => {
-          const region = tournament.regions[regionKey]
-          if (!region) return null
-          const rounds = buildInteractiveBracket(regionKey, region, tournament, mergedPicks)
+          const region = tournament.regions[regionKey];
+          if (!region) return null;
+          const rounds = buildInteractiveBracket(
+            regionKey,
+            region,
+            tournament,
+            mergedPicks,
+          );
           const pick = (game: GameSlot) => (
             <PickMatchup
               key={game.key}
@@ -427,10 +548,15 @@ export function BracketEditorPage() {
               onRequestPredictions={handleRequestPredictions}
               predictionsLoading={loadingPredictions.has(game.key)}
             />
-          )
+          );
           return (
             <div className="space-y-2">
-              <h3 className={cn('text-sm font-semibold text-muted-foreground uppercase tracking-wide', mirrored && 'text-right')}>
+              <h3
+                className={cn(
+                  "text-sm font-semibold text-muted-foreground uppercase tracking-wide",
+                  mirrored && "text-right",
+                )}
+              >
                 {region.name}
               </h3>
               <BracketTree
@@ -441,50 +567,53 @@ export function BracketEditorPage() {
                 mirrored={mirrored}
               />
             </div>
-          )
-        }
+          );
+        };
 
-        const firstFourHeader = tournament.play_in.length > 0 ? (
-          <section className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">First Four</h3>
-            <div className="flex flex-wrap gap-4 justify-center">
-              {tournament.play_in.map((pi) => {
-                const hasResult = pi.result !== null
-                return (
-                  <div key={pi.slot} className="space-y-1">
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
-                      {pi.region} · Seed {pi.seed}
+        const firstFourHeader =
+          tournament.play_in.length > 0 ? (
+            <section className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">
+                First Four
+              </h3>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {tournament.play_in.map((pi) => {
+                  const hasResult = pi.result !== null;
+                  return (
+                    <div key={pi.slot} className="space-y-1">
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wide px-1">
+                        {pi.region} · Seed {pi.seed}
+                      </div>
+                      {hasResult ? (
+                        <Matchup
+                          topTeam={pi.teams[0] ?? null}
+                          bottomTeam={pi.teams[1] ?? null}
+                          topSeed={pi.seed}
+                          bottomSeed={pi.seed}
+                          winner={pi.result}
+                          teamMap={teamMap}
+                        />
+                      ) : (
+                        <PickMatchup
+                          gameKey={pi.slot}
+                          topTeam={pi.teams[0] ?? null}
+                          bottomTeam={pi.teams[1] ?? null}
+                          topSeed={pi.seed}
+                          bottomSeed={pi.seed}
+                          pick={picks[pi.slot] ?? null}
+                          teamMap={teamMap}
+                          onPick={handlePick}
+                          predictions={predictions[pi.slot]}
+                          onRequestPredictions={handleRequestPredictions}
+                          predictionsLoading={loadingPredictions.has(pi.slot)}
+                        />
+                      )}
                     </div>
-                    {hasResult ? (
-                      <Matchup
-                        topTeam={pi.teams[0] ?? null}
-                        bottomTeam={pi.teams[1] ?? null}
-                        topSeed={pi.seed}
-                        bottomSeed={pi.seed}
-                        winner={pi.result}
-                        teamMap={teamMap}
-                      />
-                    ) : (
-                      <PickMatchup
-                        gameKey={pi.slot}
-                        topTeam={pi.teams[0] ?? null}
-                        bottomTeam={pi.teams[1] ?? null}
-                        topSeed={pi.seed}
-                        bottomSeed={pi.seed}
-                        pick={picks[pi.slot] ?? null}
-                        teamMap={teamMap}
-                        onPick={handlePick}
-                        predictions={predictions[pi.slot]}
-                        onRequestPredictions={handleRequestPredictions}
-                        predictionsLoading={loadingPredictions.has(pi.slot)}
-                      />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        ) : undefined
+                  );
+                })}
+              </div>
+            </section>
+          ) : undefined;
 
         return (
           <BracketFullLayout
@@ -495,6 +624,7 @@ export function BracketEditorPage() {
             header={firstFourHeader}
             center={
               <div className="flex flex-col items-center gap-3">
+                <TournamentLogo tournamentId={tournamentId!} size={96} />
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide text-center">
                   Final Four
                 </h3>
@@ -504,15 +634,17 @@ export function BracketEditorPage() {
                     gameKey="FF_G1"
                     topTeam={ffG1Top}
                     bottomTeam={ffG1Bottom}
-                    topSeed={null}
-                    bottomSeed={null}
-                    pick={mergedPicks['FF_G1'] ?? null}
+                    topSeed={ffG1Top ? (allSeeds.get(ffG1Top) ?? null) : null}
+                    bottomSeed={
+                      ffG1Bottom ? (allSeeds.get(ffG1Bottom) ?? null) : null
+                    }
+                    pick={mergedPicks["FF_G1"] ?? null}
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ffG1Locked}
-                    predictions={predictions['FF_G1']}
+                    predictions={predictions["FF_G1"]}
                     onRequestPredictions={handleRequestPredictions}
-                    predictionsLoading={loadingPredictions.has('FF_G1')}
+                    predictionsLoading={loadingPredictions.has("FF_G1")}
                   />
 
                   {/* Championship — center */}
@@ -520,15 +652,17 @@ export function BracketEditorPage() {
                     gameKey="NCG"
                     topTeam={ncgTop}
                     bottomTeam={ncgBottom}
-                    topSeed={null}
-                    bottomSeed={null}
-                    pick={mergedPicks['NCG'] ?? null}
+                    topSeed={ncgTop ? (allSeeds.get(ncgTop) ?? null) : null}
+                    bottomSeed={
+                      ncgBottom ? (allSeeds.get(ncgBottom) ?? null) : null
+                    }
+                    pick={mergedPicks["NCG"] ?? null}
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ncgLocked}
-                    predictions={predictions['NCG']}
+                    predictions={predictions["NCG"]}
                     onRequestPredictions={handleRequestPredictions}
-                    predictionsLoading={loadingPredictions.has('NCG')}
+                    predictionsLoading={loadingPredictions.has("NCG")}
                   />
 
                   {/* SF2 — right side, feeds from right regions */}
@@ -536,15 +670,17 @@ export function BracketEditorPage() {
                     gameKey="FF_G2"
                     topTeam={ffG2Top}
                     bottomTeam={ffG2Bottom}
-                    topSeed={null}
-                    bottomSeed={null}
-                    pick={mergedPicks['FF_G2'] ?? null}
+                    topSeed={ffG2Top ? (allSeeds.get(ffG2Top) ?? null) : null}
+                    bottomSeed={
+                      ffG2Bottom ? (allSeeds.get(ffG2Bottom) ?? null) : null
+                    }
+                    pick={mergedPicks["FF_G2"] ?? null}
                     teamMap={teamMap}
                     onPick={handlePick}
                     disabled={ffG2Locked}
-                    predictions={predictions['FF_G2']}
+                    predictions={predictions["FF_G2"]}
                     onRequestPredictions={handleRequestPredictions}
-                    predictionsLoading={loadingPredictions.has('FF_G2')}
+                    predictionsLoading={loadingPredictions.has("FF_G2")}
                   />
                 </div>
                 {/* Champion callout */}
@@ -560,8 +696,12 @@ export function BracketEditorPage() {
                           size={24}
                         />
                         <div>
-                          <div className="text-sm font-bold">{championTeam.meta.school}</div>
-                          <div className="text-[10px] text-muted-foreground">Your Champion Pick</div>
+                          <div className="text-sm font-bold">
+                            {championTeam.meta.school}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground">
+                            Your Champion Pick
+                          </div>
                         </div>
                       </>
                     ) : (
@@ -572,14 +712,16 @@ export function BracketEditorPage() {
               </div>
             }
           />
-        )
+        );
       })()}
 
       {/* Bottom save bar */}
       <div className="sticky bottom-16 md:bottom-0 flex items-center justify-between rounded-lg border bg-background/95 backdrop-blur px-4 py-3">
         <div className="text-sm">
           <span className="font-medium">{filledPicks}</span>
-          <span className="text-muted-foreground">/{remainingPicks} picks made</span>
+          <span className="text-muted-foreground">
+            /{remainingPicks} picks made
+          </span>
         </div>
         <Button onClick={handleSave} disabled={isSaving || !name.trim()}>
           {isSaving ? (
@@ -587,11 +729,11 @@ export function BracketEditorPage() {
           ) : (
             <Save className="h-4 w-4 mr-1" />
           )}
-          {isEditing ? 'Save Changes' : 'Create Bracket'}
+          {isEditing ? "Save Changes" : "Create Bracket"}
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -600,16 +742,16 @@ export function BracketEditorPage() {
 // ---------------------------------------------------------------------------
 
 /** Order of rounds — higher index = later round */
-const ROUND_ORDER = ['pi', 'R64', 'R32', 'S16', 'E8', 'FF', 'NCG'] as const
+const ROUND_ORDER = ["pi", "R64", "R32", "S16", "E8", "FF", "NCG"] as const;
 
 function getRoundIndex(gameKey: string): number {
-  if (gameKey.startsWith('pi_')) return 0
-  if (gameKey === 'NCG') return 6
-  if (gameKey.startsWith('FF_')) return 5
+  if (gameKey.startsWith("pi_")) return 0;
+  if (gameKey === "NCG") return 6;
+  if (gameKey.startsWith("FF_")) return 5;
   // Region keys like "south_R64_G1" — extract round part
-  const parts = gameKey.split('_')
-  const round = parts[1] // R64, R32, S16, E8
-  return ROUND_ORDER.indexOf(round as typeof ROUND_ORDER[number])
+  const parts = gameKey.split("_");
+  const round = parts[1]; // R64, R32, S16, E8
+  return ROUND_ORDER.indexOf(round as (typeof ROUND_ORDER)[number]);
 }
 
 function clearDownstream(
@@ -618,19 +760,19 @@ function clearDownstream(
   oldWinner: string,
   tournament: Tournament | undefined,
 ) {
-  if (!tournament) return
-  const currentRoundIdx = getRoundIndex(gameKey)
+  if (!tournament) return;
+  const currentRoundIdx = getRoundIndex(gameKey);
 
   // Only clear picks that are in later rounds AND had the old winner as their value
-  let changed = true
+  let changed = true;
   while (changed) {
-    changed = false
+    changed = false;
     for (const [key, value] of Object.entries(picks)) {
-      if (key in tournament.results) continue // don't clear tournament results
-      if (getRoundIndex(key) <= currentRoundIdx) continue // don't clear same or earlier rounds
+      if (key in tournament.results) continue; // don't clear tournament results
+      if (getRoundIndex(key) <= currentRoundIdx) continue; // don't clear same or earlier rounds
       if (value === oldWinner) {
-        delete picks[key]
-        changed = true
+        delete picks[key];
+        changed = true;
       }
     }
   }
