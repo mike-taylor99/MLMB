@@ -3,7 +3,7 @@
 // ============================================================================
 
 import { Fragment } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useTeam } from "@/lib/hooks";
 import { useSport } from "@/context/sport";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -197,6 +197,7 @@ export function TeamDetailPage() {
   const { teamId } = useParams<{ teamId: string }>();
   const { sport } = useSport();
   const { data: team, isLoading, error } = useTeam(teamId ?? "");
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -210,10 +211,8 @@ export function TeamDetailPage() {
   if (error || !team) {
     return (
       <div className="space-y-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link to="/teams">
-            <ArrowLeft className="h-4 w-4 mr-1" /> Back to teams
-          </Link>
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4 mr-1" /> Back
         </Button>
         <Card>
           <CardContent className="py-8 text-center text-destructive">
@@ -228,10 +227,8 @@ export function TeamDetailPage() {
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" size="sm" asChild>
-        <Link to="/teams">
-          <ArrowLeft className="h-4 w-4 mr-1" /> Back to teams
-        </Link>
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+        <ArrowLeft className="h-4 w-4 mr-1" /> Back
       </Button>
 
       <div className="flex items-center gap-4">
