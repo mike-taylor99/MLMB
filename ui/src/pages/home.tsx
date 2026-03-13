@@ -2,28 +2,41 @@
 // Home page — hero section + Top 25 rankings
 // ============================================================================
 
-import { useMemo } from 'react'
-import { useSport } from '@/context/sport'
-import { useRankings, useTeams } from '@/lib/hooks'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Link } from 'react-router'
-import { TeamLogo } from '@/components/team-logo'
+import { useMemo } from "react";
+import { useSport } from "@/context/sport";
+import { useRankings, useTeams } from "@/lib/hooks";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router";
+import { TeamLogo } from "@/components/team-logo";
 
 export function HomePage() {
-  const { sport } = useSport()
-  const { data, isLoading, error } = useRankings(sport)
-  const { data: teamsData } = useTeams({ sport, limit: 500 })
+  const { sport } = useSport();
+  const { data, isLoading, error } = useRankings(sport);
+  const { data: teamsData } = useTeams({ sport, limit: 500 });
 
   // Build a quick lookup map: team key → team meta
   const teamMap = useMemo(() => {
-    const map = new Map<string, { school: string; name: string; ncaa_key: string | null; color: string | null }>()
+    const map = new Map<
+      string,
+      {
+        school: string;
+        name: string;
+        ncaa_key: string | null;
+        color: string | null;
+      }
+    >();
     for (const t of teamsData?.data ?? []) {
-      map.set(t.id, { school: t.meta.school, name: t.meta.name, ncaa_key: t.meta.ncaa_key, color: t.meta.color })
+      map.set(t.id, {
+        school: t.meta.school,
+        name: t.meta.name,
+        ncaa_key: t.meta.ncaa_key,
+        color: t.meta.color,
+      });
     }
-    return map
-  }, [teamsData])
+    return map;
+  }, [teamsData]);
 
   return (
     <div className="space-y-8">
@@ -33,8 +46,8 @@ export function HomePage() {
           Machine Learning March Bracketology
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          NCAA basketball predictions powered by ensemble machine learning models
-          trained on historical team performance data.
+          NCAA basketball predictions powered by ensemble machine learning
+          models trained on historical team performance data.
         </p>
       </section>
 
@@ -42,7 +55,8 @@ export function HomePage() {
       <section>
         <h2 className="text-2xl font-semibold">Top 25</h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Every AP Top 25 matchup simulated across all model and span combinations
+          Every AP Top 25 matchup simulated across all model and span
+          combinations
         </p>
 
         {error && (
@@ -65,13 +79,18 @@ export function HomePage() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm text-muted-foreground font-normal">
-                Updated {new Date(data.updated_at).toLocaleDateString()}
+                Updated{" "}
+                {new Date(data.updated_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y">
                 {data.rankings.map((entry) => {
-                  const meta = teamMap.get(entry.team)
+                  const meta = teamMap.get(entry.team);
                   return (
                     <Link
                       key={entry.rank}
@@ -79,7 +98,7 @@ export function HomePage() {
                       className="flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors sm:px-6 sm:gap-4"
                     >
                       <Badge
-                        variant={entry.rank <= 3 ? 'default' : 'secondary'}
+                        variant={entry.rank <= 3 ? "default" : "secondary"}
                         className="w-8 justify-center tabular-nums"
                       >
                         {entry.rank}
@@ -104,7 +123,7 @@ export function HomePage() {
                         {entry.rating.toFixed(3)}
                       </span>
                     </Link>
-                  )
+                  );
                 })}
               </div>
             </CardContent>
@@ -112,5 +131,5 @@ export function HomePage() {
         )}
       </section>
     </div>
-  )
+  );
 }
