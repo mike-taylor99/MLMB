@@ -101,15 +101,17 @@ function LatestStatsCard({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-base">
-          <span>Statistical Profile</span>
-          {data.last_played && (
-            <span className="flex items-center gap-1 text-xs font-normal text-muted-foreground">
-              <CalendarDays className="h-3 w-3" />
-              Stats through {data.last_played}
-            </span>
-          )}
-        </CardTitle>
+        <CardTitle className="text-base">Statistical Profile</CardTitle>
+        {data.last_played && (
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <CalendarDays className="h-3 w-3" />
+            Stats through{" "}
+            {new Date(data.last_played + "T00:00:00").toLocaleDateString(
+              "en-US",
+              { month: "short", day: "numeric", year: "numeric" },
+            )}
+          </p>
+        )}
       </CardHeader>
       <CardContent className="px-0 pb-0">
         <div className="grid grid-cols-[1fr_5rem_5rem] text-sm">

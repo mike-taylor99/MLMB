@@ -230,6 +230,9 @@ class TeamsListResponse(BaseModel):
     first_id: Optional[str] = Field(None, description="ID of first team in response")
     last_id: Optional[str] = Field(None, description="ID of last team in response")
     has_more: bool = Field(..., description="Whether more teams exist")
+    stats_updated_at: Optional[str] = Field(
+        None, description="ISO timestamp of when team stats were last updated"
+    )
 
 
 # =============================================================================

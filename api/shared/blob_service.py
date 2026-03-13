@@ -85,6 +85,10 @@ class BlobStorageService:
             "ncaaw_basketball": None,
         }
         self._teams_cache: Optional[tuple] = None  # (teams_list, last_modified)
+        self._team_stats_updated: Dict[str, Optional[str]] = {
+            "ncaam_basketball": None,
+            "ncaaw_basketball": None,
+        }
 
         # Manifest and schema caches
         self._models_manifest_cache: Optional[Dict] = None
@@ -163,10 +167,28 @@ class BlobStorageService:
                 blob_data = blob_client.download_blob().readall()
                 data = json.loads(blob_data.decode())
                 self._team_stats_cache[cache_key] = data
+
+                # Cache last_modified from blob properties
+                try:
+                    props = blob_client.get_blob_properties()
+                    self._team_stats_updated[
+                        cache_key
+                    ] = props.last_modified.isoformat().replace("+00:00", "Z")
+                except Exception:
+                    pass  # Non-critical — stats still usable without timestamp
+
                 return data
             except Exception as e:
                 logging.error(f"Failed to load team stats ({blob_name}): {e}")
                 raise
+
+    def get_team_stats_updated_at(self, is_womens: bool = False) -> Optional[str]:
+        """
+        Return the last-modified ISO timestamp for the team-stats blob.
+        Returns None if stats haven't been loaded yet or timestamp is unavailable.
+        """
+        cache_key = self._get_cache_key(is_womens)
+        return self._team_stats_updated.get(cache_key)
 
     def get_matchup_stats(
         self, team1: str, team2: str, span: int, is_womens: bool = False

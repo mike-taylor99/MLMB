@@ -49,6 +49,7 @@ export interface TeamsListResponse {
   first_id: string | null;
   last_id: string | null;
   has_more: boolean;
+  stats_updated_at: string | null;
 }
 
 // ---------------------------------------------------------------------------

@@ -2,25 +2,25 @@
 // Teams page — searchable directory of all teams
 // ============================================================================
 
-import { useState, useMemo } from 'react'
-import { Link } from 'react-router'
-import { useSport } from '@/context/sport'
-import { useTeams } from '@/lib/hooks'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Search } from 'lucide-react'
-import { TeamLogo } from '@/components/team-logo'
+import { useState, useMemo } from "react";
+import { Link } from "react-router";
+import { useSport } from "@/context/sport";
+import { useTeams } from "@/lib/hooks";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Search, Clock } from "lucide-react";
+import { TeamLogo } from "@/components/team-logo";
 
 export function TeamsPage() {
-  const { sport, label } = useSport()
-  const { data, isLoading, error } = useTeams({ sport, limit: 500 })
-  const [search, setSearch] = useState('')
+  const { sport, label } = useSport();
+  const { data, isLoading, error } = useTeams({ sport, limit: 500 });
+  const [search, setSearch] = useState("");
 
   const teams = useMemo(() => {
-    const all = data?.data ?? []
-    if (!search.trim()) return all
-    const q = search.toLowerCase()
+    const all = data?.data ?? [];
+    if (!search.trim()) return all;
+    const q = search.toLowerCase();
     return all.filter(
       (t) =>
         t.meta.school.toLowerCase().includes(q) ||
@@ -28,16 +28,14 @@ export function TeamsPage() {
         t.meta.location.toLowerCase().includes(q) ||
         t.id.toLowerCase().includes(q) ||
         (t.meta.ncaa_key?.toLowerCase().includes(q) ?? false),
-    )
-  }, [data, search])
+    );
+  }, [data, search]);
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Teams</h1>
-        <p className="text-muted-foreground mt-1">
-          {label} programs directory
-        </p>
+        <p className="text-muted-foreground mt-1">{label} programs directory</p>
       </div>
 
       {/* Search — sticky below the header so it stays visible while scrolling */}
@@ -71,10 +69,27 @@ export function TeamsPage() {
 
       {data && (
         <>
-          <p className="text-sm text-muted-foreground">
-            {teams.length} team{teams.length !== 1 && 's'}
-            {search && ` matching "${search}"`}
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              {teams.length} team{teams.length !== 1 && "s"}
+              {search && ` matching "${search}"`}
+            </p>
+            {data.stats_updated_at && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                Stats updated{" "}
+                {new Date(data.stats_updated_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}{" "}
+                {new Date(data.stats_updated_at).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </span>
+            )}
+          </div>
 
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 [&>*]:min-w-0">
             {teams.map((team) => (
@@ -101,5 +116,5 @@ export function TeamsPage() {
         </>
       )}
     </div>
-  )
+  );
 }

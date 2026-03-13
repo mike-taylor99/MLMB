@@ -207,9 +207,18 @@ def list_teams(
     # Convert to response models
     teams = [TeamResponse.from_record(t) for t in paginated]
 
+    # Get stats blob last-modified timestamp (triggers load if not cached yet)
+    is_womens = sport == "ncaaw_basketball"
+    try:
+        blob_service.get_team_stats(is_womens)
+    except Exception:
+        pass  # Stats may be unavailable — non-critical
+    stats_updated_at = blob_service.get_team_stats_updated_at(is_womens)
+
     return TeamsListResponse(
         data=teams,
         first_id=teams[0].id if teams else None,
         last_id=teams[-1].id if teams else None,
         has_more=has_more,
+        stats_updated_at=stats_updated_at,
     )
