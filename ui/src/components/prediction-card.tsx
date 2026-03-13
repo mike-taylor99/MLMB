@@ -2,6 +2,7 @@
 // PredictionCard — reusable prediction result display
 // ============================================================================
 
+import { Link } from 'react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { TeamLogo } from '@/components/team-logo'
@@ -38,9 +39,9 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
           <div className="flex items-center gap-3">
             <div className="flex-1 flex items-center gap-2 min-w-0 justify-end">
               <div className="text-right min-w-0">
-                <p className={`truncate text-sm ${homeWins ? 'font-semibold' : ''}`}>
+                <Link to={`/teams/${prediction.home_team}`} className={`truncate text-sm hover:underline ${homeWins ? 'font-semibold' : ''}`}>
                   {homeLabel}
-                </p>
+                </Link>
                 <p className="text-[10px] text-muted-foreground">
                   {prediction.neutral ? '' : 'Home'}
                   {fmtDate(prediction.home_last_played) && (
@@ -48,27 +49,31 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
                   )}
                 </p>
               </div>
-              <TeamLogo
-                ncaaKey={homeTeam?.meta.ncaa_key ?? null}
-                color={homeTeam?.meta.color ?? null}
-                school={homeLabel}
-                size={32}
-              />
+              <Link to={`/teams/${prediction.home_team}`}>
+                <TeamLogo
+                  ncaaKey={homeTeam?.meta.ncaa_key ?? null}
+                  color={homeTeam?.meta.color ?? null}
+                  school={homeLabel}
+                  size={32}
+                />
+              </Link>
             </div>
 
             <div className="text-xs font-bold text-muted-foreground shrink-0">vs</div>
 
             <div className="flex-1 flex items-center gap-2 min-w-0">
-              <TeamLogo
-                ncaaKey={awayTeam?.meta.ncaa_key ?? null}
-                color={awayTeam?.meta.color ?? null}
-                school={awayLabel}
-                size={32}
-              />
+              <Link to={`/teams/${prediction.away_team}`}>
+                <TeamLogo
+                  ncaaKey={awayTeam?.meta.ncaa_key ?? null}
+                  color={awayTeam?.meta.color ?? null}
+                  school={awayLabel}
+                  size={32}
+                />
+              </Link>
               <div className="min-w-0">
-                <p className={`truncate text-sm ${!homeWins ? 'font-semibold' : ''}`}>
+                <Link to={`/teams/${prediction.away_team}`} className={`truncate text-sm hover:underline ${!homeWins ? 'font-semibold' : ''}`}>
                   {awayLabel}
-                </p>
+                </Link>
                 <p className="text-[10px] text-muted-foreground">
                   {prediction.neutral ? '' : 'Away'}
                   {fmtDate(prediction.away_last_played) && (
@@ -116,14 +121,16 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-2 min-w-0">
           <div className="flex flex-col items-center space-y-2 min-w-0">
             <p className="text-sm text-muted-foreground">Home</p>
-            <TeamLogo
-              ncaaKey={homeTeam?.meta.ncaa_key ?? null}
-              color={homeTeam?.meta.color ?? null}
-              school={homeLabel}
-              size={48}
-            />
+            <Link to={`/teams/${prediction.home_team}`}>
+              <TeamLogo
+                ncaaKey={homeTeam?.meta.ncaa_key ?? null}
+                color={homeTeam?.meta.color ?? null}
+                school={homeLabel}
+                size={48}
+              />
+            </Link>
             <div className="text-center w-full px-2">
-              <p className="text-lg font-semibold truncate">{homeLabel}</p>
+              <Link to={`/teams/${prediction.home_team}`} className="text-lg font-semibold truncate hover:underline">{homeLabel}</Link>
               <p className="text-xs text-muted-foreground h-4 truncate">
                 {homeTeam && homeTeam.meta.name !== homeTeam.meta.school ? homeTeam.meta.name : '\u00A0'}
               </p>
@@ -138,14 +145,16 @@ export function PredictionCard({ prediction, teams, compact = false }: Predictio
           <div className="text-2xl font-bold text-muted-foreground self-center">vs</div>
           <div className="flex flex-col items-center space-y-2 min-w-0">
             <p className="text-sm text-muted-foreground">Away</p>
-            <TeamLogo
-              ncaaKey={awayTeam?.meta.ncaa_key ?? null}
-              color={awayTeam?.meta.color ?? null}
-              school={awayLabel}
-              size={48}
-            />
+            <Link to={`/teams/${prediction.away_team}`}>
+              <TeamLogo
+                ncaaKey={awayTeam?.meta.ncaa_key ?? null}
+                color={awayTeam?.meta.color ?? null}
+                school={awayLabel}
+                size={48}
+              />
+            </Link>
             <div className="text-center w-full px-2">
-              <p className="text-lg font-semibold truncate">{awayLabel}</p>
+              <Link to={`/teams/${prediction.away_team}`} className="text-lg font-semibold truncate hover:underline">{awayLabel}</Link>
               <p className="text-xs text-muted-foreground h-4 truncate">
                 {awayTeam && awayTeam.meta.name !== awayTeam.meta.school ? awayTeam.meta.name : '\u00A0'}
               </p>
