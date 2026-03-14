@@ -222,7 +222,7 @@ ML Ensemble Model Predictions (across 3 moving-average windows):
 {away_team} Advanced Stats (5-game SMA):
 {format_stats(away_stats)}
 
-Please provide a concise 2-3 paragraph analysis of this matchup based on the data above."""
+Analyze this matchup for a bracket pick."""
 
         return prompt
 
