@@ -32,6 +32,15 @@ def write_predictions_bulk(
         logging.error(f"Background bulk write failed: {e}")
 
 
+def write_analysis(predictions_store: PredictionsStore, record: dict) -> None:
+    """Write a matchup analysis to Cosmos DB."""
+    try:
+        predictions_store.create_analysis(record)
+        logging.info(f"Background analysis write completed: {record['id']}")
+    except Exception as e:
+        logging.error(f"Background analysis write failed for {record['id']}: {e}")
+
+
 def link_user_prediction(
     predictions_store: PredictionsStore,
     user_id: str,

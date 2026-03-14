@@ -159,6 +159,71 @@ class BatchResponse(BaseModel):
 
 
 # =============================================================================
+# Matchup Analysis Models
+# =============================================================================
+
+
+class AnalysisRequest(BaseModel):
+    """Request body for a matchup analysis."""
+
+    home_team: str = Field(
+        ..., min_length=1, description="Home team key (e.g., 'duke')"
+    )
+    away_team: str = Field(
+        ..., min_length=1, description="Away team key (e.g., 'connecticut')"
+    )
+    sport: SportType = Field(default="ncaam_basketball", description="Sport code")
+    neutral: bool = Field(
+        default=True,
+        description=(
+            "Neutral court analysis (6 predictions, flipped orientations) "
+            "or home/away analysis (3 predictions)"
+        ),
+    )
+
+    @field_validator("home_team", "away_team", "sport")
+    @classmethod
+    def lowercase_strings(cls, v: str) -> str:
+        return v.strip().lower()
+
+
+class AnalysisPredictionSummary(BaseModel):
+    """Summary of a single prediction within an analysis."""
+
+    span: int = Field(..., description="Moving average span (3, 5, or 7)")
+    home_team: str = Field(..., description="Home team for this prediction")
+    away_team: str = Field(..., description="Away team for this prediction")
+    home_win_probability: float = Field(
+        ..., ge=0.0, le=1.0, description="Probability home team wins"
+    )
+    neutral: bool = Field(..., description="Whether neutral site")
+
+
+class AnalysisResponse(BaseModel):
+    """Response for a matchup analysis."""
+
+    id: str = Field(..., description="Analysis ID (content-hash)")
+    type: Literal["analysis"] = Field(default="analysis", description="Response type")
+    home_team: str = Field(..., description="Primary home team key")
+    away_team: str = Field(..., description="Primary away team key")
+    sport: str = Field(..., description="Sport code")
+    neutral: bool = Field(..., description="Whether neutral-site analysis")
+    predictions: List[AnalysisPredictionSummary] = Field(
+        ..., description="Individual predictions (3 or 6)"
+    )
+    home_stats: Dict[str, float] = Field(..., description="Curated stats for home team")
+    away_stats: Dict[str, float] = Field(..., description="Curated stats for away team")
+    home_last_played: str = Field(
+        ..., description="Home team last game date (YYYY-MM-DD)"
+    )
+    away_last_played: str = Field(
+        ..., description="Away team last game date (YYYY-MM-DD)"
+    )
+    analysis: str = Field(..., description="Agent-generated analysis text")
+    created_at: str = Field(..., description="ISO timestamp when created")
+
+
+# =============================================================================
 # Team Models
 # =============================================================================
 

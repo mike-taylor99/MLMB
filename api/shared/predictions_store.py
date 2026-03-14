@@ -654,6 +654,66 @@ class PredictionsStore:
 
         return records
 
+    # ------------------------------------------------------------------
+    # Analysis cache (stored in the same predictions container)
+    # ------------------------------------------------------------------
+
+    ANALYSIS_CONTAINER_NAME = "analyses"
+
+    @property
+    def analysis_container(self):
+        """Get or create the Cosmos DB analyses container."""
+        if not hasattr(self, "_analysis_container") or self._analysis_container is None:
+            self._ensure_client()
+            self._analysis_container = self._database.create_container_if_not_exists(
+                id=self.ANALYSIS_CONTAINER_NAME,
+                partition_key=PartitionKey(path="/sport"),
+            )
+        return self._analysis_container
+
+    def get_analysis(self, analysis_id: str, sport: str) -> Optional[Dict]:
+        """
+        Retrieve a cached analysis by ID (point read).
+
+        Args:
+            analysis_id: The analysis content-hash ID.
+            sport: Sport partition key.
+
+        Returns:
+            Analysis record or None if not found.
+        """
+        try:
+            item = self.analysis_container.read_item(
+                item=analysis_id, partition_key=sport
+            )
+            return item
+        except CosmosResourceNotFoundError:
+            return None
+        except Exception as e:
+            logging.error(f"Error reading analysis {analysis_id}: {e}")
+            raise
+
+    def create_analysis(self, record: Dict) -> Dict:
+        """
+        Persist an analysis record.  First-write-wins on conflict.
+
+        Args:
+            record: Analysis record to store.
+
+        Returns:
+            Created or existing record.
+        """
+        try:
+            created = self.analysis_container.create_item(body=record)
+            logging.info(f"Created analysis: {record['id']}")
+            return created
+        except CosmosResourceExistsError:
+            logging.info(f"Analysis already exists (race): {record['id']}")
+            return self.get_analysis(record["id"], record["sport"])
+        except Exception as e:
+            logging.error(f"Error creating analysis: {e}")
+            raise
+
 
 # Convenience function to get the singleton instance
 def get_predictions_store() -> PredictionsStore:

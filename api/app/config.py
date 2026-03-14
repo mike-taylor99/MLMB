@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     # Auth — server-to-server API key (used by jobs/pipelines)
     api_key: str = ""
 
+    # Azure AI Foundry — agent-based matchup analysis
+    foundry_project_endpoint: str = ""
+    foundry_agent_name: str = "mlmb-matchup-analysis"
+
     # Set LOCAL_DEV=true to bypass auth during local development
     local_dev: bool = False
 

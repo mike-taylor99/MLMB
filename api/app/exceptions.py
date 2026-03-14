@@ -88,6 +88,13 @@ class BracketNotFoundError(NotFoundError):
         super().__init__("Bracket", bracket_id)
 
 
+class AnalysisNotFoundError(NotFoundError):
+    """Analysis not found."""
+
+    def __init__(self, analysis_id: str):
+        super().__init__("Analysis", analysis_id)
+
+
 class BracketLockedError(APIError):
     """Tournament brackets are locked."""
 

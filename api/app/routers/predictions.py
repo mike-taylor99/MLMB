@@ -15,6 +15,7 @@ from fastapi import APIRouter, BackgroundTasks, Query
 
 from app.constants import VALID_SPORTS
 from app.dependencies import (
+    AgentServiceDep,
     BlobServiceDep,
     PredictionsStoreDep,
     RequireAuthDep,
@@ -22,12 +23,15 @@ from app.dependencies import (
     get_user_id,
 )
 from app.exceptions import (
+    AnalysisNotFoundError,
     InvalidSportError,
     PredictionNotFoundError,
     BatchTooLargeError,
     ValidationError,
 )
 from app.schemas import (
+    AnalysisRequest,
+    AnalysisResponse,
     PredictionRequest,
     PredictionResponse,
     PredictionListResponse,
@@ -40,9 +44,11 @@ from app.services import (
     get_prediction_by_id,
     list_predictions,
 )
+from app.services.analysis import get_analysis_by_id, run_analysis
 from app.tasks import (
     write_prediction,
     write_predictions_bulk,
+    write_analysis,
     link_user_prediction,
     link_user_predictions_bulk,
 )
@@ -215,3 +221,93 @@ async def batch_predictions_endpoint(
             )
 
     return BatchResponse(output=results)
+
+
+# =============================================================================
+# GET /predictions/analysis/{analysis_id} - Get a cached analysis
+# =============================================================================
+
+
+@router.get("/analysis/{analysis_id}", response_model=AnalysisResponse)
+async def get_analysis_endpoint(
+    analysis_id: str,
+    predictions_store: PredictionsStoreDep,
+    _auth: RequireAuthDep,
+    sport: str = Query(..., description="Sport code (required)"),
+) -> AnalysisResponse:
+    """Retrieve a cached analysis by ID."""
+    if sport not in VALID_SPORTS:
+        raise InvalidSportError(sport)
+
+    analysis = get_analysis_by_id(analysis_id, sport, predictions_store)
+    if not analysis:
+        raise AnalysisNotFoundError(analysis_id)
+
+    return analysis
+
+
+# =============================================================================
+# POST /predictions/analysis - Matchup analysis
+# =============================================================================
+
+
+@router.post("/analysis", response_model=AnalysisResponse)
+async def analysis_endpoint(
+    request: AnalysisRequest,
+    background_tasks: BackgroundTasks,
+    blob_service: BlobServiceDep,
+    predictions_store: PredictionsStoreDep,
+    agent_service: AgentServiceDep,
+    auth: RequireAuthDep,
+) -> AnalysisResponse:
+    """
+    Generate an AI-powered matchup analysis.
+
+    Runs predictions across all 3 spans (3, 5, 7). When neutral=true,
+    runs 6 predictions (both orientations) for a fair comparison.
+    When neutral=false, runs 3 predictions with the specified home/away.
+
+    Curated stats for both teams are extracted and sent to a Foundry
+    agent (GPT-4.1 mini) which produces a natural-language analysis.
+
+    Results are cached — identical matchups with the same underlying
+    stats return the cached analysis without calling the agent again.
+    """
+    try:
+        response, cosmos_records, analysis_record, prediction_ids = run_analysis(
+            home_team=request.home_team,
+            away_team=request.away_team,
+            sport=request.sport,
+            neutral=request.neutral,
+            blob_service=blob_service,
+            predictions_store=predictions_store,
+            agent_service=agent_service,
+        )
+
+        # Queue background writes for new predictions
+        if cosmos_records:
+            background_tasks.add_task(
+                write_predictions_bulk, predictions_store, cosmos_records
+            )
+
+        # Queue background write for the analysis record
+        if analysis_record:
+            background_tasks.add_task(
+                write_analysis, predictions_store, analysis_record
+            )
+
+        # Link the individual predictions to the user
+        user_id = get_user_id(auth)
+        if user_id and prediction_ids:
+            background_tasks.add_task(
+                link_user_predictions_bulk,
+                predictions_store,
+                user_id,
+                prediction_ids,
+                request.sport,
+            )
+
+        return response
+
+    except ValueError as e:
+        raise ValidationError(str(e))

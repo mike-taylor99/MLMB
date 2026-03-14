@@ -28,6 +28,10 @@ from shared.bracket_store import (
     BracketStore,
     get_bracket_store as _get_bracket_store,
 )
+from shared.agent_service import (
+    AgentService,
+    get_agent_service as _get_agent_service,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -55,11 +59,17 @@ def get_bracket_store() -> BracketStore:
     return _get_bracket_store()
 
 
+def get_agent_service() -> AgentService:
+    """Get the agent service singleton."""
+    return _get_agent_service()
+
+
 # Type aliases for dependency injection
 BlobServiceDep = Annotated[BlobStorageService, Depends(get_blob_service)]
 PredictionsStoreDep = Annotated[PredictionsStore, Depends(get_predictions_store)]
 TournamentStoreDep = Annotated[TournamentStore, Depends(get_tournament_store)]
 BracketStoreDep = Annotated[BracketStore, Depends(get_bracket_store)]
+AgentServiceDep = Annotated[AgentService, Depends(get_agent_service)]
 
 
 # ---------------------------------------------------------------------------

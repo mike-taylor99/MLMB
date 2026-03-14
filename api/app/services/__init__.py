@@ -6,6 +6,7 @@ from app.services.predictions import (
     get_prediction_by_id,
     list_predictions,
 )
+from app.services.analysis import get_analysis_by_id, run_analysis
 from app.services.teams import get_team_by_id, get_team_detail, list_teams
 from app.services.rankings import get_rankings
 from app.services.tournaments import list_tournaments, get_tournament
@@ -23,6 +24,8 @@ __all__ = [
     "create_batch_predictions",
     "get_prediction_by_id",
     "list_predictions",
+    "get_analysis_by_id",
+    "run_analysis",
     "get_team_by_id",
     "get_team_detail",
     "list_teams",
