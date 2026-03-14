@@ -32,8 +32,8 @@ import { ArrowLeft, Save, Loader2, Trophy } from "lucide-react";
 import { TeamLogo } from "@/components/team-logo";
 import { TournamentLogo } from "@/components/tournament-logo";
 import { cn } from "@/lib/utils";
-import { createPrediction } from "@/lib/api";
-import type { Team, Tournament, Span, Sport } from "@/lib/types";
+import { createAnalysis } from "@/lib/api";
+import type { Team, Tournament, Sport, Analysis } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Seed matchup pairings (same as bracket.ts)
@@ -226,6 +226,7 @@ export function BracketEditorPage() {
   const [predictions, setPredictions] = useState<
     Record<string, MatchupPredictions>
   >({});
+  const [analyses, setAnalyses] = useState<Record<string, Analysis>>({});
   const [loadingPredictions, setLoadingPredictions] = useState<Set<string>>(
     new Set(),
   );
@@ -298,6 +299,16 @@ export function BracketEditorPage() {
             }
             return nextP;
           });
+          setAnalyses((prevA) => {
+            const nextA = { ...prevA };
+            for (const key of Object.keys(nextA)) {
+              if (key === gameKey) continue;
+              if (getRoundIndex(key) > getRoundIndex(gameKey)) {
+                delete nextA[key];
+              }
+            }
+            return nextA;
+          });
         }
 
         return next;
@@ -306,68 +317,37 @@ export function BracketEditorPage() {
     [tournament],
   );
 
-  // Request ML predictions — fires 6 requests (3 spans × 2 home/away)
+  // Request ML predictions — single analysis call (replaces 6 individual requests)
   const handleRequestPredictions = useCallback(
     async (gameKey: string, topTeam: string, bottomTeam: string) => {
       if (!sport) return;
 
       setLoadingPredictions((prev) => new Set(prev).add(gameKey));
 
-      const spans: Span[] = [3, 5, 7];
-      const requests = spans.flatMap((span) => [
-        // topTeam as home
-        {
-          span,
-          topIsHome: true as const,
-          req: {
-            home_team: topTeam,
-            away_team: bottomTeam,
-            span,
-            neutral: true,
-            sport: sport as Sport,
-            model: "ensemble" as const,
-          },
-        },
-        // bottomTeam as home
-        {
-          span,
-          topIsHome: false as const,
-          req: {
-            home_team: bottomTeam,
-            away_team: topTeam,
-            span,
-            neutral: true,
-            sport: sport as Sport,
-            model: "ensemble" as const,
-          },
-        },
-      ]);
-
       try {
-        const results = await Promise.allSettled(
-          requests.map((r) => createPrediction(r.req)),
-        );
+        const result = await createAnalysis({
+          home_team: topTeam,
+          away_team: bottomTeam,
+          neutral: true,
+          sport: sport as Sport,
+        });
 
-        const scenarios: PredictionScenario[] = [];
-        results.forEach((result, i) => {
-          if (result.status === "fulfilled") {
-            const { span, topIsHome } = requests[i];
-            const pred = result.value;
-            scenarios.push({
-              span,
-              topIsHome,
-              // When topTeam is home, home_win_probability IS topWinProb.
-              // When bottomTeam is home, topWinProb = 1 - home_win_probability.
-              topWinProb: topIsHome
-                ? pred.home_win_probability
-                : 1 - pred.home_win_probability,
-            });
-          }
+        // Convert analysis predictions to PredictionScenario format
+        const scenarios: PredictionScenario[] = result.predictions.map((p) => {
+          const topIsHome = p.home_team === topTeam;
+          return {
+            span: p.span as 3 | 5 | 7,
+            topIsHome,
+            topWinProb: topIsHome
+              ? p.home_win_probability
+              : 1 - p.home_win_probability,
+          };
         });
 
         if (scenarios.length > 0) {
           setPredictions((prev) => ({ ...prev, [gameKey]: { scenarios } }));
         }
+        setAnalyses((prev) => ({ ...prev, [gameKey]: result }));
       } finally {
         setLoadingPredictions((prev) => {
           const next = new Set(prev);
@@ -545,6 +525,7 @@ export function BracketEditorPage() {
               disabled={game.locked}
               compact
               predictions={predictions[game.key]}
+              analysis={analyses[game.key]}
               onRequestPredictions={handleRequestPredictions}
               predictionsLoading={loadingPredictions.has(game.key)}
             />
@@ -604,6 +585,7 @@ export function BracketEditorPage() {
                           teamMap={teamMap}
                           onPick={handlePick}
                           predictions={predictions[pi.slot]}
+                          analysis={analyses[pi.slot]}
                           onRequestPredictions={handleRequestPredictions}
                           predictionsLoading={loadingPredictions.has(pi.slot)}
                         />
@@ -643,6 +625,7 @@ export function BracketEditorPage() {
                     onPick={handlePick}
                     disabled={ffG1Locked}
                     predictions={predictions["FF_G1"]}
+                    analysis={analyses["FF_G1"]}
                     onRequestPredictions={handleRequestPredictions}
                     predictionsLoading={loadingPredictions.has("FF_G1")}
                   />
@@ -661,6 +644,7 @@ export function BracketEditorPage() {
                     onPick={handlePick}
                     disabled={ncgLocked}
                     predictions={predictions["NCG"]}
+                    analysis={analyses["NCG"]}
                     onRequestPredictions={handleRequestPredictions}
                     predictionsLoading={loadingPredictions.has("NCG")}
                   />
@@ -679,6 +663,7 @@ export function BracketEditorPage() {
                     onPick={handlePick}
                     disabled={ffG2Locked}
                     predictions={predictions["FF_G2"]}
+                    analysis={analyses["FF_G2"]}
                     onRequestPredictions={handleRequestPredictions}
                     predictionsLoading={loadingPredictions.has("FF_G2")}
                   />

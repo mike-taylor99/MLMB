@@ -7,9 +7,9 @@
 // ============================================================================
 
 import { cn } from "@/lib/utils";
-import type { Team, Span } from "@/lib/types";
+import type { Team, Span, Analysis } from "@/lib/types";
 import { TeamLogo } from "@/components/team-logo";
-import { Sparkles, Loader2, ChevronDown } from "lucide-react";
+import { Sparkles, Loader2, ChevronDown, Brain } from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
@@ -151,13 +151,16 @@ function PredictionDetail({
   topTeam,
   bottomTeam,
   teamMap,
+  analysis,
 }: {
   predictions: MatchupPredictions;
   topTeam: string;
   bottomTeam: string;
   teamMap: Map<string, Team>;
+  analysis?: Analysis;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const [analysisExpanded, setAnalysisExpanded] = useState(false);
 
   const topSchool = teamMap.get(topTeam)?.meta.school ?? topTeam;
   const bottomSchool = teamMap.get(bottomTeam)?.meta.school ?? bottomTeam;
@@ -175,11 +178,19 @@ function PredictionDetail({
       (a.topIsHome === b.topIsHome ? 0 : a.topIsHome ? -1 : 1),
   );
 
+  // Analysis preview — first ~120 chars
+  const analysisText = analysis?.analysis ?? "";
+  const previewLen = 120;
+  const needsTruncation = analysisText.length > previewLen;
+  const preview = needsTruncation
+    ? analysisText.slice(0, analysisText.lastIndexOf(" ", previewLen)) + "…"
+    : analysisText;
+
   return (
     <div className="space-y-2.5">
       <div className="flex items-center gap-1.5 text-xs font-semibold text-violet-600 dark:text-violet-300">
-        <Sparkles className="h-3.5 w-3.5" />
-        ML Prediction
+        <Brain className="h-3.5 w-3.5" />
+        AI Analysis
       </div>
 
       {/* Team names */}
@@ -230,13 +241,38 @@ function PredictionDetail({
         </span>
       </div>
 
-      {/* Summary + expand toggle */}
+      {/* AI Analysis text — preview by default, expandable */}
+      {analysisText && (
+        <div className="pt-1.5 border-t">
+          {analysisExpanded ? (
+            <div className="max-h-36 overflow-y-auto text-[11px] leading-relaxed text-muted-foreground whitespace-pre-line pr-1">
+              {analysisText}
+            </div>
+          ) : (
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
+              {preview}
+            </p>
+          )}
+          {needsTruncation && (
+            <button
+              type="button"
+              onClick={() => setAnalysisExpanded(!analysisExpanded)}
+              className="mt-1 text-[11px] text-violet-600 dark:text-violet-300 hover:text-violet-700 dark:hover:text-violet-200 transition-colors cursor-pointer"
+            >
+              {analysisExpanded ? "Show less" : "Read more"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Model details — collapsible */}
       <div className="pt-1 border-t">
         <button
           type="button"
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => setShowDetails(!showDetails)}
           className="w-full flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer py-0.5"
         >
+          <Sparkles className="h-3 w-3" />
           <span>
             {predictions.scenarios.length} model runs · favors{" "}
             <span className="font-semibold text-foreground">{favored}</span>
@@ -244,13 +280,13 @@ function PredictionDetail({
           <ChevronDown
             className={cn(
               "h-3 w-3 transition-transform",
-              expanded && "rotate-180",
+              showDetails && "rotate-180",
             )}
           />
         </button>
 
         {/* Expanded detail rows */}
-        {expanded && (
+        {showDetails && (
           <div className="mt-2 space-y-1">
             {sorted.map((sc, i) => {
               const pct = Math.round(sc.topWinProb * 100);
@@ -322,6 +358,8 @@ interface PickMatchupProps {
   ) => void;
   /** Whether predictions are currently loading */
   predictionsLoading?: boolean;
+  /** Full analysis result (includes AI text + stats) */
+  analysis?: Analysis;
 }
 
 export function PickMatchup({
@@ -338,6 +376,7 @@ export function PickMatchup({
   predictions,
   onRequestPredictions,
   predictionsLoading,
+  analysis,
 }: PickMatchupProps) {
   const needsPick =
     !disabled && pick === null && topTeam !== null && bottomTeam !== null;
@@ -396,7 +435,7 @@ export function PickMatchup({
                   ? "bg-violet-500 text-white hover:bg-violet-600 border border-violet-400 dark:border-violet-600"
                   : "bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-900/60 border border-violet-200 dark:border-violet-700",
               )}
-              title={hasResults ? "View ML predictions" : "Get ML predictions"}
+              title={hasResults ? "View AI analysis" : "Get AI analysis"}
             >
               {predictionsLoading ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
@@ -406,12 +445,16 @@ export function PickMatchup({
             </button>
           </PopoverTrigger>
           {predictions && (
-            <PopoverContent side="top" className="w-56 p-3">
+            <PopoverContent
+              side="top"
+              className={cn("p-3", analysis?.analysis ? "w-72" : "w-56")}
+            >
               <PredictionDetail
                 predictions={predictions}
                 topTeam={topTeam!}
                 bottomTeam={bottomTeam!}
                 teamMap={teamMap}
+                analysis={analysis}
               />
             </PopoverContent>
           )}

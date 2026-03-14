@@ -97,6 +97,41 @@ export interface BatchResponse {
 }
 
 // ---------------------------------------------------------------------------
+// Analysis
+// ---------------------------------------------------------------------------
+
+export interface AnalysisRequest {
+  home_team: string;
+  away_team: string;
+  sport?: Sport;
+  neutral?: boolean;
+}
+
+export interface AnalysisPredictionSummary {
+  span: number;
+  home_team: string;
+  away_team: string;
+  home_win_probability: number;
+  neutral: boolean;
+}
+
+export interface Analysis {
+  id: string;
+  type: "analysis";
+  home_team: string;
+  away_team: string;
+  sport: string;
+  neutral: boolean;
+  predictions: AnalysisPredictionSummary[];
+  home_stats: Record<string, number>;
+  away_stats: Record<string, number>;
+  home_last_played: string;
+  away_last_played: string;
+  analysis: string;
+  created_at: string;
+}
+
+// ---------------------------------------------------------------------------
 // Rankings
 // ---------------------------------------------------------------------------
 
