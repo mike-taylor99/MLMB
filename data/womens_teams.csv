@@ -28,7 +28,7 @@ Birmingham-Southern,"Birmingham, Alabama",birmingham-southern,birmingham-so,Birm
 Boise State,"Boise, Idaho",boise-state,boise-st,Boise St.,Boise State University,#0032A0
 Boston College,"Chestnut Hill, Massachusetts",boston-college,boston-college,Boston College,Boston College,#862633
 Boston University,"Boston, Massachusetts",boston-university,boston-u,Boston U.,Boston University,#C8102E
-Bowling Green State,"Bowling Green, Ohio",bowling-green-state,bowling-green,Bowling Green,Bowling Green State University,#FE5000
+Bowling Green,"Bowling Green, Ohio",bowling-green-state,bowling-green,Bowling Green,Bowling Green State University,#FE5000
 Bradley,"Peoria, Illinois",bradley,bradley,Bradley,Bradley University,#A21B21
 Brigham Young,"Provo, Utah",brigham-young,byu,BYU,Brigham Young University,#213C84
 Brooklyn,"Brooklyn, New York",brooklyn,brooklyn,Brooklyn,Brooklyn College,#861F41
@@ -72,6 +72,7 @@ Davidson,"Davidson, North Carolina",davidson,davidson,Davidson,Davidson College,
 Dayton,"Dayton, Ohio",dayton,dayton,Dayton,University of Dayton,#D50032
 Delaware,"Newark, Delaware",delaware,delaware,Delaware,University of Delaware,#006095
 Delaware State,"Dover, Delaware",delaware-state,delaware-st,Delaware St.,Delaware State University,#DA291C
+Delta State,"Cleveland, Mississippi",delta-state,delta-st,Delta State,Delta State University,#00843D
 Denver,"Denver, Colorado",denver,denver,Denver,University of Denver,#862633
 DePaul,"Chicago, Illinois",depaul,depaul,DePaul,DePaul University,#003DA5
 Detroit Mercy,"Detroit, Michigan",detroit-mercy,detroit,Detroit,University of Detroit Mercy,#A6192E
@@ -81,6 +82,7 @@ Duke,"Durham, North Carolina",duke,duke,Duke,Duke University,#002D72
 Duquesne,"Pittsburgh, Pennsylvania",duquesne,duquesne,Duquesne,Duquesne University,#BA0C2F
 East Carolina,"Greenville, North Carolina",east-carolina,east-carolina,East Carolina,East Carolina University,#582C83
 East Tennessee State,"Johnson City, Tennessee",east-tennessee-state,east-tenn-st,East Tenn. St.,East Tennessee State University,#041E42
+East Texas A&M,"Commerce, Texas",texas-am-commerce,tex-am-commerce,Tex. A&M-Commerce,Texas A&M-Commerce,#00205B
 Eastern Illinois,"Charleston, Illinois",eastern-illinois,eastern-ill,Eastern Ill.,Eastern Illinois University,#003594
 Eastern Kentucky,"Richmond, Kentucky",eastern-kentucky,eastern-ky,Eastern Ky.,Eastern Kentucky University,#6F263D
 Eastern Michigan,"Ypsilanti, Michigan",eastern-michigan,eastern-mich,Eastern Mich.,Eastern Michigan University,#046A38
@@ -111,6 +113,7 @@ Grambling,"Grambling, Louisiana",grambling,grambling,Grambling,Grambling State U
 Grand Canyon,"Phoenix, Arizona",grand-canyon,grand-canyon,Grand Canyon,Grand Canyon University,#5F259F
 Green Bay,"Green Bay, Wisconsin",green-bay,green-bay,Green Bay,"University of Wisconsin, Green Bay",#0F5640
 Hampton,"Hampton, Virginia",hampton,hampton,Hampton,Hampton University,#0033A0
+Hardin-Simmons,"Abilene, Texas",hardin-simmons,hardin-simmons,Hardin-Simmons,Hardin-Simmons University,#5b2d83
 Hartford Hawks,"West Hartford, Connecticut",hartford,hartford,Hartford,University of Hartford,#DA291C
 Harvard,"Boston, Massachusetts",harvard,harvard,Harvard,Harvard University,#912235
 Hawaii,"Honolulu, Hawaii",hawaii,hawaii,Hawaii,"University of Hawaii, Manoa",#154734
@@ -131,7 +134,7 @@ Indiana State,"Terre Haute, Indiana",indiana-state,indiana-st,Indiana St.,Indian
 Iona,"New Rochelle, New York",iona,iona,Iona,Iona College,#6F2C3F
 Iowa,"Iowa City, Iowa",iowa,iowa,Iowa,University of Iowa,#010101
 Iowa State,"Ames, Iowa",iowa-state,iowa-st,Iowa St.,Iowa State University,#A6192E
-IUPUI,"Indianapolis, Indiana",iupui,iupui,IUPUI,IUPUI,#9D2235
+IU Indy,"Indianapolis, Indiana",iupui,iupui,IUPUI,IUPUI,#9D2235
 Jackson State,"Jackson, Mississippi",jackson-state,jackson-st,Jackson St.,Jackson State University,#041E42
 Jacksonville,"Jacksonville, Florida",jacksonville,jacksonville,Jacksonville,Jacksonville University,#004E42
 Jacksonville State,"Jacksonville, Alabama",jacksonville-state,jacksonville-st,Jacksonville St.,Jacksonville State University,#C8102E
@@ -175,6 +178,7 @@ Massachusetts-Lowell,"Lowell, Massachusetts",massachusetts-lowell,umass-lowell,M
 McNeese State,"Lake Charles, Louisiana",mcneese-state,mcneese-st,McNeese St.,McNeese State University,
 Memphis,"Memphis, Tennessee",memphis,memphis,Memphis,University of Memphis,#173B70
 Mercer,"Macon, Georgia",mercer,mercer,Mercer,Mercer University,#E87722
+Mercyhurst,"Erie, Pennsylvania",mercyhurst,mercyhurst,Mercyhurst College,Mercyhurst College,#00594C
 Merrimack,"North Andover, Massachusetts",merrimack,merrimack,Merrimack,Merrimack College,#003057
 Miami (FL),"Coral Gables, Florida",miami-fl,miami-fl,Miami (Fla.),University of Miami,#154734
 Miami (OH),"Oxford, Ohio",miami-oh,miami-oh,Miami (OH),Miami University (Ohio),#C8102E
@@ -184,6 +188,7 @@ Middle Tennessee,"Murfreesboro, Tennessee",middle-tennessee,middle-tenn,Middle T
 Milwaukee,"Milwaukee, Wisconsin",milwaukee,milwaukee,Milwaukee,"University of Wisconsin, Milwaukee",#010101
 Minnesota,"Minneapolis, Minnesota",minnesota,minnesota,Minnesota,University of Minnesota,#861F41
 Mississippi,"University, Mississippi",mississippi,ole-miss,Mississippi,University of Mississippi,#C8102E
+Mississippi College,"Clinton, Mississippi",mississippi-college,mississippi-col,Mississippi College,Mississippi College,#003057
 Mississippi State,"Mississippi State, Mississippi",mississippi-state,mississippi-st,Mississippi St.,Mississippi State University,#5D1725
 Mississippi Valley State,"Itta Bena, Mississippi",mississippi-valley-state,mississippi-val,Mississippi Val.,Mississippi Valley State University,#046A38
 Missouri,"Columbia, Missouri",missouri,missouri,Missouri,University of Missouri,#010101
@@ -191,6 +196,7 @@ Missouri State,"Springfield, Missouri",missouri-state,missouri-st,Missouri St.,M
 Monmouth,"West Long Branch, New Jersey",monmouth,monmouth,Monmouth,Monmouth University,#041E42
 Montana,"Missoula, Montana",montana,montana,Montana,University of Montana,#6F2C3F
 Montana State,"Bozeman, Montana",montana-state,montana-st,Montana St.,Montana State University-Bozeman,#00205B
+Montclair State,"Montclair, New Jersey",montclair-state,montclair-st,Montclair State,Montclair State University,#D01841
 Morehead State,"Morehead, Kentucky",morehead-state,morehead-st,Morehead St.,Morehead State University,#0032A0
 Morgan State,"Baltimore, Maryland",morgan-state,morgan-st,Morgan St.,Morgan State University,#FC4C02
 Mount St. Mary's,"Emmitsburg, Maryland",mount-st-marys,mt-st-marys,Mt. St. Mary's,Mount St. Mary's University,#002F6C
@@ -201,6 +207,7 @@ Nebraska,"Lincoln, Nebraska",nebraska,nebraska,Nebraska,University of Nebraska-L
 Nevada,"Reno, Nevada",nevada,nevada,Nevada,University of Nevada,#041E42
 Nevada-Las Vegas,"Las Vegas, Nevada",nevada-las-vegas,unlv,UNLV,UNLV,#C8102E
 New Hampshire,"Durham, New Hampshire",new-hampshire,new-hampshire,New Hampshire,University of New Hampshire,#041E42
+New Haven,"West Haven, Connecticut",new-haven,new-haven,New Haven,University of New Haven,#102B4E
 New Mexico,"Albuquerque, New Mexico",new-mexico,new-mexico,New Mexico,University of New Mexico,#BA0C2F
 New Mexico State,"Las Cruces, New Mexico",new-mexico-state,new-mexico-st,New Mexico St.,New Mexico State University,#891619
 New Orleans,"New Orleans, Louisiana",new-orleans,new-orleans,New Orleans,University of New Orleans,#0057B8
@@ -230,6 +237,7 @@ Oakland,"Rochester, Michigan",oakland,oakland,Oakland,Oakland University,#010101
 Ohio,"Athens, Ohio",ohio,ohio,Ohio,Ohio University,#154734
 Ohio State,"Columbus, Ohio",ohio-state,ohio-st,Ohio St.,The Ohio State University,#CE0F3E
 Oklahoma,"Norman, Oklahoma",oklahoma,oklahoma,Oklahoma,University of Oklahoma,#9D2235
+Oklahoma City,"Oklahoma City, Oklahoma",oklahoma-city,,,,
 Oklahoma State,"Stillwater, Oklahoma",oklahoma-state,oklahoma-st,Oklahoma St.,Oklahoma State University,#DF4F2A
 Old Dominion,"Norfolk, Virginia",old-dominion,old-dominion,Old Dominion,Old Dominion University,#0B4071
 Omaha,"Omaha, Nebraska",nebraska-omaha,neb-omaha,Omaha,University of Nebraska-Omaha,#010101
@@ -250,6 +258,7 @@ Providence,"Providence, Rhode Island",providence,providence,Providence,Providenc
 Purdue,"West Lafayette, Indiana",purdue,purdue,Purdue,Purdue University,#010101
 Purdue Fort Wayne,"Fort Wayne, Indiana",ipfw,ipfw,Purdue University Fort Wayne,Purdue University Fort Wayne,#1f3d7c
 Queens (NC),"Charlotte, North Carolina",queens-nc,queens-nc,Queens (NC),Queens University of Charlotte,#041E42
+Queens (NY),"Flushing, New York",queens-ny,queens-ny,Queens (NY),Queens College,#00263E
 Quinnipiac,"Hamden, Connecticut",quinnipiac,quinnipiac,Quinnipiac,Quinnipiac University,#0C2340
 Radford,"Radford, Virginia",radford,radford,Radford,Radford University,#C8102E
 Rhode Island,"Kingston, Rhode Island",rhode-island,rhode-island,Rhode Island,University of Rhode Island,#041E42
@@ -312,7 +321,6 @@ Tennessee Tech,"Cookeville, Tennessee",tennessee-tech,tennessee-tech,Tennessee T
 Tennessee-Martin,"Martin, Tennessee",tennessee-martin,ut-martin,Tenn-Martin,University of Tennessee at Martin,#0C2340
 Texas,"Austin, Texas",texas,texas,Texas,University of Texas,#CB6015
 Texas A&M,"College Station, Texas",texas-am,texas-am,Texas A&M,Texas A&M University,#5D0025
-Texas A&M-Commerce,"Commerce, Texas",texas-am-commerce,tex-am-commerce,Tex. A&M-Commerce,Texas A&M-Commerce,#00205B
 Texas A&M-Corpus Christi,"Corpus Christi, Texas",texas-am-corpus-christi,am-corpus-chris,Texas-Am-Corpus,Texas A&M-Corpus Christi,#007AC1
 Texas Southern,"Houston, Texas",texas-southern,texas-southern,Texas Southern,Texas Southern University,#6F263D
 Texas State,"San Marcos, Texas",texas-state,texas-st,Texas St.,Texas State University,#572932
@@ -354,6 +362,8 @@ Wake Forest,"Winston-Salem, North Carolina",wake-forest,wake-forest,Wake Forest,
 Washington,"Seattle, Washington",washington,washington,Washington,University of Washington,#33006f
 Washington State,"Pullman, Washington",washington-state,washington-st,Washington St.,Washington State University,#9D2235
 Weber State,"Ogden, Utah",weber-state,weber-st,Weber St.,Weber State University,#470A68
+West Chester,"West Chester, Pennsylvania",west-chester,west-chester,West Chester,West Chester Univ. of Pennsylvania,#512D6D
+West Georgia,"Carrollton, Georgia",west-georgia,west-ga,West Georgia,University of West Georgia,#0032A0
 West Virginia,"Morgantown, West Virginia",west-virginia,west-virginia,West Virginia,West Virginia University,#0F2D52
 Western Carolina,"Cullowhee, North Carolina",western-carolina,western-caro,Western Caro.,Western Carolina University,#5F259F
 Western Illinois,"Macomb, Illinois",western-illinois,western-ill,Western Ill.,Western Illinois University,#59327E

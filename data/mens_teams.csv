@@ -19,10 +19,10 @@ Arkansas-Pine Bluff,"Pine Bluff, Arkansas",arkansas-pine-bluff,ark-pine-bluff,Ar
 Armstrong Pirates,"Savannah, Georgia",armstrong,armstrong,Armstrong,Armstrong State University,
 Army,"West Point, New York",army,army,Army,Army West Point,#010101
 Auburn,"Auburn, Alabama",auburn,auburn,Auburn,Auburn University,#FA4616
-Augusta State Jaguars,"Augusta, Georgia",augusta-state,,,,
+Augusta Jaguars,"Augusta, Georgia",augusta-state,,,,
 Augustana (IL) Vikings,"Rock Island, Illinois",augustana-il,augustana-il,Augustana (IL),Augustana College (IL),#00437b
 Austin Peay,"Clarksville, Tennessee",austin-peay,austin-peay,Austin Peay,Austin Peay State University,#BA0C2F
-Baker University Wildcats,"Baldwin City, Kansas",baker-university,,,,
+Baker,"Baldwin City, Kansas",baker,,,,
 Baldwin-Wallace Yellow Jackets,"Berea, Ohio",baldwin-wallace,baldwin-wallace,Baldwin Wallace,Baldwin Wallace University,#010101
 Ball State,"Muncie, Indiana",ball-state,ball-st,Ball St.,Ball State University,#BA0C2F
 Baltimore Super Bees,"Baltimore, Maryland",baltimore,,,,
@@ -37,7 +37,7 @@ Bloomsburg Huskies,"Bloomsburg, Pennsylvania",bloomsburg,bloomsburg,Bloomsburg,B
 Boise State,"Boise, Idaho",boise-state,boise-st,Boise St.,Boise State University,#0032A0
 Boston College,"Chestnut Hill, Massachusetts",boston-college,boston-college,Boston College,Boston College,#862633
 Boston University,"Boston, Massachusetts",boston-university,boston-u,Boston U.,Boston University,#C8102E
-Bowling Green State,"Bowling Green, Ohio",bowling-green-state,bowling-green,Bowling Green,Bowling Green State University,#FE5000
+Bowling Green,"Bowling Green, Ohio",bowling-green-state,bowling-green,Bowling Green,Bowling Green State University,#FE5000
 Bradley,"Peoria, Illinois",bradley,bradley,Bradley,Bradley University,#A21B21
 Brigham Young,"Provo, Utah",brigham-young,byu,BYU,Brigham Young University,#213C84
 Brigham Young College,"Logan, Utah",brigham-young-college,,,,
@@ -57,14 +57,13 @@ California Baptist,"Riverside, California",california-baptist,california-baptist
 Campbell,"Buies Creek, North Carolina",campbell,campbell,Campbell,Campbell University,#FF4713
 Canisius,"Buffalo, New York",canisius,canisius,Canisius,Canisius College,#0C2340
 Canterbury College,"Danville, Indiana",central-normal-college,,,,
-Carleton College Knights,"Northfield, Minnesota",carleton-college,carleton,Carleton,Carleton College,#08407c
+Carleton Knights,"Northfield, Minnesota",carleton-college,carleton,Carleton,Carleton College,#08407c
 Carnegie Mellon Tartans,"Pittsburgh, Pennsylvania",carnegie-mellon,carnegie-mellon,Carnegie Mellon,Carnegie Mellon University,#B01C33
 Case Western Reserve Spartans,"Cleveland, Ohio",case-western-reserve,case,Case Western Reserve,Case Western Reserve University,#265594
 Catholic Cardinals,"Washington, D.C.",catholic,catholic,Catholic,Catholic University,#BF2519
 Centenary (LA) Gents,"Shreveport, Louisiana",centenary-la,centenary-la,Centenary (LA),Centenary College of Louisiana,#960A2C
 Central Arkansas,"Conway, Arkansas",central-arkansas,central-ark,Central Ark.,University of Central Arkansas,#582C83
 Central Connecticut State,"New Britain, Connecticut",central-connecticut-state,central-conn-st,Central Conn. St.,Central Connecticut State University,#003087
-Central Florida,"Orlando, Florida",central-florida,ucf,UCF,University of Central Florida,#010101
 Central Michigan,"Mount Pleasant, Michigan",central-michigan,central-mich,Central Mich.,Central Michigan University,#6F263D
 Central Missouri Mules,"Warrensburg, Missouri",central-missouri,central-mo,Central Mo.,University of Central Missouri,#BA0C2F
 Central Pennsylvania College Knights,"Summerdale, Pennsylvania",central-pennsylvania-college,,,,
@@ -94,7 +93,7 @@ Coppin State,"Baltimore, Maryland",coppin-state,coppin-st,Coppin St.,Coppin Stat
 Cornell,"Ithaca, New York",cornell,cornell,Cornell,Cornell University,#B32025
 Cotner College,"Lincoln, Nebraska",cotner-university,,,,
 Creighton,"Omaha, Nebraska",creighton,creighton,Creighton,Creighton University,#0032A0
-Cumberland,"Lebanon, Tennessee",cumberland,,,,
+Cumberland (TN),"Lebanon, Tennessee",cumberland,,,,
 Dakota Wesleyan Tigers,"Mitchell, South Dakota",dakota-wesleyan,,,,
 Dartmouth,"Hanover, New Hampshire",dartmouth,dartmouth,Dartmouth,Dartmouth College,#046A38
 Davidson,"Davidson, North Carolina",davidson,davidson,Davidson,Davidson College,#C8102E
@@ -114,6 +113,7 @@ Duquesne,"Pittsburgh, Pennsylvania",duquesne,duquesne,Duquesne,Duquesne Universi
 East Carolina,"Greenville, North Carolina",east-carolina,east-carolina,East Carolina,East Carolina University,#582C83
 East Central Tigers,"Ada, Oklahoma",east-central,east-central,East Central,East Central University,#010101
 East Tennessee State,"Johnson City, Tennessee",east-tennessee-state,east-tenn-st,East Tenn. St.,East Tennessee State University,#041E42
+East Texas A&M,"Commerce, Texas",texas-am-commerce,tex-am-commerce,Tex. A&M-Commerce,Texas A&M-Commerce,#00205B
 Eastern Illinois,"Charleston, Illinois",eastern-illinois,eastern-ill,Eastern Ill.,Eastern Illinois University,#003594
 Eastern Kentucky,"Richmond, Kentucky",eastern-kentucky,eastern-ky,Eastern Ky.,Eastern Kentucky University,#6F263D
 Eastern Michigan,"Ypsilanti, Michigan",eastern-michigan,eastern-mich,Eastern Mich.,Eastern Michigan University,#046A38
@@ -123,7 +123,7 @@ Emporia State Hornets,"Emporia, Kansas",emporia-state,emporia-st,Emporia St.,Emp
 Ensign College,"Salt Lake City, Utah",latter-day-saints-university,,,,
 Evansville,"Evansville, Indiana",evansville,evansville,Evansville,University of Evansville,#470A68
 Fairfield,"Fairfield, Connecticut",fairfield,fairfield,Fairfield,Fairfield University,#C8102E
-Fairleigh Dickinson,"Teaneck, New Jersey",fairleigh-dickinson,fairleigh-dickinson,Fairleigh Dickinson,Fairleigh Dickinson University,#72293c
+FDU,"Teaneck, New Jersey",fairleigh-dickinson,fairleigh-dickinson,Fairleigh Dickinson,Fairleigh Dickinson University,#72293c
 Florida,"Gainesville, Florida",florida,florida,Florida,University of Florida,#003087
 Florida A&M,"Tallahassee, Florida",florida-am,florida-am,Florida A&M,Florida A&M University,#FF8200
 Florida Atlantic,"Boca Raton, Florida",florida-atlantic,fla-atlantic,Florida Atlantic,Florida Atlantic University,#002855
@@ -177,7 +177,7 @@ Indiana State,"Terre Haute, Indiana",indiana-state,indiana-st,Indiana St.,Indian
 Iona,"New Rochelle, New York",iona,iona,Iona,Iona College,#6F2C3F
 Iowa,"Iowa City, Iowa",iowa,iowa,Iowa,University of Iowa,#010101
 Iowa State,"Ames, Iowa",iowa-state,iowa-st,Iowa St.,Iowa State University,#A6192E
-IUPUI,"Indianapolis, Indiana",iupui,iupui,IUPUI,IUPUI,#9D2235
+IU Indy,"Indianapolis, Indiana",iupui,iupui,IUPUI,IUPUI,#9D2235
 Jackson State,"Jackson, Mississippi",jackson-state,jackson-st,Jackson St.,Jackson State University,#041E42
 Jacksonville,"Jacksonville, Florida",jacksonville,jacksonville,Jacksonville,Jacksonville University,#004E42
 Jacksonville State,"Jacksonville, Alabama",jacksonville-state,jacksonville-st,Jacksonville St.,Jacksonville State University,#C8102E
@@ -233,6 +233,7 @@ McNeese State,"Lake Charles, Louisiana",mcneese-state,mcneese-st,McNeese St.,McN
 Memphis,"Memphis, Tennessee",memphis,memphis,Memphis,University of Memphis,#173B70
 Mercer,"Macon, Georgia",mercer,mercer,Mercer,Mercer University,#E87722
 Merchant Marine Mariners,"King's Point, New York",merchant-marine-academy,merchant-marine,Merchant Marine,U.S. Merchant Marine Academy,#002C9A
+Mercyhurst,"Erie, Pennsylvania",mercyhurst,mercyhurst,Mercyhurst College,Mercyhurst College,#00594C
 Merrimack,"North Andover, Massachusetts",merrimack,merrimack,Merrimack,Merrimack College,#003057
 Miami (FL),"Coral Gables, Florida",miami-fl,miami-fl,Miami (Fla.),University of Miami,#154734
 Miami (OH),"Oxford, Ohio",miami-oh,miami-oh,Miami (OH),Miami University (Ohio),#C8102E
@@ -267,6 +268,7 @@ Nebraska Wesleyan Prairie Wolves,"Lincoln, Nebraska",nebraska-wesleyan,neb-wesle
 Nevada,"Reno, Nevada",nevada,nevada,Nevada,University of Nevada,#041E42
 Nevada-Las Vegas,"Las Vegas, Nevada",nevada-las-vegas,unlv,UNLV,UNLV,#C8102E
 New Hampshire,"Durham, New Hampshire",new-hampshire,new-hampshire,New Hampshire,University of New Hampshire,#041E42
+New Haven,"West Haven, Connecticut",new-haven,new-haven,New Haven,University of New Haven,#102B4E
 New Mexico,"Albuquerque, New Mexico",new-mexico,new-mexico,New Mexico,University of New Mexico,#BA0C2F
 New Mexico State,"Las Cruces, New Mexico",new-mexico-state,new-mexico-st,New Mexico St.,New Mexico State University,#891619
 New Orleans,"New Orleans, Louisiana",new-orleans,new-orleans,New Orleans,University of New Orleans,#0057B8
@@ -280,7 +282,7 @@ North Alabama,"Florence, Alabama",north-alabama,north-ala,North Ala.,University 
 North Carolina,"Chapel Hill, North Carolina",north-carolina,north-carolina,North Carolina,University of North Carolina,#7BAFD4
 North Carolina A&T,"Greensboro, North Carolina",north-carolina-at,nc-at,North Carolina A&T,North Carolina A&T State University,#002D72
 North Carolina Central,"Durham, North Carolina",north-carolina-central,nc-central,North Carolina Central,North Carolina Central University,#862633
-North Central Cardinals,"Naperville, Illinois",north-central,north-central-il,North Central (IL),North Central College,#ad1300
+North Central (IL) Cardinals,"Naperville, Illinois",north-central,north-central-il,North Central (IL),North Central College,#ad1300
 North Dakota,"Grand Forks, North Dakota",north-dakota,north-dakota,North Dakota,University of North Dakota,#009A44
 North Dakota State,"Fargo, North Dakota",north-dakota-state,north-dakota-st,North Dakota St.,North Dakota State University,#115740
 North Florida,"Jacksonville, Florida",north-florida,north-florida,North Florida,University of North Florida,#0C2340
@@ -393,7 +395,7 @@ Stetson,"DeLand, Florida",stetson,stetson,Stetson,Stetson University,#006747
 Stevens Institute Ducks,"Hoboken, New Jersey",stevens-institute,stevens,Stevens,Stevens Institute of Technology,#9D2235
 Stonehill,"Easton, Massachusetts",stonehill,stonehill,Stonehill,Stonehill College,#582C83
 Stony Brook,"Stony Brook, New York",stony-brook,stony-brook,Stony Brook,Stony Brook University,#A6192E
-SUNY-Potsdam Bears,"Potsdam, New York",suny-potsdam,suny-potsdam,SUNY Potsdam,"SUNY, Potsdam",#7A1D33
+SUNY Potsdam Bears,"Potsdam, New York",suny-potsdam,suny-potsdam,SUNY Potsdam,"SUNY, Potsdam",#7A1D33
 Swarthmore Garnet,"Swarthmore, Pennsylvania",swarthmore,swarthmore,Swarthmore,Swarthmore College,#9D2235
 Syracuse,"Syracuse, New York",syracuse,syracuse,Syracuse,Syracuse University,#DC4405
 Tarleton State,"Stephenville, Texas",tarleton-state,tarleton-st,Tarleton St.,Tarleton State University,#582C83
@@ -405,7 +407,6 @@ Tennessee Tech,"Cookeville, Tennessee",tennessee-tech,tennessee-tech,Tennessee T
 Tennessee-Martin,"Martin, Tennessee",tennessee-martin,ut-martin,Tenn-Martin,University of Tennessee at Martin,#0C2340
 Texas,"Austin, Texas",texas,texas,Texas,University of Texas,#CB6015
 Texas A&M,"College Station, Texas",texas-am,texas-am,Texas A&M,Texas A&M University,#5D0025
-Texas A&M-Commerce,"Commerce, Texas",texas-am-commerce,tex-am-commerce,Tex. A&M-Commerce,Texas A&M-Commerce,#00205B
 Texas A&M-Corpus Christi,"Corpus Christi, Texas",texas-am-corpus-christi,am-corpus-chris,Texas-Am-Corpus,Texas A&M-Corpus Christi,#007AC1
 Texas Southern,"Houston, Texas",texas-southern,texas-southern,Texas Southern,Texas Southern University,#6F263D
 Texas State,"San Marcos, Texas",texas-state,texas-st,Texas St.,Texas State University,#572932
@@ -427,6 +428,7 @@ UC Irvine,"Irvine, California",california-irvine,uc-irvine,UC Irvine,UC Irvine,#
 UC Riverside,"Riverside, California",california-riverside,uc-riverside,UC Riverside,UC Riverside,#1E437B
 UC San Diego,"La Jolla, California",california-san-diego,uc-san-diego,UC San Diego,UC San Diego,#192847
 UC Santa Barbara,"Santa Barbara, California",california-santa-barbara,uc-santa-barbara,UC Santa Barbara,UC Santa Barbara,#0032A0
+UCF,"Orlando, Florida",central-florida,ucf,UCF,University of Central Florida,#010101
 UCLA,"Los Angeles, California",ucla,ucla,UCLA,UCLA,#0072CE
 UNC Asheville,"Asheville, North Carolina",north-carolina-asheville,unc-asheville,UNC Asheville,UNC Asheville,#002F6C
 UNC Greensboro,"Greensboro, North Carolina",north-carolina-greensboro,unc-greensboro,UNC Greensboro,UNC Greensboro,#13294B
@@ -462,6 +464,7 @@ Wayne State (MI) Warriors,"Detroit, Michigan",wayne-state-mi,wayne-st-mi,Wayne S
 Weber State,"Ogden, Utah",weber-state,weber-st,Weber St.,Weber State University,#470A68
 Wesleyan (CT) Cardinals,"Middletown, Connecticut",wesleyan-ct,wesleyan-ct,Wesleyan (CT),Wesleyan University,#EA0029
 West Chester Golden Rams,"West Chester, Pennsylvania",west-chester,west-chester,West Chester,West Chester Univ. of Pennsylvania,#512D6D
+West Georgia,"Carrollton, Georgia",west-georgia,west-ga,West Georgia,University of West Georgia,#0032A0
 West Texas A&M Buffaloes,"Canyon, Texas",west-texas-am,west-tex-am,West Tex. A&M,West Texas A&M University,#651D32
 West Virginia,"Morgantown, West Virginia",west-virginia,west-virginia,West Virginia,West Virginia University,#0F2D52
 Western Carolina,"Cullowhee, North Carolina",western-carolina,western-caro,Western Caro.,Western Carolina University,#5F259F
@@ -477,6 +480,7 @@ Wichita State,"Wichita, Kansas",wichita-state,wichita-st,Wichita St.,Wichita Sta
 Widener Pride,"Chester, Pennsylvania",widener,widener,Widener,Widener University,#264F91
 William & Mary,"Williamsburg, Virginia",william-mary,william-mary,William & Mary,College of William and Mary,#284734
 Williams Ephs,"Williamstown, Massachusetts",williams,williams,Williams,Williams College,#500082
+Winston-Salem Rams,"Winston-Salem, North Carolina",winston-salem,winston-salem,Winston-Salem,Winston-Salem State University,#C8102E
 Winthrop,"Rock Hill, South Carolina",winthrop,winthrop,Winthrop,Winthrop University,#9D2235
 Wisconsin,"Madison, Wisconsin",wisconsin,wisconsin,Wisconsin,"University of Wisconsin, Madison",#BA0C2F
 Wisconsin-Stevens Point Pointers,"Stevens Point, Wisconsin",wisconsin-stevens-point,wis-stevens-point,Wis.-Stevens Point,Univ. of Wisconsin-Stevens Point,#512698
