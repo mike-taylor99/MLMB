@@ -6,54 +6,126 @@
   "lock_date": "2026-03-19T12:00:00Z",
 
   "play_in": [
-    { "slot": "pi_1", "region": "south", "seed": 16, "teams": [], "result": null },
-    { "slot": "pi_2", "region": "east",  "seed": 16, "teams": [], "result": null },
-    { "slot": "pi_3", "region": "midwest", "seed": 11, "teams": [], "result": null },
-    { "slot": "pi_4", "region": "west",  "seed": 11, "teams": [], "result": null }
+    {
+      "slot": "pi_1",
+      "region": "west",
+      "seed": 11,
+      "teams": ["texas", "north-carolina-state"],
+      "result": null
+    },
+    {
+      "slot": "pi_2",
+      "region": "midwest",
+      "seed": 16,
+      "teams": ["maryland-baltimore-county", "howard"],
+      "result": null
+    },
+    {
+      "slot": "pi_3",
+      "region": "midwest",
+      "seed": 11,
+      "teams": ["miami-oh", "southern-methodist"],
+      "result": null
+    },
+    {
+      "slot": "pi_4",
+      "region": "south",
+      "seed": 16,
+      "teams": ["prairie-view", "lehigh"],
+      "result": null
+    }
   ],
 
   "regions": {
-    "south": {
-      "name": "South",
-      "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": "pi_1"
-      }
-    },
     "east": {
       "name": "East",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": "pi_2"
-      }
-    },
-    "midwest": {
-      "name": "Midwest",
-      "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": "pi_3", "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "duke",
+        "2": "connecticut",
+        "3": "michigan-state",
+        "4": "kansas",
+        "5": "st-johns-ny",
+        "6": "louisville",
+        "7": "ucla",
+        "8": "ohio-state",
+        "9": "texas-christian",
+        "10": "central-florida",
+        "11": "south-florida",
+        "12": "northern-iowa",
+        "13": "california-baptist",
+        "14": "north-dakota-state",
+        "15": "furman",
+        "16": "siena"
       }
     },
     "west": {
       "name": "West",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": "pi_4", "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "arizona",
+        "2": "purdue",
+        "3": "gonzaga",
+        "4": "arkansas",
+        "5": "wisconsin",
+        "6": "brigham-young",
+        "7": "miami-fl",
+        "8": "villanova",
+        "9": "utah-state",
+        "10": "missouri",
+        "11": "pi_1",
+        "12": "high-point",
+        "13": "hawaii",
+        "14": "kennesaw-state",
+        "15": "queens-nc",
+        "16": "long-island-university"
+      }
+    },
+    "midwest": {
+      "name": "Midwest",
+      "seeds": {
+        "1": "michigan",
+        "2": "iowa-state",
+        "3": "virginia",
+        "4": "alabama",
+        "5": "texas-tech",
+        "6": "tennessee",
+        "7": "kentucky",
+        "8": "georgia",
+        "9": "saint-louis",
+        "10": "santa-clara",
+        "11": "pi_3",
+        "12": "akron",
+        "13": "hofstra",
+        "14": "wright-state",
+        "15": "tennessee-state",
+        "16": "pi_2"
+      }
+    },
+    "south": {
+      "name": "South",
+      "seeds": {
+        "1": "florida",
+        "2": "houston",
+        "3": "illinois",
+        "4": "nebraska",
+        "5": "vanderbilt",
+        "6": "north-carolina",
+        "7": "saint-marys-ca",
+        "8": "clemson",
+        "9": "iowa",
+        "10": "texas-am",
+        "11": "virginia-commonwealth",
+        "12": "mcneese-state",
+        "13": "troy",
+        "14": "pennsylvania",
+        "15": "idaho",
+        "16": "pi_4"
       }
     }
   },
 
   "final_four": {
-    "semifinal_1": ["south", "east"],
-    "semifinal_2": ["midwest", "west"]
+    "semifinal_1": ["east", "south"],
+    "semifinal_2": ["west", "midwest"]
   },
 
   "results": {}

@@ -9,6 +9,7 @@ on:
       - "pipelines/**"
       - "data/mens_teams.csv"
       - "data/womens_teams.csv"
+      - "data/tournaments/**"
       - "requirements.txt"
       - "Dockerfile"
       - ".github/workflows/deploy-api.yml"
