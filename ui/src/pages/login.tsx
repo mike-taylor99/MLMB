@@ -5,8 +5,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrophyIcon } from '@/components/trophy-icon'
 import { AuthButtons } from '@/components/auth-buttons'
+import { useDocumentTitle } from '@/lib/use-document-title'
 
 export function LoginPage() {
+  useDocumentTitle('Sign In')
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-background">
       <Card className="w-full max-w-sm">

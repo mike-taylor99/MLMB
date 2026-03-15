@@ -5,6 +5,7 @@
 import { Fragment } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useTeam } from "@/lib/hooks";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { useSport } from "@/context/sport";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -197,6 +198,7 @@ export function TeamDetailPage() {
   const { teamId } = useParams<{ teamId: string }>();
   const { sport } = useSport();
   const { data: team, isLoading, error } = useTeam(teamId ?? "");
+  useDocumentTitle(team?.meta.school);
   const navigate = useNavigate();
 
   if (isLoading) {

@@ -5,6 +5,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router";
 import { useTournament, useTeams, usePublicBracket } from "@/lib/hooks";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import {
   buildRegionBracketFromPicks,
   buildFinalFourFromPicks,
@@ -87,6 +88,7 @@ export function BracketViewPage() {
     tournamentId,
     bracketId,
   );
+  useDocumentTitle(bracket?.name);
   const sport = tournament?.sport as
     | "ncaam_basketball"
     | "ncaaw_basketball"

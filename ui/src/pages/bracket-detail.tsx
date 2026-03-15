@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useAuth } from "@/context/auth";
 import { useCountdown } from "@/lib/use-countdown";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import {
   useTournament,
   useTeams,
@@ -67,11 +68,13 @@ const statusConfig: Record<
 export function BracketDetailPage() {
   const { tournamentId } = useParams<{ tournamentId: string }>();
   const navigate = useNavigate();
+
   const {
     data: tournament,
     isLoading,
     error,
   } = useTournament(tournamentId ?? "");
+  useDocumentTitle(tournament?.name);
   const sport = tournament?.sport as
     | "ncaam_basketball"
     | "ncaaw_basketball"

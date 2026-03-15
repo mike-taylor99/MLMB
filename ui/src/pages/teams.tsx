@@ -6,6 +6,7 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router";
 import { useSport } from "@/context/sport";
 import { useTeams } from "@/lib/hooks";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +14,7 @@ import { Search, Clock } from "lucide-react";
 import { TeamLogo } from "@/components/team-logo";
 
 export function TeamsPage() {
+  useDocumentTitle("Teams");
   const { sport, label } = useSport();
   const { data, isLoading, error } = useTeams({ sport, limit: 500 });
   const [search, setSearch] = useState("");

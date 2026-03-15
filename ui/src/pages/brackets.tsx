@@ -6,11 +6,13 @@ import { useMemo } from 'react'
 import { Link } from 'react-router'
 import { useSport } from '@/context/sport'
 import { useTournaments } from '@/lib/hooks'
+import { useDocumentTitle } from '@/lib/use-document-title'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TournamentLogo } from '@/components/tournament-logo'
 
 export function BracketsPage() {
+  useDocumentTitle('Brackets')
   const { sport, label } = useSport()
   const { data, isLoading, error } = useTournaments()
 

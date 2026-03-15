@@ -31,6 +31,7 @@ import { TeamLogo } from "@/components/team-logo";
 import { TournamentLogo } from "@/components/tournament-logo";
 import { cn } from "@/lib/utils";
 import { createAnalysis } from "@/lib/api";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import type { Team, Tournament, Sport, Analysis } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -201,6 +202,9 @@ export function BracketEditorPage() {
   // Data fetching
   const { data: tournament, isLoading: loadingT } = useTournament(
     tournamentId ?? "",
+  );
+  useDocumentTitle(
+    tournament ? (isEditing ? `Edit Bracket · ${tournament.name}` : `New Bracket · ${tournament.name}`) : undefined,
   );
   const sport = tournament?.sport as
     | "ncaam_basketball"

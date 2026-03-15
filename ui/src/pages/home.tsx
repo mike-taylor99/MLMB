@@ -5,6 +5,7 @@
 import { useMemo } from "react";
 import { useSport } from "@/context/sport";
 import { useRankings, useTeams } from "@/lib/hooks";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,6 +13,7 @@ import { Link } from "react-router";
 import { TeamLogo } from "@/components/team-logo";
 
 export function HomePage() {
+  useDocumentTitle("Home");
   const { sport } = useSport();
   const { data, isLoading, error } = useRankings(sport);
   const { data: teamsData } = useTeams({ sport, limit: 500 });

@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { useSport } from "@/context/sport";
 import { useTeams, useCreatePrediction } from "@/lib/hooks";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,6 +23,7 @@ import { PredictionCard } from "@/components/prediction-card";
 const SPANS: Span[] = [3, 5, 7];
 
 export function PredictPage() {
+  useDocumentTitle("Predict");
   const { sport, label } = useSport();
   const [searchParams] = useSearchParams();
   const { data: teamsData, isLoading: teamsLoading } = useTeams({

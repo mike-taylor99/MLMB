@@ -4,6 +4,7 @@
 
 import { useSport } from '@/context/sport'
 import { usePredictions, useTeams } from '@/lib/hooks'
+import { useDocumentTitle } from '@/lib/use-document-title'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -11,6 +12,7 @@ import { History } from 'lucide-react'
 import { PredictionCard } from '@/components/prediction-card'
 
 export function HistoryPage() {
+  useDocumentTitle('History')
   const { sport, label } = useSport()
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     usePredictions({ sport, limit: 20 })
