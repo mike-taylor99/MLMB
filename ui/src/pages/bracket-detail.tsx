@@ -110,7 +110,9 @@ export function BracketDetailPage() {
   }, [tournament]);
 
   // Countdown — must be called unconditionally (Rules of Hooks)
-  const status = tournament ? getTournamentStatus(tournament) : undefined;
+  const status: TournamentStatus = tournament
+    ? getTournamentStatus(tournament)
+    : "not_started";
   const countdown = useCountdown(
     status === "open" ? tournament?.lock_date : undefined,
   );
