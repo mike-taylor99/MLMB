@@ -7,9 +7,16 @@
 // ============================================================================
 
 import { cn } from "@/lib/utils";
-import type { Team, Span, Analysis } from "@/lib/types";
+import type {
+  Team,
+  Span,
+  Analysis,
+  AnalysisPredictionSummary,
+  MatchupPredictions,
+  PredictionScenario,
+} from "@/lib/types";
 import { TeamLogo } from "@/components/team-logo";
-import { Sparkles, Loader2, ChevronDown, Brain } from "lucide-react";
+import { Sparkles, Loader2, ChevronDown } from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
@@ -17,27 +24,28 @@ import {
 } from "@/components/ui/popover";
 import { useState, useEffect, useRef } from "react";
 
-// ---------------------------------------------------------------------------
-// Prediction data for a single matchup — 6 scenarios
-// ---------------------------------------------------------------------------
-
-/** One prediction scenario */
-export interface PredictionScenario {
-  span: Span;
-  /** true when the top team was passed as home_team in the request */
-  topIsHome: boolean;
-  /** The top team's estimated win probability (0–1) */
-  topWinProb: number;
-}
-
-/** Full set of predictions for a matchup */
-export interface MatchupPredictions {
-  scenarios: PredictionScenario[];
-}
+export type { PredictionScenario, MatchupPredictions };
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/** Convert API analysis predictions into PredictionScenario[] for display. */
+export function toPredictionScenarios(
+  predictions: AnalysisPredictionSummary[],
+  topTeam: string,
+): PredictionScenario[] {
+  return predictions.map((p) => {
+    const topIsHome = p.home_team === topTeam;
+    return {
+      span: p.span as Span,
+      topIsHome,
+      topWinProb: topIsHome
+        ? p.home_win_probability
+        : 1 - p.home_win_probability,
+    };
+  });
+}
 
 /** Average the top-team win probability across all loaded scenarios. */
 function averageTopProb(scenarios: PredictionScenario[]): number {
@@ -146,7 +154,7 @@ const SPAN_LABEL: Record<number, string> = {
   7: "7-game",
 };
 
-function PredictionDetail({
+export function PredictionDetail({
   predictions,
   topTeam,
   bottomTeam,
@@ -178,18 +186,12 @@ function PredictionDetail({
       (a.topIsHome === b.topIsHome ? 0 : a.topIsHome ? -1 : 1),
   );
 
-  // Analysis preview — first ~120 chars
   const analysisText = analysis?.analysis ?? "";
-  const previewLen = 120;
-  const needsTruncation = analysisText.length > previewLen;
-  const preview = needsTruncation
-    ? analysisText.slice(0, analysisText.lastIndexOf(" ", previewLen)) + "…"
-    : analysisText;
 
   return (
     <div className="space-y-2.5">
       <div className="flex items-center gap-1.5 text-xs font-semibold text-violet-600 dark:text-violet-300">
-        <Brain className="h-3.5 w-3.5" />
+        <Sparkles className="h-3.5 w-3.5" />
         AI Analysis
       </div>
 
@@ -250,10 +252,13 @@ function PredictionDetail({
             </div>
           ) : (
             <p className="text-[11px] leading-relaxed text-muted-foreground">
-              {preview}
+              {analysisText.length > 120
+                ? analysisText.slice(0, analysisText.lastIndexOf(" ", 120)) +
+                  "…"
+                : analysisText}
             </p>
           )}
-          {needsTruncation && (
+          {analysisText.length > 120 && (
             <button
               type="button"
               onClick={() => setAnalysisExpanded(!analysisExpanded)}

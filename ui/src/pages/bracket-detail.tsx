@@ -279,6 +279,8 @@ export function BracketDetailPage() {
                   <RegionBracketView
                     bracket={rm.get(sf1r1)!}
                     teamMap={teamMap}
+                    analyses={tournament.analyses}
+                    sport={sport}
                   />
                 )
               }
@@ -287,6 +289,8 @@ export function BracketDetailPage() {
                   <RegionBracketView
                     bracket={rm.get(sf1r2)!}
                     teamMap={teamMap}
+                    analyses={tournament.analyses}
+                    sport={sport}
                   />
                 )
               }
@@ -295,6 +299,8 @@ export function BracketDetailPage() {
                   <RegionBracketView
                     bracket={rm.get(sf2r1)!}
                     teamMap={teamMap}
+                    analyses={tournament.analyses}
+                    sport={sport}
                     mirrored
                   />
                 )
@@ -304,6 +310,8 @@ export function BracketDetailPage() {
                   <RegionBracketView
                     bracket={rm.get(sf2r2)!}
                     teamMap={teamMap}
+                    analyses={tournament.analyses}
+                    sport={sport}
                     mirrored
                   />
                 )
@@ -313,6 +321,8 @@ export function BracketDetailPage() {
                   bracket={finalFour}
                   teamMap={teamMap}
                   tournamentId={tournamentId!}
+                  analyses={tournament.analyses}
+                  sport={sport}
                 />
               }
               header={

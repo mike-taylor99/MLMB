@@ -125,6 +125,12 @@ export function createAnalysis(body: AnalysisRequest): Promise<Analysis> {
   });
 }
 
+export function fetchAnalysis(id: string, sport: Sport): Promise<Analysis> {
+  return request(
+    `/api/predictions/analysis/${encodeURIComponent(id)}?sport=${sport}`,
+  );
+}
+
 export interface ListPredictionsParams {
   sport: Sport;
   limit?: number;

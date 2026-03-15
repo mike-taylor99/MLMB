@@ -6,9 +6,13 @@
 // ============================================================================
 
 import { cn } from '@/lib/utils'
-import type { Team } from '@/lib/types'
+import type { Team, Sport, MatchupPredictions } from '@/lib/types'
 import { TeamLogo } from '@/components/team-logo'
-import { Check, X } from 'lucide-react'
+import { Check, X, Sparkles, Loader2 } from 'lucide-react'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { useState, useMemo } from 'react'
+import { useAnalysis } from '@/lib/hooks'
+import { PredictionDetail, toPredictionScenarios } from './pick-matchup'
 
 interface MatchupTeamProps {
   teamKey: string | null
@@ -88,6 +92,71 @@ interface MatchupProps {
   pick?: string | null
   /** Optional: set of teams eliminated in earlier rounds (marks busted picks) */
   eliminated?: Set<string>
+  /** Optional: analysis ID linked to this matchup */
+  analysisId?: string
+  /** Required when analysisId is set — used to fetch the analysis */
+  sport?: Sport
+}
+
+// ---------------------------------------------------------------------------
+// MatchupAnalysisPopover — lazy-fetches an Analysis and renders the full
+// PredictionDetail (model runs + AI analysis text) inside a popover.
+// ---------------------------------------------------------------------------
+
+function MatchupAnalysisPopover({
+  analysisId,
+  sport,
+  topTeam,
+  bottomTeam,
+  teamMap,
+}: {
+  analysisId: string
+  sport: Sport
+  topTeam: string
+  bottomTeam: string
+  teamMap: Map<string, Team>
+}) {
+  const [open, setOpen] = useState(false)
+  const { data: analysis, isLoading } = useAnalysis(open ? analysisId : undefined, sport)
+
+  // Convert analysis predictions to PredictionScenario[] format
+  const predictions: MatchupPredictions | null = useMemo(() => {
+    if (!analysis?.predictions?.length) return null
+    return { scenarios: toPredictionScenarios(analysis.predictions, topTeam) }
+  }, [analysis, topTeam])
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="absolute -top-2 -right-2 z-10 flex items-center justify-center w-5 h-5 rounded-full bg-violet-500 text-white hover:bg-violet-600 border border-violet-400 dark:border-violet-600 transition-colors cursor-pointer shadow-sm"
+          title="View AI analysis"
+        >
+          <Sparkles className="h-3 w-3" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent side="top" className={cn("p-3", analysis?.analysis ? "w-72" : "w-56")}>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          </div>
+        ) : predictions ? (
+          <PredictionDetail
+            predictions={predictions}
+            topTeam={topTeam}
+            bottomTeam={bottomTeam}
+            teamMap={teamMap}
+            analysis={analysis}
+          />
+        ) : (
+          <p className="text-[11px] text-muted-foreground italic text-center py-2">
+            Analysis not available.
+          </p>
+        )}
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 export function Matchup({
@@ -100,6 +169,8 @@ export function Matchup({
   compact,
   pick,
   eliminated,
+  analysisId,
+  sport,
 }: MatchupProps) {
   const hasResult = winner !== null
   const hasPick = pick != null
@@ -119,35 +190,46 @@ export function Matchup({
   const hasBustedSlot = topEliminated || bottomEliminated
 
   return (
-    <div
-      className={cn(
-        'rounded-md border bg-card text-card-foreground shadow-xs',
-        compact ? 'w-36' : 'w-44',
-        hasPick && pickCorrect === true && 'border-green-500/40',
-        (hasPick && pickCorrect === false) || hasBustedSlot ? 'border-destructive/40' : '',
+    <div className="relative">
+      <div
+        className={cn(
+          'rounded-md border bg-card text-card-foreground shadow-xs',
+          compact ? 'w-36' : 'w-44',
+          hasPick && pickCorrect === true && 'border-green-500/40',
+          (hasPick && pickCorrect === false) || hasBustedSlot ? 'border-destructive/40' : '',
+        )}
+      >
+        <MatchupTeam
+          teamKey={topTeam}
+          seed={topSeed}
+          teamMap={teamMap}
+          isWinner={hasResult && winner === topTeam}
+          isLoser={hasResult && winner !== topTeam}
+          isPick={hasPick && pick === topTeam}
+          isCorrect={hasPick && pick === topTeam ? pickCorrect : null}
+          isEliminated={topEliminated}
+        />
+        <div className="border-t" />
+        <MatchupTeam
+          teamKey={bottomTeam}
+          seed={bottomSeed}
+          teamMap={teamMap}
+          isWinner={hasResult && winner === bottomTeam}
+          isLoser={hasResult && winner !== bottomTeam}
+          isPick={hasPick && pick === bottomTeam}
+          isCorrect={hasPick && pick === bottomTeam ? pickCorrect : null}
+          isEliminated={bottomEliminated}
+        />
+      </div>
+      {analysisId && sport && topTeam && bottomTeam && (
+        <MatchupAnalysisPopover
+          analysisId={analysisId}
+          sport={sport}
+          topTeam={topTeam}
+          bottomTeam={bottomTeam}
+          teamMap={teamMap}
+        />
       )}
-    >
-      <MatchupTeam
-        teamKey={topTeam}
-        seed={topSeed}
-        teamMap={teamMap}
-        isWinner={hasResult && winner === topTeam}
-        isLoser={hasResult && winner !== topTeam}
-        isPick={hasPick && pick === topTeam}
-        isCorrect={hasPick && pick === topTeam ? pickCorrect : null}
-        isEliminated={topEliminated}
-      />
-      <div className="border-t" />
-      <MatchupTeam
-        teamKey={bottomTeam}
-        seed={bottomSeed}
-        teamMap={teamMap}
-        isWinner={hasResult && winner === bottomTeam}
-        isLoser={hasResult && winner !== bottomTeam}
-        isPick={hasPick && pick === bottomTeam}
-        isCorrect={hasPick && pick === bottomTeam ? pickCorrect : null}
-        isEliminated={bottomEliminated}
-      />
     </div>
   )
 }

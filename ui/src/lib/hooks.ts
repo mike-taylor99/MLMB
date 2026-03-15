@@ -19,6 +19,7 @@ import {
   fetchPredictions,
   createPrediction,
   createAnalysis,
+  fetchAnalysis,
   fetchTournaments,
   fetchTournament,
   fetchBrackets,
@@ -61,6 +62,7 @@ export const queryKeys = {
   rankings: (sport: Sport) => ["rankings", sport] as const,
   predictions: (params: ListPredictionsParams) =>
     ["predictions", params] as const,
+  analysis: (id: string, sport: Sport) => ["analysis", id, sport] as const,
   tournaments: ["tournaments"] as const,
   tournament: (id: string) => ["tournaments", id] as const,
   brackets: (tournamentId?: string) => ["brackets", tournamentId] as const,
@@ -168,6 +170,14 @@ export function useCreateAnalysis() {
   });
 }
 
+export function useAnalysis(id: string | undefined, sport: Sport) {
+  return useQuery({
+    queryKey: queryKeys.analysis(id ?? "", sport),
+    queryFn: () => fetchAnalysis(id!, sport),
+    enabled: !!id,
+    staleTime: Infinity,
+  });
+}
 // ---------------------------------------------------------------------------
 // Tournaments
 // ---------------------------------------------------------------------------

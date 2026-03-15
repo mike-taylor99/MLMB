@@ -383,6 +383,10 @@ class TournamentResponse(BaseModel):
     regions: dict = Field(..., description="Region definitions")
     final_four: FinalFourDef = Field(..., description="Final Four config")
     results: dict = Field(default_factory=dict, description="Slot → winning team")
+    analyses: dict = Field(
+        default_factory=dict,
+        description="Slot → analysis ID (optional, for official matchup analyses)",
+    )
 
 
 # =============================================================================

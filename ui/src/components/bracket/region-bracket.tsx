@@ -7,24 +7,36 @@
 // Set `mirrored` for right-side regions (flows right-to-left).
 // ============================================================================
 
-import type { RegionBracket, MatchupSlot } from '@/lib/bracket'
-import type { Team } from '@/lib/types'
-import { cn } from '@/lib/utils'
-import { Matchup } from './matchup'
-import { BracketTree } from './bracket-tree'
+import type { RegionBracket, MatchupSlot } from "@/lib/bracket";
+import type { Team, Sport } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { Matchup } from "./matchup";
+import { BracketTree } from "./bracket-tree";
 
 interface RegionBracketViewProps {
-  bracket: RegionBracket
-  teamMap: Map<string, Team>
+  bracket: RegionBracket;
+  teamMap: Map<string, Team>;
   /** Optional user picks — enables scored mode on each matchup */
-  picks?: Record<string, string>
+  picks?: Record<string, string>;
   /** Optional set of eliminated teams — marks busted picks */
-  eliminated?: Set<string>
+  eliminated?: Set<string>;
+  /** Optional analysis IDs keyed by game slot */
+  analyses?: Record<string, string>;
+  /** Sport code — required when analyses is provided */
+  sport?: Sport;
   /** Render right-to-left (for right-side bracket regions) */
-  mirrored?: boolean
+  mirrored?: boolean;
 }
 
-export function RegionBracketView({ bracket, teamMap, picks, eliminated, mirrored }: RegionBracketViewProps) {
+export function RegionBracketView({
+  bracket,
+  teamMap,
+  picks,
+  eliminated,
+  analyses,
+  sport,
+  mirrored,
+}: RegionBracketViewProps) {
   const render = (m: MatchupSlot) => (
     <Matchup
       key={m.key}
@@ -36,13 +48,20 @@ export function RegionBracketView({ bracket, teamMap, picks, eliminated, mirrore
       teamMap={teamMap}
       pick={picks?.[m.key]}
       eliminated={eliminated}
+      analysisId={analyses?.[m.key]}
+      sport={sport}
       compact
     />
-  )
+  );
 
   return (
     <div className="space-y-2">
-      <h3 className={cn('text-sm font-semibold text-muted-foreground uppercase tracking-wide', mirrored && 'text-right')}>
+      <h3
+        className={cn(
+          "text-sm font-semibold text-muted-foreground uppercase tracking-wide",
+          mirrored && "text-right",
+        )}
+      >
         {bracket.regionName}
       </h3>
       <BracketTree
@@ -53,5 +72,5 @@ export function RegionBracketView({ bracket, teamMap, picks, eliminated, mirrore
         mirrored={mirrored}
       />
     </div>
-  )
+  );
 }

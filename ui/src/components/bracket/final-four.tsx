@@ -9,7 +9,7 @@
 // ============================================================================
 
 import type { FinalFourBracket } from "@/lib/bracket";
-import type { Team } from "@/lib/types";
+import type { Team, Sport } from "@/lib/types";
 import { Matchup } from "./matchup";
 import { TeamLogo } from "@/components/team-logo";
 import { TournamentLogo } from "@/components/tournament-logo";
@@ -24,6 +24,10 @@ interface FinalFourViewProps {
   picks?: Record<string, string>;
   /** Optional set of eliminated teams — marks busted picks */
   eliminated?: Set<string>;
+  /** Optional analysis IDs keyed by game slot */
+  analyses?: Record<string, string>;
+  /** Sport code — required when analyses is provided */
+  sport?: Sport;
 }
 
 export function FinalFourView({
@@ -32,6 +36,8 @@ export function FinalFourView({
   tournamentId,
   picks,
   eliminated,
+  analyses,
+  sport,
 }: FinalFourViewProps) {
   const champion = bracket.championship.winner;
   const championTeam = champion ? teamMap.get(champion) : null;
@@ -56,6 +62,8 @@ export function FinalFourView({
           teamMap={teamMap}
           pick={picks?.["FF_G1"]}
           eliminated={eliminated}
+          analysisId={analyses?.["FF_G1"]}
+          sport={sport}
         />
 
         {/* Championship — center */}
@@ -68,6 +76,8 @@ export function FinalFourView({
           teamMap={teamMap}
           pick={picks?.["NCG"]}
           eliminated={eliminated}
+          analysisId={analyses?.["NCG"]}
+          sport={sport}
         />
 
         {/* SF2 — right side, flows left */}
@@ -80,6 +90,8 @@ export function FinalFourView({
           teamMap={teamMap}
           pick={picks?.["FF_G2"]}
           eliminated={eliminated}
+          analysisId={analyses?.["FF_G2"]}
+          sport={sport}
         />
       </div>
 

@@ -20,10 +20,8 @@ import {
   BracketTree,
   BracketFullLayout,
 } from "@/components/bracket";
-import type {
-  MatchupPredictions,
-  PredictionScenario,
-} from "@/components/bracket/pick-matchup";
+import type { MatchupPredictions } from "@/lib/types";
+import { toPredictionScenarios } from "@/components/bracket/pick-matchup";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -333,16 +331,7 @@ export function BracketEditorPage() {
         });
 
         // Convert analysis predictions to PredictionScenario format
-        const scenarios: PredictionScenario[] = result.predictions.map((p) => {
-          const topIsHome = p.home_team === topTeam;
-          return {
-            span: p.span as 3 | 5 | 7,
-            topIsHome,
-            topWinProb: topIsHome
-              ? p.home_win_probability
-              : 1 - p.home_win_probability,
-          };
-        });
+        const scenarios = toPredictionScenarios(result.predictions, topTeam);
 
         if (scenarios.length > 0) {
           setPredictions((prev) => ({ ...prev, [gameKey]: { scenarios } }));

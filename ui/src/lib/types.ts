@@ -100,6 +100,20 @@ export interface BatchResponse {
 // Analysis
 // ---------------------------------------------------------------------------
 
+/** One prediction scenario (span + orientation + probability). */
+export interface PredictionScenario {
+  span: Span;
+  /** true when the top team was passed as home_team in the request */
+  topIsHome: boolean;
+  /** The top team's estimated win probability (0–1) */
+  topWinProb: number;
+}
+
+/** Full set of prediction scenarios for a matchup. */
+export interface MatchupPredictions {
+  scenarios: PredictionScenario[];
+}
+
 export interface AnalysisRequest {
   home_team: string;
   away_team: string;
@@ -194,6 +208,7 @@ export interface Tournament {
   regions: Record<string, RegionDef>;
   final_four: FinalFourDef;
   results: Record<string, string>;
+  analyses: Record<string, string>;
 }
 
 // ---------------------------------------------------------------------------
