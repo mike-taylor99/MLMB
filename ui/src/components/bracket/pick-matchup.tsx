@@ -293,6 +293,12 @@ export function PredictionDetail({
         {/* Expanded detail rows */}
         {showDetails && (
           <div className="mt-2 space-y-1">
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground/60 uppercase tracking-wider pb-0.5 border-b border-muted">
+              <span>Model</span>
+              <span className="tabular-nums">
+                {topSchool} – {bottomSchool}
+              </span>
+            </div>
             {sorted.map((sc, i) => {
               const pct = Math.round(sc.topWinProb * 100);
               return (
