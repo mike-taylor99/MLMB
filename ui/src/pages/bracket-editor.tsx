@@ -320,13 +320,37 @@ export function BracketEditorPage() {
     async (gameKey: string, topTeam: string, bottomTeam: string) => {
       if (!sport) return;
 
+      // Determine home/away and neutral based on tournament context.
+      // Women's tournament: R64 & R32 are hosted by the top-4 seeds,
+      // so the 1–4 seed is the home team and the game is NOT neutral.
+      let homeTeam = topTeam;
+      let awayTeam = bottomTeam;
+      let neutral = true;
+
+      if (sport === "ncaaw_basketball") {
+        const round = gameKey.split("_")[1]; // e.g. "albany_R64_G1" → "R64"
+        if (round === "R64" || round === "R32") {
+          const topSeed = allSeeds.get(topTeam);
+          const bottomSeed = allSeeds.get(bottomTeam);
+          if (topSeed && topSeed <= 4) {
+            homeTeam = topTeam;
+            awayTeam = bottomTeam;
+            neutral = false;
+          } else if (bottomSeed && bottomSeed <= 4) {
+            homeTeam = bottomTeam;
+            awayTeam = topTeam;
+            neutral = false;
+          }
+        }
+      }
+
       setLoadingPredictions((prev) => new Set(prev).add(gameKey));
 
       try {
         const result = await createAnalysis({
-          home_team: topTeam,
-          away_team: bottomTeam,
-          neutral: true,
+          home_team: homeTeam,
+          away_team: awayTeam,
+          neutral,
           sport: sport as Sport,
         });
 
@@ -345,7 +369,7 @@ export function BracketEditorPage() {
         });
       }
     },
-    [sport],
+    [sport, allSeeds],
   );
 
   // Save
