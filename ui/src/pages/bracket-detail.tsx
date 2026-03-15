@@ -3,8 +3,9 @@
 // ============================================================================
 
 import { useMemo } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useAuth } from "@/context/auth";
+import { useCountdown } from "@/lib/use-countdown";
 import {
   useTournament,
   useTeams,
@@ -65,6 +66,7 @@ const statusConfig: Record<
 
 export function BracketDetailPage() {
   const { tournamentId } = useParams<{ tournamentId: string }>();
+  const navigate = useNavigate();
   const {
     data: tournament,
     isLoading,
@@ -104,6 +106,12 @@ export function BracketDetailPage() {
     return buildFinalFour(tournament);
   }, [tournament]);
 
+  // Countdown — must be called unconditionally (Rules of Hooks)
+  const status = tournament ? getTournamentStatus(tournament) : undefined;
+  const countdown = useCountdown(
+    status === "open" ? tournament?.lock_date : undefined,
+  );
+
   if (error) {
     return (
       <Card>
@@ -125,7 +133,6 @@ export function BracketDetailPage() {
 
   const hasResults = Object.keys(tournament.results).length > 0;
   const totalGames = Object.keys(tournament.results).length;
-  const status = getTournamentStatus(tournament);
 
   // Check if all seeds are filled (bracket is ready for picks)
   const seedsFilled = status !== "not_started";
@@ -161,6 +168,15 @@ export function BracketDetailPage() {
                   </Badge>
                 );
               })()}
+              {countdown && !countdown.expired && (
+                <Badge
+                  variant="outline"
+                  className="text-xs tabular-nums border-primary/40 text-primary"
+                >
+                  <Clock className="h-3 w-3 mr-1" />
+                  Locks in {countdown.label}
+                </Badge>
+              )}
               {hasResults && (
                 <span className="text-sm text-muted-foreground">
                   {totalGames} games played
@@ -187,10 +203,18 @@ export function BracketDetailPage() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {bracketsData.data.map((b) => (
-              <Link
+              <div
                 key={b.id}
-                to={`/brackets/${tournamentId}/view/${b.id}`}
-                className="block"
+                role="button"
+                tabIndex={0}
+                onClick={() =>
+                  navigate(`/brackets/${tournamentId}/view/${b.id}`)
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    navigate(`/brackets/${tournamentId}/view/${b.id}`);
+                }}
+                className="block cursor-pointer"
               >
                 <Card className="transition-colors hover:border-primary/40">
                   <CardContent className="flex items-center justify-between p-4">
@@ -226,12 +250,16 @@ export function BracketDetailPage() {
                     {!tournament.is_locked && seedsFilled && (
                       <div
                         className="flex items-center gap-1 shrink-0"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Button asChild variant="ghost" size="icon">
-                          <Link to={`/brackets/${tournamentId}/edit/${b.id}`}>
-                            <Pencil className="h-4 w-4" />
-                          </Link>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() =>
+                            navigate(`/brackets/${tournamentId}/edit/${b.id}`)
+                          }
+                        >
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -251,7 +279,7 @@ export function BracketDetailPage() {
                     )}
                   </CardContent>
                 </Card>
-              </Link>
+              </div>
             ))}
           </div>
         </section>

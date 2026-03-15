@@ -5,44 +5,57 @@
 // ✗ for wrong picks when a result (winner) is also present.
 // ============================================================================
 
-import { cn } from '@/lib/utils'
-import type { Team, Sport, MatchupPredictions } from '@/lib/types'
-import { TeamLogo } from '@/components/team-logo'
-import { Check, X, Sparkles, Loader2 } from 'lucide-react'
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
-import { useState, useMemo } from 'react'
-import { useAnalysis } from '@/lib/hooks'
-import { PredictionDetail, toPredictionScenarios } from './pick-matchup'
+import { cn } from "@/lib/utils";
+import type { Team, Sport, MatchupPredictions } from "@/lib/types";
+import { TeamLogo } from "@/components/team-logo";
+import { Check, X, Sparkles, Loader2 } from "lucide-react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { useState, useMemo } from "react";
+import { useAnalysis } from "@/lib/hooks";
+import { PredictionDetail, toPredictionScenarios } from "./pick-matchup";
 
 interface MatchupTeamProps {
-  teamKey: string | null
-  seed: number | null
-  teamMap: Map<string, Team>
-  isWinner: boolean
-  isLoser: boolean
+  teamKey: string | null;
+  seed: number | null;
+  teamMap: Map<string, Team>;
+  isWinner: boolean;
+  isLoser: boolean;
   /** This team was the user's pick for this game */
-  isPick: boolean
+  isPick: boolean;
   /** The user's pick for this game was correct */
-  isCorrect: boolean | null
+  isCorrect: boolean | null;
   /** This team was eliminated in an earlier round (shouldn't be here) */
-  isEliminated: boolean
+  isEliminated: boolean;
 }
 
-function MatchupTeam({ teamKey, seed, teamMap, isWinner, isLoser, isPick, isCorrect, isEliminated }: MatchupTeamProps) {
-  const team = teamKey ? teamMap.get(teamKey) : null
+function MatchupTeam({
+  teamKey,
+  seed,
+  teamMap,
+  isWinner,
+  isLoser,
+  isPick,
+  isCorrect,
+  isEliminated,
+}: MatchupTeamProps) {
+  const team = teamKey ? teamMap.get(teamKey) : null;
   // Show as wrong if it's a wrong pick OR the team is eliminated
-  const showWrong = (isPick && isCorrect === false) || isEliminated
+  const showWrong = (isPick && isCorrect === false) || isEliminated;
 
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 px-2 py-1 min-w-0',
-        isWinner && 'font-semibold',
-        isLoser && 'opacity-40',
-        isEliminated && !isLoser && 'opacity-40 bg-destructive/10',
-        isPick && isCorrect === true && 'bg-green-500/10',
-        isPick && isCorrect === false && 'bg-destructive/10',
-        isPick && isCorrect === null && !isEliminated && 'bg-primary/10',
+        "flex items-center gap-1.5 px-2 py-1 min-w-0",
+        isWinner && "font-semibold",
+        isLoser && "opacity-40",
+        isEliminated && !isLoser && "opacity-40 bg-destructive/10",
+        isPick && isCorrect === true && "bg-green-500/10",
+        isPick && isCorrect === false && "bg-destructive/10",
+        isPick && isCorrect === null && !isEliminated && "bg-primary/10",
       )}
     >
       {seed && (
@@ -58,14 +71,21 @@ function MatchupTeam({ teamKey, seed, teamMap, isWinner, isLoser, isPick, isCorr
             school={team.meta.school}
             size={20}
           />
-          <span className={cn('truncate text-xs', showWrong && 'line-through')}>
+          <span className={cn("truncate text-xs", showWrong && "line-through")}>
             {team.meta.school}
           </span>
         </>
       ) : teamKey ? (
         <>
           <div className="w-5 h-5 rounded-full bg-muted shrink-0" />
-          <span className={cn('truncate text-xs text-muted-foreground', showWrong && 'line-through')}>{teamKey}</span>
+          <span
+            className={cn(
+              "truncate text-xs text-muted-foreground",
+              showWrong && "line-through",
+            )}
+          >
+            {teamKey}
+          </span>
         </>
       ) : (
         <span className="text-xs text-muted-foreground/50 italic">TBD</span>
@@ -73,29 +93,27 @@ function MatchupTeam({ teamKey, seed, teamMap, isWinner, isLoser, isPick, isCorr
       {isPick && isCorrect === true && (
         <Check className="h-3 w-3 text-green-500 shrink-0 ml-auto" />
       )}
-      {showWrong && (
-        <X className="h-3 w-3 text-destructive shrink-0 ml-auto" />
-      )}
+      {showWrong && <X className="h-3 w-3 text-destructive shrink-0 ml-auto" />}
     </div>
-  )
+  );
 }
 
 interface MatchupProps {
-  topTeam: string | null
-  bottomTeam: string | null
-  topSeed: number | null
-  bottomSeed: number | null
-  winner: string | null
-  teamMap: Map<string, Team>
-  compact?: boolean
+  topTeam: string | null;
+  bottomTeam: string | null;
+  topSeed: number | null;
+  bottomSeed: number | null;
+  winner: string | null;
+  teamMap: Map<string, Team>;
+  compact?: boolean;
   /** Optional: user's pick for this game (enables scored mode) */
-  pick?: string | null
+  pick?: string | null;
   /** Optional: set of teams eliminated in earlier rounds (marks busted picks) */
-  eliminated?: Set<string>
+  eliminated?: Set<string>;
   /** Optional: analysis ID linked to this matchup */
-  analysisId?: string
+  analysisId?: string;
   /** Required when analysisId is set — used to fetch the analysis */
-  sport?: Sport
+  sport?: Sport;
 }
 
 // ---------------------------------------------------------------------------
@@ -110,20 +128,23 @@ function MatchupAnalysisPopover({
   bottomTeam,
   teamMap,
 }: {
-  analysisId: string
-  sport: Sport
-  topTeam: string
-  bottomTeam: string
-  teamMap: Map<string, Team>
+  analysisId: string;
+  sport: Sport;
+  topTeam: string;
+  bottomTeam: string;
+  teamMap: Map<string, Team>;
 }) {
-  const [open, setOpen] = useState(false)
-  const { data: analysis, isLoading } = useAnalysis(open ? analysisId : undefined, sport)
+  const [open, setOpen] = useState(false);
+  const { data: analysis, isLoading } = useAnalysis(
+    open ? analysisId : undefined,
+    sport,
+  );
 
   // Convert analysis predictions to PredictionScenario[] format
   const predictions: MatchupPredictions | null = useMemo(() => {
-    if (!analysis?.predictions?.length) return null
-    return { scenarios: toPredictionScenarios(analysis.predictions, topTeam) }
-  }, [analysis, topTeam])
+    if (!analysis?.predictions?.length) return null;
+    return { scenarios: toPredictionScenarios(analysis.predictions, topTeam) };
+  }, [analysis, topTeam]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -136,7 +157,10 @@ function MatchupAnalysisPopover({
           <Sparkles className="h-3 w-3" />
         </button>
       </PopoverTrigger>
-      <PopoverContent side="top" className={cn("p-3", analysis?.analysis ? "w-72" : "w-56")}>
+      <PopoverContent
+        side="top"
+        className={cn("p-3", analysis?.analysis ? "w-72" : "w-56")}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -156,7 +180,7 @@ function MatchupAnalysisPopover({
         )}
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
 export function Matchup({
@@ -172,31 +196,32 @@ export function Matchup({
   analysisId,
   sport,
 }: MatchupProps) {
-  const hasResult = winner !== null
-  const hasPick = pick != null
+  const hasResult = winner !== null;
+  const hasPick = pick != null;
   // Pick is wrong if there's a result and it doesn't match, OR if the
   // picked team has been eliminated in an earlier round (busted pick).
-  const pickBusted = hasPick && !hasResult && eliminated?.has(pick!) === true
-  const pickCorrect = hasPick && hasResult
-    ? pick === winner
-    : pickBusted
-      ? false
-      : null
+  const pickBusted = hasPick && !hasResult && eliminated?.has(pick!) === true;
+  const pickCorrect =
+    hasPick && hasResult ? pick === winner : pickBusted ? false : null;
 
   // A team appearing in this slot that was already knocked out
-  const topEliminated = !!topTeam && !hasResult && eliminated?.has(topTeam) === true
-  const bottomEliminated = !!bottomTeam && !hasResult && eliminated?.has(bottomTeam) === true
+  const topEliminated =
+    !!topTeam && !hasResult && eliminated?.has(topTeam) === true;
+  const bottomEliminated =
+    !!bottomTeam && !hasResult && eliminated?.has(bottomTeam) === true;
   // Border: red if any team is eliminated or pick is wrong
-  const hasBustedSlot = topEliminated || bottomEliminated
+  const hasBustedSlot = topEliminated || bottomEliminated;
 
   return (
     <div className="relative">
       <div
         className={cn(
-          'rounded-md border bg-card text-card-foreground shadow-xs',
-          compact ? 'w-36' : 'w-44',
-          hasPick && pickCorrect === true && 'border-green-500/40',
-          (hasPick && pickCorrect === false) || hasBustedSlot ? 'border-destructive/40' : '',
+          "rounded-md border bg-card text-card-foreground shadow-xs",
+          compact ? "w-36" : "w-44",
+          hasPick && pickCorrect === true && "border-green-500/40",
+          (hasPick && pickCorrect === false) || hasBustedSlot
+            ? "border-destructive/40"
+            : "",
         )}
       >
         <MatchupTeam
@@ -231,5 +256,5 @@ export function Matchup({
         />
       )}
     </div>
-  )
+  );
 }
