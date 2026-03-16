@@ -5,50 +5,127 @@
   "name": "2026 NCAA Women's Tournament",
   "lock_date": "2026-03-21T12:00:00Z",
 
-  "play_in": [],
+  "play_in": [
+    {
+      "slot": "pi_1",
+      "region": "sacramento_2",
+      "seed": 11,
+      "teams": ["nebraska", "richmond"],
+      "result": null
+    },
+    {
+      "slot": "pi_2",
+      "region": "fort_worth_3",
+      "seed": 16,
+      "teams": ["missouri-state", "stephen-f-austin"],
+      "result": null
+    },
+    {
+      "slot": "pi_3",
+      "region": "sacramento_4",
+      "seed": 16,
+      "teams": ["southern", "samford"],
+      "result": null
+    },
+    {
+      "slot": "pi_4",
+      "region": "sacramento_4",
+      "seed": 10,
+      "teams": ["virginia", "arizona-state"],
+      "result": null
+    }
+  ],
 
   "regions": {
-    "albany": {
-      "name": "Albany",
+    "fort_worth_1": {
+      "name": "Fort Worth 1",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "connecticut",
+        "2": "vanderbilt",
+        "3": "ohio-state",
+        "4": "north-carolina",
+        "5": "maryland",
+        "6": "notre-dame",
+        "7": "illinois",
+        "8": "iowa-state",
+        "9": "syracuse",
+        "10": "colorado",
+        "11": "fairfield",
+        "12": "murray-state",
+        "13": "western-illinois",
+        "14": "howard",
+        "15": "high-point",
+        "16": "texas-san-antonio"
       }
     },
-    "portland": {
-      "name": "Portland",
+    "sacramento_2": {
+      "name": "Sacramento 2",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "ucla",
+        "2": "louisiana-state",
+        "3": "duke",
+        "4": "minnesota",
+        "5": "mississippi",
+        "6": "baylor",
+        "7": "texas-tech",
+        "8": "oklahoma-state",
+        "9": "princeton",
+        "10": "villanova",
+        "11": "pi_1",
+        "12": "gonzaga",
+        "13": "green-bay",
+        "14": "college-of-charleston",
+        "15": "jacksonville",
+        "16": "california-baptist"
       }
     },
-    "dallas": {
-      "name": "Dallas",
+    "fort_worth_3": {
+      "name": "Fort Worth 3",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "texas",
+        "2": "michigan",
+        "3": "louisville",
+        "4": "west-virginia",
+        "5": "kentucky",
+        "6": "alabama",
+        "7": "north-carolina-state",
+        "8": "oregon",
+        "9": "virginia-tech",
+        "10": "tennessee",
+        "11": "rhode-island",
+        "12": "james-madison",
+        "13": "miami-oh",
+        "14": "vermont",
+        "15": "holy-cross",
+        "16": "pi_2"
       }
     },
-    "tampa": {
-      "name": "Tampa",
+    "sacramento_4": {
+      "name": "Sacramento 4",
       "seeds": {
-        "1": null, "2": null, "3": null, "4": null,
-        "5": null, "6": null, "7": null, "8": null,
-        "9": null, "10": null, "11": null, "12": null,
-        "13": null, "14": null, "15": null, "16": null
+        "1": "south-carolina",
+        "2": "iowa",
+        "3": "texas-christian",
+        "4": "oklahoma",
+        "5": "michigan-state",
+        "6": "washington",
+        "7": "georgia",
+        "8": "clemson",
+        "9": "southern-california",
+        "10": "pi_4",
+        "11": "south-dakota-state",
+        "12": "colorado-state",
+        "13": "idaho",
+        "14": "california-san-diego",
+        "15": "fairleigh-dickinson",
+        "16": "pi_3"
       }
     }
   },
 
   "final_four": {
-    "semifinal_1": ["albany", "portland"],
-    "semifinal_2": ["dallas", "tampa"]
+    "semifinal_1": ["fort_worth_1", "sacramento_4"],
+    "semifinal_2": ["sacramento_2", "fort_worth_3"]
   },
 
   "results": {}
