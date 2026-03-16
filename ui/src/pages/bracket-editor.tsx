@@ -204,7 +204,11 @@ export function BracketEditorPage() {
     tournamentId ?? "",
   );
   useDocumentTitle(
-    tournament ? (isEditing ? `Edit Bracket · ${tournament.name}` : `New Bracket · ${tournament.name}`) : undefined,
+    tournament
+      ? isEditing
+        ? `Edit Bracket · ${tournament.name}`
+        : `New Bracket · ${tournament.name}`
+      : undefined,
   );
   const sport = tournament?.sport as
     | "ncaam_basketball"
@@ -332,7 +336,10 @@ export function BracketEditorPage() {
       let neutral = true;
 
       if (sport === "ncaaw_basketball") {
-        const round = gameKey.split("_")[1]; // e.g. "albany_R64_G1" → "R64"
+        // Extract round from game key — handles region keys with underscores
+        // e.g. "fort_worth_1_R64_G1" or "albany_R64_G1"
+        const parts = gameKey.split("_");
+        const round = parts.find((p) => /^(R64|R32|S16|E8|FF)$/.test(p));
         if (round === "R64" || round === "R32") {
           const topSeed = allSeeds.get(topTeam);
           const bottomSeed = allSeeds.get(bottomTeam);
