@@ -377,6 +377,8 @@ export function BracketDetailPage() {
                             bottomSeed={pi.seed}
                             winner={pi.result}
                             teamMap={teamMap}
+                            analysisId={tournament.analyses?.[pi.slot]}
+                            sport={sport}
                           />
                         </div>
                       ))}

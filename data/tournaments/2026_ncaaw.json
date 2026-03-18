@@ -128,5 +128,12 @@
     "semifinal_2": ["sacramento_2", "fort_worth_3"]
   },
 
-  "results": {}
+  "results": {},
+
+  "analyses": {
+    "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
+    "pi_2": "analysis_497402713f4560429c05626387f628ed",
+    "pi_3": "analysis_697faaa76e82f1b8a1b2138888191ce9",
+    "pi_4": "analysis_3fe4bf6ec8d714f63499b9fbd58f2671"
+  }
 }

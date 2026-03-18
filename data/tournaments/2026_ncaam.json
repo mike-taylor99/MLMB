@@ -128,5 +128,12 @@
     "semifinal_2": ["west", "midwest"]
   },
 
-  "results": {}
+  "results": {},
+
+  "analyses": {
+    "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
+    "pi_2": "analysis_74a17b6e1c18583c370130865016390e",
+    "pi_3": "analysis_8f474cd84cbc69702083228bba25cbdc",
+    "pi_4": "analysis_d33ea6965348d1188547eab5c608b264"
+  }
 }
