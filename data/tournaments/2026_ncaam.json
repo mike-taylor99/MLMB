@@ -11,14 +11,14 @@
       "region": "west",
       "seed": 11,
       "teams": ["texas", "north-carolina-state"],
-      "result": null
+      "result": "texas"
     },
     {
       "slot": "pi_2",
       "region": "midwest",
       "seed": 16,
       "teams": ["maryland-baltimore-county", "howard"],
-      "result": null
+      "result": "howard"
     },
     {
       "slot": "pi_3",
