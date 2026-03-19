@@ -25,14 +25,14 @@
       "region": "midwest",
       "seed": 11,
       "teams": ["miami-oh", "southern-methodist"],
-      "result": null
+      "result": "miami-oh"
     },
     {
       "slot": "pi_4",
       "region": "south",
       "seed": 16,
       "teams": ["prairie-view", "lehigh"],
-      "result": null
+      "result": "prairie-view"
     }
   ],
 

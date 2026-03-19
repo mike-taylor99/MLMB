@@ -232,7 +232,6 @@ async def batch_predictions_endpoint(
 async def get_analysis_endpoint(
     analysis_id: str,
     predictions_store: PredictionsStoreDep,
-    _auth: RequireAuthDep,
     sport: str = Query(..., description="Sport code (required)"),
 ) -> AnalysisResponse:
     """Retrieve a cached analysis by ID."""

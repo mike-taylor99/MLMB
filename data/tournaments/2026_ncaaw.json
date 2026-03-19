@@ -11,14 +11,14 @@
       "region": "sacramento_2",
       "seed": 11,
       "teams": ["nebraska", "richmond"],
-      "result": null
+      "result": "richmond"
     },
     {
       "slot": "pi_2",
       "region": "fort_worth_3",
       "seed": 16,
       "teams": ["missouri-state", "stephen-f-austin"],
-      "result": null
+      "result": "missouri-state"
     },
     {
       "slot": "pi_3",
