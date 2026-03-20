@@ -9,40 +9,28 @@
       "slot": "pi_1",
       "region": "west",
       "seed": 11,
-      "teams": [
-        "texas",
-        "north-carolina-state"
-      ],
+      "teams": ["texas", "north-carolina-state"],
       "result": "texas"
     },
     {
       "slot": "pi_2",
       "region": "midwest",
       "seed": 16,
-      "teams": [
-        "maryland-baltimore-county",
-        "howard"
-      ],
+      "teams": ["maryland-baltimore-county", "howard"],
       "result": "howard"
     },
     {
       "slot": "pi_3",
       "region": "midwest",
       "seed": 11,
-      "teams": [
-        "miami-oh",
-        "southern-methodist"
-      ],
+      "teams": ["miami-oh", "southern-methodist"],
       "result": "miami-oh"
     },
     {
       "slot": "pi_4",
       "region": "south",
       "seed": 16,
-      "teams": [
-        "prairie-view",
-        "lehigh"
-      ],
+      "teams": ["prairie-view", "lehigh"],
       "result": "prairie-view"
     }
   ],
@@ -133,16 +121,27 @@
     }
   },
   "final_four": {
-    "semifinal_1": [
-      "east",
-      "south"
-    ],
-    "semifinal_2": [
-      "west",
-      "midwest"
-    ]
+    "semifinal_1": ["east", "south"],
+    "semifinal_2": ["west", "midwest"]
   },
-  "results": {},
+  "results": {
+    "east_R64_G1": "duke",
+    "east_R64_G2": "texas-christian",
+    "east_R64_G5": "louisville",
+    "east_R64_G6": "michigan-state",
+    "west_R64_G3": "high-point",
+    "west_R64_G4": "arkansas",
+    "west_R64_G5": "texas",
+    "west_R64_G6": "gonzaga",
+    "midwest_R64_G1": "michigan",
+    "midwest_R64_G2": "saint-louis",
+    "south_R64_G3": "vanderbilt",
+    "south_R64_G4": "nebraska",
+    "south_R64_G5": "virginia-commonwealth",
+    "south_R64_G6": "illinois",
+    "south_R64_G7": "texas-am",
+    "south_R64_G8": "houston"
+  },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
     "pi_2": "analysis_74a17b6e1c18583c370130865016390e",

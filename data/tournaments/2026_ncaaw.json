@@ -9,40 +9,28 @@
       "slot": "pi_1",
       "region": "sacramento_2",
       "seed": 11,
-      "teams": [
-        "nebraska",
-        "richmond"
-      ],
+      "teams": ["nebraska", "richmond"],
       "result": "nebraska"
     },
     {
       "slot": "pi_2",
       "region": "fort_worth_3",
       "seed": 16,
-      "teams": [
-        "missouri-state",
-        "stephen-f-austin"
-      ],
+      "teams": ["missouri-state", "stephen-f-austin"],
       "result": "missouri-state"
     },
     {
       "slot": "pi_3",
       "region": "sacramento_4",
       "seed": 16,
-      "teams": [
-        "southern",
-        "samford"
-      ],
+      "teams": ["southern", "samford"],
       "result": "southern"
     },
     {
       "slot": "pi_4",
       "region": "sacramento_4",
       "seed": 10,
-      "teams": [
-        "virginia",
-        "arizona-state"
-      ],
+      "teams": ["virginia", "arizona-state"],
       "result": "virginia"
     }
   ],
@@ -133,14 +121,8 @@
     }
   },
   "final_four": {
-    "semifinal_1": [
-      "fort_worth_1",
-      "sacramento_4"
-    ],
-    "semifinal_2": [
-      "sacramento_2",
-      "fort_worth_3"
-    ]
+    "semifinal_1": ["fort_worth_1", "sacramento_4"],
+    "semifinal_2": ["sacramento_2", "fort_worth_3"]
   },
   "results": {},
   "analyses": {
