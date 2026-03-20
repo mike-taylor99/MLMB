@@ -4,38 +4,48 @@
   "sport": "ncaaw_basketball",
   "name": "2026 NCAA Women's Tournament",
   "lock_date": "2026-03-20T15:30:00Z",
-
   "play_in": [
     {
       "slot": "pi_1",
       "region": "sacramento_2",
       "seed": 11,
-      "teams": ["nebraska", "richmond"],
-      "result": "richmond"
+      "teams": [
+        "nebraska",
+        "richmond"
+      ],
+      "result": "nebraska"
     },
     {
       "slot": "pi_2",
       "region": "fort_worth_3",
       "seed": 16,
-      "teams": ["missouri-state", "stephen-f-austin"],
+      "teams": [
+        "missouri-state",
+        "stephen-f-austin"
+      ],
       "result": "missouri-state"
     },
     {
       "slot": "pi_3",
       "region": "sacramento_4",
       "seed": 16,
-      "teams": ["southern", "samford"],
-      "result": null
+      "teams": [
+        "southern",
+        "samford"
+      ],
+      "result": "southern"
     },
     {
       "slot": "pi_4",
       "region": "sacramento_4",
       "seed": 10,
-      "teams": ["virginia", "arizona-state"],
-      "result": null
+      "teams": [
+        "virginia",
+        "arizona-state"
+      ],
+      "result": "virginia"
     }
   ],
-
   "regions": {
     "fort_worth_1": {
       "name": "Fort Worth 1",
@@ -122,18 +132,53 @@
       }
     }
   },
-
   "final_four": {
-    "semifinal_1": ["fort_worth_1", "sacramento_4"],
-    "semifinal_2": ["sacramento_2", "fort_worth_3"]
+    "semifinal_1": [
+      "fort_worth_1",
+      "sacramento_4"
+    ],
+    "semifinal_2": [
+      "sacramento_2",
+      "fort_worth_3"
+    ]
   },
-
   "results": {},
-
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
     "pi_2": "analysis_497402713f4560429c05626387f628ed",
     "pi_3": "analysis_697faaa76e82f1b8a1b2138888191ce9",
-    "pi_4": "analysis_3fe4bf6ec8d714f63499b9fbd58f2671"
+    "pi_4": "analysis_3fe4bf6ec8d714f63499b9fbd58f2671",
+    "fort_worth_1_R64_G1": "analysis_b6329b19bb46b5e41739b45f7e46b4a3",
+    "fort_worth_1_R64_G2": "analysis_718c7d27689312c8c57f7d9baedf681e",
+    "fort_worth_1_R64_G3": "analysis_1a4024c368c63d6b130f7552920305b4",
+    "fort_worth_1_R64_G4": "analysis_f6ef450cce3847993011187ef9fc0138",
+    "fort_worth_1_R64_G5": "analysis_d37fb40f4e9f93bbc7f08bca5177907d",
+    "fort_worth_1_R64_G6": "analysis_2801383dd69c72f681f23364e88ed0e6",
+    "fort_worth_1_R64_G7": "analysis_637b5ffe79494c9f259b5e6434561975",
+    "fort_worth_1_R64_G8": "analysis_9a9c86fa94b7f67e74ee7b37d9fe9c17",
+    "sacramento_2_R64_G1": "analysis_b6bb1d388f250c88966d48ead5b4c82e",
+    "sacramento_2_R64_G2": "analysis_ace2042c6e661db08b1afe790c50603a",
+    "sacramento_2_R64_G3": "analysis_496b7a2cc6ebe62fb6e8fc024687de7c",
+    "sacramento_2_R64_G4": "analysis_5899a53a0902bb1f9e6e94ead31b5234",
+    "sacramento_2_R64_G6": "analysis_d0701c9f603557aff9f843839bf4e98c",
+    "sacramento_2_R64_G7": "analysis_11f440b10c920bf9172f5446003ed65c",
+    "sacramento_2_R64_G8": "analysis_be88076ffaf929a9f7468dd7c3ca9f51",
+    "fort_worth_3_R64_G1": "analysis_25f4d9ff3619f33cf70cc3591464bc61",
+    "fort_worth_3_R64_G2": "analysis_b7727bf39eb1da8b92bad8ae48c04b7b",
+    "fort_worth_3_R64_G3": "analysis_3809c35f3a2b56ff66e42031cc127fde",
+    "fort_worth_3_R64_G4": "analysis_83f75d718ee8e90de1abbc67fac6f6cf",
+    "fort_worth_3_R64_G5": "analysis_9aa3950105ea09a035b14e8d85977110",
+    "fort_worth_3_R64_G6": "analysis_aa5f5a3d789c7b477e2c60121a1d648e",
+    "fort_worth_3_R64_G7": "analysis_708310be122f71c72a51eff5faec9114",
+    "fort_worth_3_R64_G8": "analysis_e1ec39ea5eced7d1c9f03e79ae86cb5b",
+    "sacramento_4_R64_G2": "analysis_d449ed2af1e954db245270a13c860377",
+    "sacramento_4_R64_G3": "analysis_34912548d67ec4229b744263084b8be8",
+    "sacramento_4_R64_G4": "analysis_f35cf7d257ac824262a552f6fc081dac",
+    "sacramento_4_R64_G5": "analysis_4701350e98eef1992397b56a78469fbe",
+    "sacramento_4_R64_G6": "analysis_042d7ad2e4a9e948eca9bea54be6904f",
+    "sacramento_4_R64_G8": "analysis_b14e8f01bf235696378280c415aaa3a5",
+    "sacramento_4_R64_G1": "analysis_c4b416b61bdbeae733b450e3377c5bff",
+    "sacramento_4_R64_G7": "analysis_aeac39e4d08c8791f0a847f227c80cb0",
+    "sacramento_2_R64_G5": "analysis_ea02f6ccb58b71cc618d4baf658f442c"
   }
 }

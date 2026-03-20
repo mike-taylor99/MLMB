@@ -4,38 +4,48 @@
   "sport": "ncaam_basketball",
   "name": "2026 NCAA Men's Tournament",
   "lock_date": "2026-03-19T16:15:00Z",
-
   "play_in": [
     {
       "slot": "pi_1",
       "region": "west",
       "seed": 11,
-      "teams": ["texas", "north-carolina-state"],
+      "teams": [
+        "texas",
+        "north-carolina-state"
+      ],
       "result": "texas"
     },
     {
       "slot": "pi_2",
       "region": "midwest",
       "seed": 16,
-      "teams": ["maryland-baltimore-county", "howard"],
+      "teams": [
+        "maryland-baltimore-county",
+        "howard"
+      ],
       "result": "howard"
     },
     {
       "slot": "pi_3",
       "region": "midwest",
       "seed": 11,
-      "teams": ["miami-oh", "southern-methodist"],
+      "teams": [
+        "miami-oh",
+        "southern-methodist"
+      ],
       "result": "miami-oh"
     },
     {
       "slot": "pi_4",
       "region": "south",
       "seed": 16,
-      "teams": ["prairie-view", "lehigh"],
+      "teams": [
+        "prairie-view",
+        "lehigh"
+      ],
       "result": "prairie-view"
     }
   ],
-
   "regions": {
     "east": {
       "name": "East",
@@ -122,18 +132,53 @@
       }
     }
   },
-
   "final_four": {
-    "semifinal_1": ["east", "south"],
-    "semifinal_2": ["west", "midwest"]
+    "semifinal_1": [
+      "east",
+      "south"
+    ],
+    "semifinal_2": [
+      "west",
+      "midwest"
+    ]
   },
-
   "results": {},
-
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
     "pi_2": "analysis_74a17b6e1c18583c370130865016390e",
     "pi_3": "analysis_8f474cd84cbc69702083228bba25cbdc",
-    "pi_4": "analysis_d33ea6965348d1188547eab5c608b264"
+    "pi_4": "analysis_d33ea6965348d1188547eab5c608b264",
+    "east_R64_G1": "analysis_55c4075b3db736b6899af419493483f9",
+    "east_R64_G2": "analysis_9fad35f53d83e9f025a99b4a1304ede3",
+    "east_R64_G3": "analysis_44cfd1f4abcdae5aa469da0bae092cea",
+    "east_R64_G4": "analysis_c8fbd5052c39140091f41a18e3c11e3d",
+    "east_R64_G5": "analysis_25051350b909eaf0a81f1ad8d7a8c6e6",
+    "east_R64_G6": "analysis_88d5c79049a84bc5b06c53b86abd9651",
+    "east_R64_G7": "analysis_b17ba04cc79a1015d44624c9f77c9f42",
+    "east_R64_G8": "analysis_3460bd982a380b9c6cb54d9c64b3034d",
+    "west_R64_G1": "analysis_6c317ca60b3a7c9ab9e6c4429978ab6b",
+    "west_R64_G2": "analysis_907e9e878e849391bcaece5efc3864c4",
+    "west_R64_G3": "analysis_9f7e28bfcebec9170f065f9150d5e044",
+    "west_R64_G4": "analysis_d0f31c1122f6ce97b6c49905c22a06a9",
+    "west_R64_G5": "analysis_81cbcb31b5341ec483fb4ec91e552bb7",
+    "west_R64_G6": "analysis_4534496c381a09326698372c8079f364",
+    "west_R64_G7": "analysis_3943925ea5c3591cfd5cc59d6782023c",
+    "west_R64_G8": "analysis_3987fa01cb741e8384f21a0ba076326b",
+    "midwest_R64_G1": "analysis_bc7edc9b3dfade6f34313f421a2040c4",
+    "midwest_R64_G2": "analysis_dbc43f225aa2e91b922407af05de8bdb",
+    "midwest_R64_G3": "analysis_6374017caac6c8faea8862e2fe9b7edb",
+    "midwest_R64_G4": "analysis_289f58f59a821a10555c79f7c183101d",
+    "midwest_R64_G5": "analysis_1a1ef1cd0ae10d2f204e4d50ecdeec79",
+    "midwest_R64_G6": "analysis_9018a73769e5553666d0560561904deb",
+    "midwest_R64_G7": "analysis_21ad28ec4dfd2198fe1039873e2de6be",
+    "midwest_R64_G8": "analysis_46d9c737ab5d2aad84fc71a5b8b9e215",
+    "south_R64_G1": "analysis_849a7facc4bf31e294b7325fe33b6c4c",
+    "south_R64_G2": "analysis_6fa8b10f67b7a6f81aa9b281e06fecae",
+    "south_R64_G3": "analysis_313664fd90a9af67625de6870e69e8b0",
+    "south_R64_G4": "analysis_829480d7e5dc7ac7e80164a882c8304c",
+    "south_R64_G5": "analysis_f71e10137825310df99f4fee7875e968",
+    "south_R64_G6": "analysis_ac6fa7504a6d3256bf99c0d3361a290f",
+    "south_R64_G7": "analysis_e3b44ff5d0fea39469cfb8ae18e3da15",
+    "south_R64_G8": "analysis_d41df955cc942d4f9063fff33a65a0fb"
   }
 }
