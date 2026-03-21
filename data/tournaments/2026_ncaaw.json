@@ -124,7 +124,24 @@
     "semifinal_1": ["fort_worth_1", "sacramento_4"],
     "semifinal_2": ["sacramento_2", "fort_worth_3"]
   },
-  "results": {},
+  "results": {
+    "fort_worth_1_R64_G3": "maryland",
+    "fort_worth_1_R64_G4": "north-carolina",
+    "sacramento_2_R64_G3": "mississippi",
+    "sacramento_2_R64_G4": "minnesota",
+    "sacramento_2_R64_G5": "baylor",
+    "sacramento_2_R64_G6": "duke",
+    "sacramento_2_R64_G7": "texas-tech",
+    "sacramento_2_R64_G8": "louisiana-state",
+    "fort_worth_3_R64_G1": "texas",
+    "fort_worth_3_R64_G2": "oregon",
+    "fort_worth_3_R64_G7": "north-carolina-state",
+    "fort_worth_3_R64_G8": "michigan",
+    "sacramento_4_R64_G3": "michigan-state",
+    "sacramento_4_R64_G4": "oklahoma",
+    "sacramento_4_R64_G5": "washington",
+    "sacramento_4_R64_G6": "texas-christian"
+  },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
     "pi_2": "analysis_497402713f4560429c05626387f628ed",
