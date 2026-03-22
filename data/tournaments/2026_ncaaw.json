@@ -125,8 +125,16 @@
     "semifinal_2": ["sacramento_2", "fort_worth_3"]
   },
   "results": {
+    "fort_worth_1_R64_G1": "connecticut",
+    "fort_worth_1_R64_G2": "syracuse",
     "fort_worth_1_R64_G3": "maryland",
     "fort_worth_1_R64_G4": "north-carolina",
+    "fort_worth_1_R64_G5": "notre-dame",
+    "fort_worth_1_R64_G6": "ohio-state",
+    "fort_worth_1_R64_G7": "illinois",
+    "fort_worth_1_R64_G8": "vanderbilt",
+    "sacramento_2_R64_G1": "ucla",
+    "sacramento_2_R64_G2": "oklahoma-state",
     "sacramento_2_R64_G3": "mississippi",
     "sacramento_2_R64_G4": "minnesota",
     "sacramento_2_R64_G5": "baylor",
@@ -135,12 +143,20 @@
     "sacramento_2_R64_G8": "louisiana-state",
     "fort_worth_3_R64_G1": "texas",
     "fort_worth_3_R64_G2": "oregon",
+    "fort_worth_3_R64_G3": "kentucky",
+    "fort_worth_3_R64_G4": "west-virginia",
+    "fort_worth_3_R64_G5": "alabama",
+    "fort_worth_3_R64_G6": "louisville",
     "fort_worth_3_R64_G7": "north-carolina-state",
     "fort_worth_3_R64_G8": "michigan",
+    "sacramento_4_R64_G1": "south-carolina",
+    "sacramento_4_R64_G2": "southern-california",
     "sacramento_4_R64_G3": "michigan-state",
     "sacramento_4_R64_G4": "oklahoma",
     "sacramento_4_R64_G5": "washington",
-    "sacramento_4_R64_G6": "texas-christian"
+    "sacramento_4_R64_G6": "texas-christian",
+    "sacramento_4_R64_G7": "virginia",
+    "sacramento_4_R64_G8": "iowa"
   },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
@@ -178,6 +194,14 @@
     "sacramento_4_R64_G8": "analysis_b14e8f01bf235696378280c415aaa3a5",
     "sacramento_4_R64_G1": "analysis_c4b416b61bdbeae733b450e3377c5bff",
     "sacramento_4_R64_G7": "analysis_aeac39e4d08c8791f0a847f227c80cb0",
-    "sacramento_2_R64_G5": "analysis_ea02f6ccb58b71cc618d4baf658f442c"
+    "sacramento_2_R64_G5": "analysis_ea02f6ccb58b71cc618d4baf658f442c",
+    "fort_worth_1_R32_G2": "analysis_b09caae75504eefa2722a4e79884f758",
+    "sacramento_2_R32_G2": "analysis_7eaf7ffc0756a00eebb1df6d19e24be6",
+    "sacramento_2_R32_G3": "analysis_efc6a2ac17ebafb4a5b87d7f24e4aecf",
+    "sacramento_2_R32_G4": "analysis_a39fad962a40531406c71b0ee8d1c963",
+    "fort_worth_3_R32_G1": "analysis_b5f5d14ef70a63c257e9b69524f90354",
+    "fort_worth_3_R32_G4": "analysis_f54dc3594944cfa6358535f3a0257d61",
+    "sacramento_4_R32_G2": "analysis_e4cc8143747b0687df0267ed631b2f7a",
+    "sacramento_4_R32_G3": "analysis_01ae02e8adbbb02897c92c1bd9b8383f"
   }
 }
