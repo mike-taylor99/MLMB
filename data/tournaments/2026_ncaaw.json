@@ -156,7 +156,15 @@
     "sacramento_4_R64_G5": "washington",
     "sacramento_4_R64_G6": "texas-christian",
     "sacramento_4_R64_G7": "virginia",
-    "sacramento_4_R64_G8": "iowa"
+    "sacramento_4_R64_G8": "iowa",
+    "fort_worth_1_R32_G2": "north-carolina",
+    "sacramento_2_R32_G2": "minnesota",
+    "sacramento_2_R32_G3": "duke",
+    "sacramento_2_R32_G4": "louisiana-state",
+    "fort_worth_3_R32_G1": "texas",
+    "fort_worth_3_R32_G4": "michigan",
+    "sacramento_4_R32_G2": "oklahoma",
+    "sacramento_4_R32_G3": "texas-christian"
   },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
