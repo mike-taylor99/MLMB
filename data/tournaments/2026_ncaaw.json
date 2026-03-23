@@ -195,13 +195,21 @@
     "sacramento_4_R64_G1": "analysis_c4b416b61bdbeae733b450e3377c5bff",
     "sacramento_4_R64_G7": "analysis_aeac39e4d08c8791f0a847f227c80cb0",
     "sacramento_2_R64_G5": "analysis_ea02f6ccb58b71cc618d4baf658f442c",
+    "fort_worth_1_R32_G1": "analysis_cc77c83be3997eecc48a25e5c711cda3",
     "fort_worth_1_R32_G2": "analysis_b09caae75504eefa2722a4e79884f758",
+    "fort_worth_1_R32_G3": "analysis_86fded6fd6cc60993175359122e0aeae",
+    "fort_worth_1_R32_G4": "analysis_6c17bd387cab7284f6f34dfdebe5c48c",
+    "sacramento_2_R32_G1": "analysis_ea56611818fbb2352bc65a8607e7eac1",
     "sacramento_2_R32_G2": "analysis_7eaf7ffc0756a00eebb1df6d19e24be6",
     "sacramento_2_R32_G3": "analysis_efc6a2ac17ebafb4a5b87d7f24e4aecf",
     "sacramento_2_R32_G4": "analysis_a39fad962a40531406c71b0ee8d1c963",
     "fort_worth_3_R32_G1": "analysis_b5f5d14ef70a63c257e9b69524f90354",
+    "fort_worth_3_R32_G2": "analysis_6a717eae2560d7f9b8934412cd604484",
+    "fort_worth_3_R32_G3": "analysis_84ef36927bb0b0d7bdee33114735e13e",
     "fort_worth_3_R32_G4": "analysis_f54dc3594944cfa6358535f3a0257d61",
+    "sacramento_4_R32_G1": "analysis_35ff9ab1d2ed99fcf3f4f63db8c55aa7",
     "sacramento_4_R32_G2": "analysis_e4cc8143747b0687df0267ed631b2f7a",
-    "sacramento_4_R32_G3": "analysis_01ae02e8adbbb02897c92c1bd9b8383f"
+    "sacramento_4_R32_G3": "analysis_01ae02e8adbbb02897c92c1bd9b8383f",
+    "sacramento_4_R32_G4": "analysis_a0c81f65da9139b9ded6f6516ae661ad"
   }
 }
