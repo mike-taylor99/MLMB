@@ -226,6 +226,14 @@
     "south_R32_G1": "analysis_2a342bb6c5bf77cbf96f826711bcc8f4",
     "south_R32_G2": "analysis_8553f0b178b1718ebbf3665d273be657",
     "south_R32_G3": "analysis_7dd8d8402cc9ee1a257c4b017ef378ff",
-    "south_R32_G4": "analysis_937479b2fe19c0d455ecdd8bd94c71d6"
+    "south_R32_G4": "analysis_937479b2fe19c0d455ecdd8bd94c71d6",
+    "east_S16_G1": "analysis_07a6aa1757f868443f4dd6c9783087aa",
+    "east_S16_G2": "analysis_bdd404f7aed2f389156d0d256f35bb3b",
+    "west_S16_G1": "analysis_58dadfade667fd76886ebd4845721765",
+    "west_S16_G2": "analysis_29f50cf91cb87ca1d2f03f57b68dbdd7",
+    "midwest_S16_G1": "analysis_f944323aded1bbfb51a8d63ca8681dcc",
+    "midwest_S16_G2": "analysis_498fcbb54b025fa2db35ad25190a6745",
+    "south_S16_G1": "analysis_4c0707731a7f673f89e7753c1abf251f",
+    "south_S16_G2": "analysis_d8c0798937307c8cb8b80205152c018a"
   }
 }
