@@ -172,7 +172,11 @@
     "south_R32_G1": "iowa",
     "south_R32_G2": "nebraska",
     "south_R32_G3": "illinois",
-    "south_R32_G4": "houston"
+    "south_R32_G4": "houston",
+    "west_S16_G1": "arizona",
+    "west_S16_G2": "purdue",
+    "south_S16_G1": "iowa",
+    "south_S16_G2": "illinois"
   },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
