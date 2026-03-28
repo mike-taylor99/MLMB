@@ -176,7 +176,11 @@
     "west_S16_G1": "arizona",
     "west_S16_G2": "purdue",
     "south_S16_G1": "iowa",
-    "south_S16_G2": "illinois"
+    "south_S16_G2": "illinois",
+    "east_S16_G1": "duke",
+    "east_S16_G2": "connecticut",
+    "midwest_S16_G1": "michigan",
+    "midwest_S16_G2": "iowa-state"
   },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",

@@ -172,7 +172,11 @@
     "sacramento_4_R32_G1": "south-carolina",
     "sacramento_4_R32_G2": "oklahoma",
     "sacramento_4_R32_G3": "texas-christian",
-    "sacramento_4_R32_G4": "virginia"
+    "sacramento_4_R32_G4": "virginia",
+    "fort_worth_1_S16_G1": "connecticut",
+    "fort_worth_1_S16_G2": "notre-dame",
+    "sacramento_2_S16_G1": "ucla",
+    "sacramento_2_S16_G2": "duke"
   },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
