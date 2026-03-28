@@ -180,7 +180,7 @@
     "east_S16_G1": "duke",
     "east_S16_G2": "connecticut",
     "midwest_S16_G1": "michigan",
-    "midwest_S16_G2": "iowa-state"
+    "midwest_S16_G2": "tennessee"
   },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
@@ -246,6 +246,6 @@
     "west_E8": "analysis_13108525ed87ebae33bade0915e4b1bf",
     "south_E8": "analysis_1b24af99df1625e84e8936112596bda8",
     "east_E8": "analysis_962ff75a548e54a0e52f20cc1bc47a99",
-    "midwest_E8": "analysis_98a52585a6dfa5810ddde04e4d42f293"
+    "midwest_E8": "analysis_8fc26c322f61cfe6baac6fae473e4903"
   }
 }
