@@ -48,7 +48,8 @@ export function UserMenu() {
         size="sm"
         className="gap-1.5"
         onClick={() => {
-          window.location.href = '/login'
+          const redirect = window.location.pathname + window.location.search
+          window.location.href = `/login?redirect=${encodeURIComponent(redirect)}`
         }}
       >
         <LogIn className="h-4 w-4" />

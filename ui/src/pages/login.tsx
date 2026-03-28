@@ -6,9 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrophyIcon } from '@/components/trophy-icon'
 import { AuthButtons } from '@/components/auth-buttons'
 import { useDocumentTitle } from '@/lib/use-document-title'
+import { useSearchParams } from 'react-router'
 
 export function LoginPage() {
   useDocumentTitle('Sign In')
+  const [searchParams] = useSearchParams()
+  const rawRedirect = searchParams.get('redirect') || '/'
+  // Ensure redirect is a safe relative path (prevent open redirect)
+  const redirect = rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') ? rawRedirect : '/'
+  const redirectUrl = window.location.origin + redirect
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-background">
       <Card className="w-full max-w-sm">
@@ -22,7 +29,7 @@ export function LoginPage() {
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
-          <AuthButtons redirectUrl={window.location.origin + '/'} />
+          <AuthButtons redirectUrl={redirectUrl} />
           <p className="text-center text-xs text-muted-foreground pt-2">
             By signing in you agree to our terms of service.
           </p>

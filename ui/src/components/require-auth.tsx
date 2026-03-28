@@ -10,19 +10,22 @@
 // dev) see the child route via <Outlet />.
 // ============================================================================
 
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import { useAuth } from '@/context/auth'
 import { AuthButtons } from '@/components/auth-buttons'
 import { Lock } from 'lucide-react'
 
 export function RequireAuth() {
   const { user, loading, isLocal } = useAuth()
+  const location = useLocation()
 
   // Still checking /.auth/me
   if (loading) return null
 
   // Authenticated or local dev — render the child route
   if (user || isLocal) return <Outlet />
+
+  const redirectUrl = window.location.origin + location.pathname + location.search
 
   // Not signed in — show sign-in prompt
   return (
@@ -37,7 +40,7 @@ export function RequireAuth() {
         </p>
       </div>
       <div className="w-full max-w-xs">
-        <AuthButtons />
+        <AuthButtons redirectUrl={redirectUrl} />
       </div>
     </div>
   )
