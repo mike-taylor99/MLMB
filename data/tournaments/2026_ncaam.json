@@ -238,6 +238,8 @@
     "midwest_S16_G1": "analysis_f944323aded1bbfb51a8d63ca8681dcc",
     "midwest_S16_G2": "analysis_498fcbb54b025fa2db35ad25190a6745",
     "south_S16_G1": "analysis_4c0707731a7f673f89e7753c1abf251f",
-    "south_S16_G2": "analysis_d8c0798937307c8cb8b80205152c018a"
+    "south_S16_G2": "analysis_d8c0798937307c8cb8b80205152c018a",
+    "west_E8": "analysis_13108525ed87ebae33bade0915e4b1bf",
+    "south_E8": "analysis_1b24af99df1625e84e8936112596bda8"
   }
 }
