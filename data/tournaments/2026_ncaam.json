@@ -244,6 +244,8 @@
     "south_S16_G1": "analysis_4c0707731a7f673f89e7753c1abf251f",
     "south_S16_G2": "analysis_d8c0798937307c8cb8b80205152c018a",
     "west_E8": "analysis_13108525ed87ebae33bade0915e4b1bf",
-    "south_E8": "analysis_1b24af99df1625e84e8936112596bda8"
+    "south_E8": "analysis_1b24af99df1625e84e8936112596bda8",
+    "east_E8": "analysis_962ff75a548e54a0e52f20cc1bc47a99",
+    "midwest_E8": "analysis_98a52585a6dfa5810ddde04e4d42f293"
   }
 }
