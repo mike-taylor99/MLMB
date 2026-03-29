@@ -180,7 +180,9 @@
     "east_S16_G1": "duke",
     "east_S16_G2": "connecticut",
     "midwest_S16_G1": "michigan",
-    "midwest_S16_G2": "tennessee"
+    "midwest_S16_G2": "tennessee",
+    "west_E8": "arizona",
+    "south_E8": "illinois"
   },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
