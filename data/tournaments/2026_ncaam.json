@@ -182,7 +182,9 @@
     "midwest_S16_G1": "michigan",
     "midwest_S16_G2": "tennessee",
     "west_E8": "arizona",
-    "south_E8": "illinois"
+    "south_E8": "illinois",
+    "east_E8": "connecticut",
+    "midwest_E8": "michigan"
   },
   "analyses": {
     "pi_1": "analysis_ceccc3d6ce23a25ca57e5f25703c1b42",
