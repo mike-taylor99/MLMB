@@ -13,7 +13,12 @@ import {
   useBrackets,
   useDeleteBracket,
 } from "@/lib/hooks";
-import { buildRegionBracket, buildFinalFour } from "@/lib/bracket";
+import {
+  buildRegionBracket,
+  buildFinalFour,
+  scoreBracketWeighted,
+  getEliminatedTeams,
+} from "@/lib/bracket";
 import {
   Matchup,
   RegionBracketView,
@@ -95,6 +100,12 @@ export function BracketDetailPage() {
     }
     return map;
   }, [teamsData]);
+
+  // Eliminated teams for scoring bracket cards
+  const eliminated = useMemo(() => {
+    if (!tournament) return new Set<string>();
+    return getEliminatedTeams(tournament);
+  }, [tournament]);
 
   // Build bracket data
   const regionBrackets = useMemo(() => {
@@ -249,6 +260,20 @@ export function BracketDetailPage() {
                           {tournament.is_locked
                             ? "Locked"
                             : new Date(b.updated_at).toLocaleDateString()}
+                          {tournament.is_locked &&
+                            Object.keys(tournament.results).length > 0 &&
+                            (() => {
+                              const ws = scoreBracketWeighted(
+                                b.picks,
+                                tournament.results,
+                                eliminated,
+                              );
+                              return (
+                                <span className="ml-1 tabular-nums">
+                                  · {ws.totalEarned}/{ws.maxPossible} pts
+                                </span>
+                              );
+                            })()}
                         </div>
                       </div>
                     </div>

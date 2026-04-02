@@ -10,6 +10,7 @@ import {
   buildRegionBracketFromPicks,
   buildFinalFourFromPicks,
   scoreBracket,
+  scoreBracketWeighted,
   getEliminatedTeams,
 } from "@/lib/bracket";
 import {
@@ -22,7 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Check, X, Clock, Share2 } from "lucide-react";
+import { ArrowLeft, Check, X, Clock, Trophy, Share2 } from "lucide-react";
 import type { Team } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -129,6 +130,12 @@ export function BracketViewPage() {
     return scoreBracket(picks, tournament.results, eliminated);
   }, [tournament, picks, eliminated]);
 
+  // Weighted score (ESPN-style points by round)
+  const weightedScore = useMemo(() => {
+    if (!tournament) return null;
+    return scoreBracketWeighted(picks, tournament.results, eliminated);
+  }, [tournament, picks, eliminated]);
+
   const hasResults = tournament
     ? Object.keys(tournament.results).length > 0
     : false;
@@ -218,6 +225,14 @@ export function BracketViewPage() {
                 : "—"}
             </span>
           </div>
+          {weightedScore && (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1">
+              <Trophy className="h-3.5 w-3.5 text-primary" />
+              <span className="text-sm font-semibold text-primary tabular-nums">
+                {weightedScore.totalEarned} / {weightedScore.maxPossible}
+              </span>
+            </div>
+          )}
         </div>
       )}
 

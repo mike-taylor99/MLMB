@@ -263,6 +263,29 @@ export const ROUND_LABELS: Record<string, string> = {
   NCG: "Championship",
 };
 
+/** ESPN-style point values per correct pick in each round */
+export const ROUND_POINTS: Record<string, number> = {
+  R64: 10,
+  R32: 20,
+  S16: 40,
+  E8: 80,
+  FF: 160,
+  NCG: 320,
+};
+
+/** Number of games in each round */
+export const ROUND_GAME_COUNTS: Record<string, number> = {
+  R64: 32,
+  R32: 16,
+  S16: 8,
+  E8: 4,
+  FF: 2,
+  NCG: 1,
+};
+
+/** Ordered round keys for display */
+export const ROUND_ORDER = ["R64", "R32", "S16", "E8", "FF", "NCG"] as const;
+
 // ---------------------------------------------------------------------------
 // Eliminated teams — teams knocked out by official results
 // ---------------------------------------------------------------------------
@@ -516,4 +539,113 @@ export function scoreBracket(
   }
 
   return { correct, wrong, pending, total: correct + wrong + pending };
+}
+
+// ---------------------------------------------------------------------------
+// Weighted scoring by round (ESPN-style)
+// ---------------------------------------------------------------------------
+
+/**
+ * Extract the round identifier from a game slot key.
+ * Returns null for play-in keys.
+ */
+function getRoundFromKey(key: string): string | null {
+  if (key.startsWith("pi_")) return null;
+  if (key === "NCG") return "NCG";
+  if (key.startsWith("FF_")) return "FF";
+  const match = key.match(/_(R64|R32|S16|E8)(?:_|$)/);
+  return match ? match[1] : null;
+}
+
+export interface RoundScore {
+  round: string;
+  label: string;
+  pointsPerGame: number;
+  maxGames: number;
+  correct: number;
+  wrong: number;
+  pending: number;
+  earned: number;
+  possible: number;
+}
+
+export interface WeightedBracketScore extends BracketScore {
+  rounds: RoundScore[];
+  totalEarned: number;
+  maxPossible: number;
+}
+
+/**
+ * Score a bracket with ESPN-style weighted points per round.
+ * Each round doubles in value (10 → 20 → 40 → 80 → 160 → 320),
+ * giving 320 max points per round and 1920 total possible.
+ */
+export function scoreBracketWeighted(
+  picks: Record<string, string>,
+  results: Record<string, string>,
+  eliminated?: Set<string>,
+): WeightedBracketScore {
+  const roundData: Record<
+    string,
+    { correct: number; wrong: number; pending: number }
+  > = {};
+  for (const round of ROUND_ORDER) {
+    roundData[round] = { correct: 0, wrong: 0, pending: 0 };
+  }
+
+  let correct = 0;
+  let wrong = 0;
+  let pending = 0;
+
+  for (const [key, pick] of Object.entries(picks)) {
+    const round = getRoundFromKey(key);
+    if (!round) continue;
+
+    const result = results[key];
+    if (result) {
+      if (pick === result) {
+        correct++;
+        roundData[round].correct++;
+      } else {
+        wrong++;
+        roundData[round].wrong++;
+      }
+    } else if (eliminated?.has(pick)) {
+      wrong++;
+      roundData[round].wrong++;
+    } else {
+      pending++;
+      roundData[round].pending++;
+    }
+  }
+
+  const rounds: RoundScore[] = ROUND_ORDER.map((round) => {
+    const pts = ROUND_POINTS[round];
+    const maxGames = ROUND_GAME_COUNTS[round];
+    const data = roundData[round];
+    return {
+      round,
+      label: ROUND_LABELS[round],
+      pointsPerGame: pts,
+      maxGames,
+      correct: data.correct,
+      wrong: data.wrong,
+      pending: data.pending,
+      earned: data.correct * pts,
+      possible: maxGames * pts,
+    };
+  });
+
+  const totalEarned = rounds.reduce((sum, r) => sum + r.earned, 0);
+  const maxPossible = rounds.reduce((sum, r) => sum + r.possible, 0);
+
+  return {
+    correct,
+    wrong,
+    pending,
+    total: correct + wrong + pending,
+    rounds,
+    totalEarned,
+    maxPossible,
+  };
 }
