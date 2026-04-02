@@ -182,7 +182,9 @@
     "sacramento_4_S16_G1": "south-carolina",
     "sacramento_4_S16_G2": "texas-christian",
     "fort_worth_1_E8": "connecticut",
-    "sacramento_2_E8": "ucla"
+    "sacramento_2_E8": "ucla",
+    "fort_worth_3_E8": "texas",
+    "sacramento_4_E8": "south-carolina"
   },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
@@ -248,6 +250,8 @@
     "fort_worth_1_E8": "analysis_09e365da096ed2dd06c7728e6ce8e327",
     "sacramento_2_E8": "analysis_054a36572d5786ee8e8befd55b4b8668",
     "fort_worth_3_E8": "analysis_478fababad37f4c5b78eed9879654133",
-    "sacramento_4_E8": "analysis_ef3a1fb664fabbf2e1edc532336a0080"
+    "sacramento_4_E8": "analysis_ef3a1fb664fabbf2e1edc532336a0080",
+    "FF_G1": "analysis_3fddc3f30e7a23c7463903333b13066d",
+    "FF_G2": "analysis_8c14281bde5812519d885e3aa45ffb36"
   }
 }
