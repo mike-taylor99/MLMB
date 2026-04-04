@@ -184,7 +184,9 @@
     "fort_worth_1_E8": "connecticut",
     "sacramento_2_E8": "ucla",
     "fort_worth_3_E8": "texas",
-    "sacramento_4_E8": "south-carolina"
+    "sacramento_4_E8": "south-carolina",
+    "FF_G1": "south-carolina",
+    "FF_G2": "ucla"
   },
   "analyses": {
     "pi_1": "analysis_61798de8be1c8d90d39335a461cceced",
