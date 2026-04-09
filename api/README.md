@@ -71,15 +71,17 @@ docker run -p 8000:8000 --env-file api/.env mlmb-api
 Create a `.env` file in the `api/` directory:
 
 ```
-AZURE_STORAGE_CONNECTION_STRING=<your-connection-string>
-COSMOS_CONNECTION_STRING=<your-cosmos-connection-string>
+AZURE_STORAGE_ACCOUNT_URL=https://mlmbapi.blob.core.windows.net
+COSMOS_ENDPOINT=https://mlmb-predictions.documents.azure.com:443/
 LOCAL_DEV=true
 ```
 
+Authentication uses `DefaultAzureCredential` — managed identity in production, `az login` locally.
+
 | Variable | Required | Description |
 | --- | --- | --- |
-| `AZURE_STORAGE_CONNECTION_STRING` | Yes | Azure Blob Storage connection string |
-| `COSMOS_CONNECTION_STRING` | Yes | Azure Cosmos DB connection string |
+| `AZURE_STORAGE_ACCOUNT_URL` | Yes | Azure Blob Storage account URL |
+| `COSMOS_ENDPOINT` | Yes | Azure Cosmos DB endpoint URL |
 | `API_KEY` | No | Shared key for server-to-server auth |
 | `LOCAL_DEV` | No | Set to `true` to bypass auth in development |
 
