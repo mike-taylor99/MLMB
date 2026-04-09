@@ -20,6 +20,7 @@ from shared.predictions_store import PredictionsStore
 from shared.ml_runner import (
     MODEL_NAME_MAP,
     run_prediction as _run_prediction,
+    run_batch_predictions as _run_batch_predictions,
     preload_models,
     preload_model_versions,
     preload_stats,
@@ -178,35 +179,74 @@ def create_batch_predictions(
     model_versions_cache = preload_model_versions(blob_service, model_keys)
     stats_cache = preload_stats(blob_service, stats_keys)
 
-    # Run predictions
+    # Run predictions using vectorized batch processing
     results: list[Union[PredictionResponse, ErrorResponse]] = [None] * len(
         indexed_requests
     )  # type: ignore
     cosmos_records: list[dict] = []
 
+    # Phase 1: Validate stats and collect valid items
+    valid_items = []
     for item in indexed_requests:
         req = item["request"]
-        try:
-            result, record = _run_prediction(
-                blob_service=blob_service,
-                home_team=req.home_team,
-                away_team=req.away_team,
-                span=req.span,
-                sport=req.sport,
-                model_type=req.model,
-                neutral=req.neutral,
-                models_cache=models_cache,
-                stats_cache=stats_cache,
-                model_versions_cache=model_versions_cache,
+        is_womens = item["is_womens"]
+        stats_key_home = (req.home_team, req.span, is_womens)
+        stats_key_away = (req.away_team, req.span, is_womens)
+
+        home_stats_data = stats_cache.get(stats_key_home)
+        away_stats_data = stats_cache.get(stats_key_away)
+
+        if not home_stats_data:
+            logging.error(f"Stats not found for team: {req.home_team}")
+            results[item["index"]] = ErrorResponse(
+                error=ErrorDetail(
+                    code="prediction_error",
+                    message=f"Stats not found for team: {req.home_team}",
+                )
             )
-            results[item["index"]] = PredictionResponse.from_prediction_result(result)
-            if record:
+            continue
+        if not away_stats_data:
+            logging.error(f"Stats not found for team: {req.away_team}")
+            results[item["index"]] = ErrorResponse(
+                error=ErrorDetail(
+                    code="prediction_error",
+                    message=f"Stats not found for team: {req.away_team}",
+                )
+            )
+            continue
+
+        valid_items.append(
+            {
+                "index": item["index"],
+                "home_team": req.home_team,
+                "away_team": req.away_team,
+                "span": req.span,
+                "sport": req.sport,
+                "model_type": req.model,
+                "neutral": req.neutral,
+                "home_stats": home_stats_data["stats"],
+                "away_stats": away_stats_data["stats"],
+                "home_last_played": home_stats_data["lastPlayed"],
+                "away_last_played": away_stats_data["lastPlayed"],
+            }
+        )
+
+    # Phase 2: Vectorized predictions — one predict_proba call per model group
+    if valid_items:
+        try:
+            batch_results = _run_batch_predictions(
+                blob_service, valid_items, models_cache, model_versions_cache
+            )
+            for index, result, record in batch_results:
+                results[index] = PredictionResponse.from_prediction_result(result)
                 cosmos_records.append(record)
         except Exception as e:
-            logging.error(f"Error predicting {req.home_team} vs {req.away_team}: {e}")
-            results[item["index"]] = ErrorResponse(
-                error=ErrorDetail(code="prediction_error", message=str(e))
-            )
+            logging.error(f"Batch prediction failed: {e}")
+            for item in valid_items:
+                if results[item["index"]] is None:
+                    results[item["index"]] = ErrorResponse(
+                        error=ErrorDetail(code="prediction_error", message=str(e))
+                    )
 
     return results, cosmos_records
 

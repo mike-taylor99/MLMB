@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional
 
 import joblib
 import pandas as pd
+from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
 # Pre-import sklearn to avoid circular import errors during parallel model loading
@@ -118,14 +119,16 @@ class BlobStorageService:
 
     @property
     def client(self) -> BlobServiceClient:
-        """Get or create the BlobServiceClient."""
+        """Get or create the BlobServiceClient using managed identity."""
         if self._client is None:
             from app.config import get_settings
 
-            conn_str = get_settings().azure_storage_connection_string
-            if not conn_str:
-                raise ValueError("AZURE_STORAGE_CONNECTION_STRING not configured")
-            self._client = BlobServiceClient.from_connection_string(conn_str)
+            account_url = get_settings().azure_storage_account_url
+            if not account_url:
+                raise ValueError("AZURE_STORAGE_ACCOUNT_URL not configured")
+            self._client = BlobServiceClient(
+                account_url, credential=DefaultAzureCredential()
+            )
         return self._client
 
     def _get_cache_key(self, is_womens: bool) -> str:

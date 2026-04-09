@@ -8,7 +8,7 @@ Usage:
     python -m team_stats.generate
 
 Environment variables:
-    AZURE_STORAGE_CONNECTION_STRING  — Required for blob upload.
+    AZURE_STORAGE_ACCOUNT_URL  — Required for blob upload (uses managed identity).
 """
 
 import logging
@@ -36,20 +36,12 @@ def main() -> None:
         return
 
     season = current_season_year()
-    connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
-
-    if not connection_string:
-        logger.warning(
-            "AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally."
-        )
 
     logger.info(f"Starting team stats pipeline for season {season}")
-    success = generate_and_upload_team_stats(
-        season, connection_string=connection_string
-    )
+    success = generate_and_upload_team_stats(season)
     logger.info("Team stats pipeline complete.")
 
-    if success and connection_string:
+    if success:
         restart_api()
 
     if not success:

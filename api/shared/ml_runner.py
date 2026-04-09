@@ -211,18 +211,28 @@ def run_prediction(
 
 
 def preload_models(blob_service: BlobStorageService, model_keys: set) -> dict:
-    """Pre-load all required models for batch processing."""
+    """Pre-load all required models for batch processing (parallel)."""
+    if not model_keys:
+        return {}
+
+    from concurrent.futures import ThreadPoolExecutor
+
     models_cache = {}
 
-    for sport, span, model_type in model_keys:
+    def load_model(key):
+        sport, span, model_type = key
         is_womens = sport == "ncaaw_basketball"
         cache_key = (sport, span, model_type)
-
         blob_name = f"{span}span_{MODEL_NAME_MAP[model_type]}"
         blob_path = blob_service.get_model_blob_path(sport, span, model_type)
-        models_cache[cache_key] = blob_service.get_model(
-            blob_name, is_womens, blob_path=blob_path
-        )
+        model = blob_service.get_model(blob_name, is_womens, blob_path=blob_path)
+        return cache_key, model
+
+    with ThreadPoolExecutor(max_workers=min(len(model_keys), 6)) as executor:
+        results = list(executor.map(load_model, model_keys))
+
+    for cache_key, model in results:
+        models_cache[cache_key] = model
 
     return models_cache
 
@@ -238,6 +248,127 @@ def preload_model_versions(blob_service: BlobStorageService, model_keys: set) ->
         )
 
     return versions_cache
+
+
+def run_batch_predictions(
+    blob_service: BlobStorageService,
+    items: list,
+    models_cache: dict,
+    model_versions_cache: dict,
+) -> list:
+    """
+    Run predictions in vectorized batches, grouped by model.
+
+    Instead of calling predict_proba once per item, this groups items
+    that share the same model and calls predict_proba once per group
+    with a multi-row DataFrame. This is significantly faster for
+    sklearn models.
+
+    Args:
+        blob_service: Blob service (for feature names)
+        items: List of dicts, each with keys:
+            index, home_team, away_team, span, sport, model_type, neutral,
+            home_stats, away_stats, home_last_played, away_last_played
+        models_cache: Pre-loaded models keyed by (sport, span, model_type)
+        model_versions_cache: Pre-loaded versions keyed by (sport, span, model_type)
+
+    Returns:
+        List of (index, result_dict, cosmos_record_dict) tuples
+    """
+    from collections import defaultdict
+    import pandas as pd
+
+    groups = defaultdict(list)
+    for item in items:
+        cache_key = (item["sport"], item["span"], item["model_type"])
+        groups[cache_key].append(item)
+
+    feature_names = blob_service.get_feature_names()
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+    all_results = []
+
+    for cache_key, group_items in groups.items():
+        sport, span, model_type = cache_key
+        model_or_models = models_cache[cache_key]
+        model_version = model_versions_cache[cache_key]
+
+        # Build multi-row feature matrix for the entire group
+        rows = []
+        for item in group_items:
+            feature_values = (
+                item["home_stats"] + item["away_stats"] + [int(item["neutral"])]
+            )
+            rows.append(feature_values)
+
+        input_data = pd.DataFrame(rows, columns=feature_names)
+
+        # Single vectorized predict_proba call for the whole group
+        probas = model_or_models.predict_proba(input_data)
+
+        # Build results from the probability matrix
+        for i, item in enumerate(group_items):
+            home_prob = probas[i][1]
+            predicted_winner = (
+                item["home_team"] if home_prob >= 0.5 else item["away_team"]
+            )
+
+            feature_values = rows[i]
+
+            prediction_id = PredictionsStore.generate_prediction_id(
+                home_team=item["home_team"],
+                away_team=item["away_team"],
+                home_last_played=item["home_last_played"],
+                away_last_played=item["away_last_played"],
+                span=span,
+                neutral=item["neutral"],
+                sport=sport,
+                model=model_type,
+                model_version=model_version,
+            )
+
+            feature_hash = PredictionsStore.generate_feature_hash(feature_values)
+
+            cosmos_record = {
+                "id": prediction_id,
+                "status": "completed",
+                "home_team": item["home_team"],
+                "away_team": item["away_team"],
+                "home_last_played": item["home_last_played"],
+                "away_last_played": item["away_last_played"],
+                "span": span,
+                "neutral": item["neutral"],
+                "sport": sport,
+                "model": model_type,
+                "model_version": model_version,
+                "feature_hash": feature_hash,
+                "result": {
+                    "home_win_probability": round(home_prob, 4),
+                    "away_win_probability": round(1 - home_prob, 4),
+                    "predicted_winner": predicted_winner,
+                },
+                "created_at": now,
+                "completed_at": now,
+            }
+
+            result = {
+                "id": prediction_id,
+                "type": "prediction",
+                "model": model_type,
+                "span": span,
+                "sport": sport,
+                "home_team": item["home_team"],
+                "away_team": item["away_team"],
+                "home_last_played": item["home_last_played"],
+                "away_last_played": item["away_last_played"],
+                "neutral": item["neutral"],
+                "home_win_probability": round(home_prob, 4),
+                "created_at": now,
+            }
+
+            all_results.append((item["index"], result, cosmos_record))
+
+    return all_results
 
 
 def preload_stats(blob_service: BlobStorageService, stats_keys: set) -> dict:

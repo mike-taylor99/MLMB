@@ -7,11 +7,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    # Azure Storage
-    azure_storage_connection_string: str = ""
+    # Azure Storage — managed identity via DefaultAzureCredential
+    azure_storage_account_url: str = ""
 
-    # Cosmos DB
-    cosmos_connection_string: str = ""
+    # Cosmos DB — managed identity via DefaultAzureCredential
+    cosmos_endpoint: str = ""
 
     # API Settings
     max_batch_size: int = 500

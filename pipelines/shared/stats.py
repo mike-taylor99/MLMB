@@ -10,14 +10,21 @@ import pandas as pd
 from tqdm import tqdm
 
 from shared.constants import (
-    META_LABELS, STAT_LABELS, FINAL_FEATURES_NO_OPP, LATEST, DEFAULT_SPANS,
+    META_LABELS,
+    STAT_LABELS,
+    FINAL_FEATURES_NO_OPP,
+    LATEST,
+    DEFAULT_SPANS,
 )
 from shared.scraper import (
-    download_gamelogs, get_team_season_file_path,
+    download_gamelogs,
+    get_team_season_file_path,
 )
 from shared.parser import (
-    create_basic_gamelog, create_advanced_gamelog,
-    combine_basic_advanced, generate_moving_averages,
+    create_basic_gamelog,
+    create_advanced_gamelog,
+    combine_basic_advanced,
+    generate_moving_averages,
 )
 from shared.blob import upload_blob
 
@@ -28,13 +35,17 @@ def _load_team_keys(is_womens: bool = False) -> list[str]:
     """Load SR school keys from team CSV."""
     gender = "womens" if is_womens else "mens"
     csv_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "data", f"{gender}_teams.csv")
+        os.path.join(
+            os.path.dirname(__file__), "..", "..", "data", f"{gender}_teams.csv"
+        )
     )
     df = pd.read_csv(csv_path)
     return df["SR key"].tolist()
 
 
-def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens: bool = False) -> dict:
+def generate_team_stats(
+    season: int, spans: list[int] = DEFAULT_SPANS, is_womens: bool = False
+) -> dict:
     """
     Full pipeline: scrape gamelogs → parse → compute stats → return JSON dict.
 
@@ -50,7 +61,9 @@ def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens
     sport = "ncaaw_basketball" if is_womens else "ncaam_basketball"
 
     # Step 1: Download gamelogs
-    logger.info(f"Downloading gamelogs for {len(teams)} teams (season {season}, {'W' if is_womens else 'M'})")
+    logger.info(
+        f"Downloading gamelogs for {len(teams)} teams (season {season}, {'W' if is_womens else 'M'})"
+    )
     download_gamelogs(teams, season, is_womens)
 
     # Step 2: Parse basic + advanced CSVs
@@ -81,7 +94,9 @@ def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens
     for span in spans:
         for key in tqdm(teams, desc=f"MA (span={span})"):
             try:
-                generate_moving_averages(key, season, span, keep_latest=True, is_womens=is_womens)
+                generate_moving_averages(
+                    key, season, span, keep_latest=True, is_womens=is_womens
+                )
             except FileNotFoundError:
                 continue
 
@@ -98,7 +113,9 @@ def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens
     for span in spans:
         latest_stats[str(span)] = {}
         for key in tqdm(teams, desc=f"Latest (span={span})"):
-            file_path = get_team_season_file_path(key, season, f"{key}_{span}ma.csv", is_womens)
+            file_path = get_team_season_file_path(
+                key, season, f"{key}_{span}ma.csv", is_womens
+            )
 
             if not os.path.exists(file_path):
                 continue
@@ -132,7 +149,7 @@ def generate_team_stats(season: int, spans: list[int] = DEFAULT_SPANS, is_womens
 
 
 def generate_and_upload_team_stats(
-    season: int, spans: list[int] = DEFAULT_SPANS, connection_string: str | None = None
+    season: int, spans: list[int] = DEFAULT_SPANS
 ) -> bool:
     """Generate team stats for both genders and upload to blob storage.
 
@@ -158,14 +175,7 @@ def generate_and_upload_team_stats(
         blob_name = f"{sport}/team-stats"
         data = json.dumps(stats, indent=2)
 
-        if connection_string:
-            upload_blob(connection_string, blob_name, data)
-            logger.info(f"Uploaded {blob_name} to blob storage")
-        else:
-            # Write locally as fallback
-            out_file = f"{sport}_team_stats.json"
-            with open(out_file, "w") as f:
-                f.write(data)
-            logger.info(f"Wrote {out_file} (no connection string — local only)")
+        upload_blob(blob_name, data)
+        logger.info(f"Uploaded {blob_name} to blob storage")
 
     return len(failures) == 0

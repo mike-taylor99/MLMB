@@ -8,7 +8,7 @@ Usage:
     python -m top25.generate
 
 Environment variables:
-    AZURE_STORAGE_CONNECTION_STRING  — Required for blob upload.
+    AZURE_STORAGE_ACCOUNT_URL  — Required for blob upload (uses managed identity).
     API_BASE_URL                     — MLMB API URL (default: production FQDN).
     API_KEY                          — API key for server-to-server auth.
 """
@@ -178,7 +178,6 @@ def generate_top25(
 def generate_and_upload_top25(
     api_base_url: str,
     season: int,
-    connection_string: str | None = None,
     api_key: str = "",
 ) -> bool:
     """Generate top 25 for both genders and upload to blob storage.
@@ -205,14 +204,8 @@ def generate_and_upload_top25(
         blob_name = f"{sport}/top25"
         data = json.dumps(rankings, indent=2)
 
-        if connection_string:
-            upload_blob(connection_string, blob_name, data)
-            logger.info(f"Uploaded {blob_name} to blob storage")
-        else:
-            out_file = f"{sport}_top25.json"
-            with open(out_file, "w") as f:
-                f.write(data)
-            logger.info(f"Wrote {out_file} (no connection string — local only)")
+        upload_blob(blob_name, data)
+        logger.info(f"Uploaded {blob_name} to blob storage")
 
     return len(failures) == 0
 
@@ -225,12 +218,6 @@ def main() -> None:
     season = current_season_year()
     api_base_url = os.environ.get("API_BASE_URL", DEFAULT_API_URL)
     api_key = os.environ.get("API_KEY", "")
-    connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
-
-    if not connection_string:
-        logger.warning(
-            "AZURE_STORAGE_CONNECTION_STRING not set — results will only be written locally."
-        )
 
     if not api_key:
         logger.warning("API_KEY not set — predictions endpoints may reject requests.")
@@ -238,12 +225,10 @@ def main() -> None:
     logger.info(f"Starting top 25 pipeline for season {season}")
     logger.info(f"API base URL: {api_base_url}")
 
-    success = generate_and_upload_top25(
-        api_base_url, season, connection_string, api_key
-    )
+    success = generate_and_upload_top25(api_base_url, season, api_key)
     logger.info("Top 25 pipeline complete.")
 
-    if success and connection_string:
+    if success:
         restart_api()
 
     if not success:

@@ -46,7 +46,7 @@ async def _lifespan(app: FastAPI):
 
     settings = get_settings()
 
-    if settings.azure_storage_connection_string:
+    if settings.azure_storage_account_url:
         from shared.blob_service import get_blob_service
 
         blob_service = get_blob_service()
@@ -55,7 +55,7 @@ async def _lifespan(app: FastAPI):
         except Exception as e:
             logging.error(f"Preload failed (app will lazy-load on demand): {e}")
     else:
-        logging.warning("No Azure Storage connection string — skipping preload")
+        logging.warning("No Azure Storage configured — skipping preload")
 
     yield  # App runs here
 

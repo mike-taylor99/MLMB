@@ -13,6 +13,7 @@ from azure.cosmos.exceptions import (
     CosmosResourceExistsError,
     CosmosResourceNotFoundError,
 )
+from azure.identity import DefaultAzureCredential
 
 from app.config import get_settings
 
@@ -56,12 +57,12 @@ class PredictionsStore:
         logging.info("PredictionsStore initialized")
 
     def _ensure_client(self):
-        """Ensure the Cosmos client and database are initialized."""
+        """Ensure the Cosmos client and database are initialized using managed identity."""
         if self._client is None:
-            conn_str = get_settings().cosmos_connection_string
-            if not conn_str:
-                raise ValueError("COSMOS_CONNECTION_STRING not configured")
-            self._client = CosmosClient.from_connection_string(conn_str)
+            endpoint = get_settings().cosmos_endpoint
+            if not endpoint:
+                raise ValueError("COSMOS_ENDPOINT not configured")
+            self._client = CosmosClient(endpoint, credential=DefaultAzureCredential())
             self._database = self._client.create_database_if_not_exists(
                 id=self.DATABASE_NAME
             )
