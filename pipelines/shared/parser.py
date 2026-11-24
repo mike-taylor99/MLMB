@@ -5,7 +5,6 @@ merge home/away opponent data.
 
 import logging
 from io import StringIO
-import numpy as np
 import pandas as pd
 
 from shared.constants import META_LABELS, LATEST, RENAME_OPPOSING_COLS
@@ -143,6 +142,12 @@ def combine_basic_advanced(
     # Drop def_eFG% from advanced (already present in basic opponent stats) to avoid merge conflicts
     adv_df = adv_df.drop(columns=["def_eFG%"], errors="ignore")
 
+    # Normalize merge-key dtypes: an all-empty OT column parses as float64 while
+    # one containing "OT"/"2OT" parses as object, which makes pd.merge fail.
+    for frame in (basic_df, adv_df):
+        frame["OT"] = frame["OT"].notna().astype(int)
+        frame["eFG%"] = pd.to_numeric(frame["eFG%"], errors="coerce")
+
     merge_cols = [
         "Rk",
         "Gtm",
@@ -159,7 +164,6 @@ def combine_basic_advanced(
     merged = pd.merge(basic_df, adv_df, on=merge_cols)
 
     merged["Location"] = merged["Location"].fillna("H")
-    merged["OT"] = np.where(merged["OT"].notna(), 1, 0)
 
     out_path = get_team_season_file_path(
         school_key, season, f"{school_key}_merged.csv", is_womens
