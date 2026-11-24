@@ -217,11 +217,49 @@ class BlobStorageService:
         span_stats = stats[span_key]
 
         if team1 not in span_stats:
-            raise ValueError(f"Team not found: {team1}")
+            raise ValueError(self.missing_stats_message(team1, span, is_womens))
         if team2 not in span_stats:
-            raise ValueError(f"Team not found: {team2}")
+            raise ValueError(self.missing_stats_message(team2, span, is_womens))
 
         return {"team1": span_stats[team1], "team2": span_stats[team2]}
+
+    def missing_stats_message(self, team: str, span: int, is_womens: bool = False) -> str:
+        """
+        Explain why a team has no stats for the requested span.
+
+        Teams only appear in a span once they have at least `span` completed
+        games this season, so distinguish that from an unknown team key.
+        """
+        program_flag = "has_womens_program" if is_womens else "has_mens_program"
+        try:
+            teams, _ = self.get_teams()
+        except Exception:
+            teams = []
+        record = next(
+            (t for t in teams if t.get("key") == team and t.get(program_flag)), None
+        )
+        if record is None:
+            return f"Team not found: {team}"
+
+        name = record.get("school") or team
+        try:
+            stats = self.get_team_stats(is_womens)
+        except Exception:
+            stats = {}
+        available = [
+            int(s)
+            for s in stats
+            if s.isdigit() and int(s) < span and team in stats[s]
+        ]
+        if available:
+            return (
+                f"{name} has fewer than {span} completed games this season "
+                f"— try a span of {max(available)} or less."
+            )
+        return (
+            f"{name} doesn't have enough completed games this season to "
+            f"make a prediction yet."
+        )
 
     # ==================== Models Manifest ====================
 

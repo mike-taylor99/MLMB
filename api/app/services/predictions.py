@@ -196,22 +196,12 @@ def create_batch_predictions(
         home_stats_data = stats_cache.get(stats_key_home)
         away_stats_data = stats_cache.get(stats_key_away)
 
-        if not home_stats_data:
-            logging.error(f"Stats not found for team: {req.home_team}")
+        if not home_stats_data or not away_stats_data:
+            missing = req.home_team if not home_stats_data else req.away_team
+            message = blob_service.missing_stats_message(missing, req.span, is_womens)
+            logging.error(f"Stats not found for team {missing}: {message}")
             results[item["index"]] = ErrorResponse(
-                error=ErrorDetail(
-                    code="prediction_error",
-                    message=f"Stats not found for team: {req.home_team}",
-                )
-            )
-            continue
-        if not away_stats_data:
-            logging.error(f"Stats not found for team: {req.away_team}")
-            results[item["index"]] = ErrorResponse(
-                error=ErrorDetail(
-                    code="prediction_error",
-                    message=f"Stats not found for team: {req.away_team}",
-                )
+                error=ErrorDetail(code="prediction_error", message=message)
             )
             continue
 

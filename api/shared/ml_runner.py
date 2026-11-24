@@ -116,9 +116,9 @@ def run_prediction(
         away_stats_data = matchup_stats["team2"]
 
     if not home_stats_data:
-        raise ValueError(f"Stats not found for team: {home_team}")
+        raise ValueError(blob_service.missing_stats_message(home_team, span, is_womens))
     if not away_stats_data:
-        raise ValueError(f"Stats not found for team: {away_team}")
+        raise ValueError(blob_service.missing_stats_message(away_team, span, is_womens))
 
     home_stats = home_stats_data["stats"]
     away_stats = away_stats_data["stats"]
